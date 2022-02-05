@@ -1,0 +1,12 @@
+# ninja log v5
+0	579	1644044273059421388	CMakeFiles/proj1.dir/Bitmap.cpp.o	5c0505c915ce4c7d
+1	158	1644044293878044479	CMakeFiles/proj1.dir/Bitmap.cpp.o	bd95aec2a27fcdf7
+0	471	1644044636556616168	CMakeFiles/proj1.dir/Bitmap.cpp.o	bd95aec2a27fcdf7
+0	272	1644044913903359631	CMakeFiles/proj1.dir/ImpBrush.cpp.o	585081482e962fb9
+0	287	1644044913917471754	CMakeFiles/proj1.dir/Impressionist.cpp.o	8cad4c42ae5dd3ab
+3	288	1644044913918269033	CMakeFiles/proj1.dir/PointBrush.cpp.o	a38216cbac241cd5
+1	289	1644044913920027773	CMakeFiles/proj1.dir/OriginalView.cpp.o	7e6c7f8bc22e4be0
+1	303	1644044913935086986	CMakeFiles/proj1.dir/ImpressionistDoc.cpp.o	f633c786f10a825b
+2	324	1644044913957780694	CMakeFiles/proj1.dir/PaintView.cpp.o	b6197b2ea63cc4f7
+1	296	1644044992372370677	CMakeFiles/proj1.dir/ImpressionistUI.cpp.o	9ee3e947e76fa2fc
+297	482	1644044992558367917	proj1	f289864fa74a89f0

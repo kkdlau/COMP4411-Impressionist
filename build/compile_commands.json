@@ -1,0 +1,49 @@
+[
+{
+  "directory": "/Users/dannylau/Program/COMP4411-Impressionist/build",
+  "command": "/usr/bin/clang++   -I../. -I.././fltk-1.3.3 -I/usr/local/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk   -std=gnu++2a -o CMakeFiles/proj1.dir/Bitmap.cpp.o -c /Users/dannylau/Program/COMP4411-Impressionist/Bitmap.cpp",
+  "file": "/Users/dannylau/Program/COMP4411-Impressionist/Bitmap.cpp"
+},
+
+{
+  "directory": "/Users/dannylau/Program/COMP4411-Impressionist/build",
+  "command": "/usr/bin/clang++   -I../. -I.././fltk-1.3.3 -I/usr/local/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk   -std=gnu++2a -o CMakeFiles/proj1.dir/ImpBrush.cpp.o -c /Users/dannylau/Program/COMP4411-Impressionist/ImpBrush.cpp",
+  "file": "/Users/dannylau/Program/COMP4411-Impressionist/ImpBrush.cpp"
+},
+
+{
+  "directory": "/Users/dannylau/Program/COMP4411-Impressionist/build",
+  "command": "/usr/bin/clang++   -I../. -I.././fltk-1.3.3 -I/usr/local/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk   -std=gnu++2a -o CMakeFiles/proj1.dir/Impressionist.cpp.o -c /Users/dannylau/Program/COMP4411-Impressionist/Impressionist.cpp",
+  "file": "/Users/dannylau/Program/COMP4411-Impressionist/Impressionist.cpp"
+},
+
+{
+  "directory": "/Users/dannylau/Program/COMP4411-Impressionist/build",
+  "command": "/usr/bin/clang++   -I../. -I.././fltk-1.3.3 -I/usr/local/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk   -std=gnu++2a -o CMakeFiles/proj1.dir/ImpressionistDoc.cpp.o -c /Users/dannylau/Program/COMP4411-Impressionist/ImpressionistDoc.cpp",
+  "file": "/Users/dannylau/Program/COMP4411-Impressionist/ImpressionistDoc.cpp"
+},
+
+{
+  "directory": "/Users/dannylau/Program/COMP4411-Impressionist/build",
+  "command": "/usr/bin/clang++   -I../. -I.././fltk-1.3.3 -I/usr/local/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk   -std=gnu++2a -o CMakeFiles/proj1.dir/ImpressionistUI.cpp.o -c /Users/dannylau/Program/COMP4411-Impressionist/ImpressionistUI.cpp",
+  "file": "/Users/dannylau/Program/COMP4411-Impressionist/ImpressionistUI.cpp"
+},
+
+{
+  "directory": "/Users/dannylau/Program/COMP4411-Impressionist/build",
+  "command": "/usr/bin/clang++   -I../. -I.././fltk-1.3.3 -I/usr/local/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk   -std=gnu++2a -o CMakeFiles/proj1.dir/OriginalView.cpp.o -c /Users/dannylau/Program/COMP4411-Impressionist/OriginalView.cpp",
+  "file": "/Users/dannylau/Program/COMP4411-Impressionist/OriginalView.cpp"
+},
+
+{
+  "directory": "/Users/dannylau/Program/COMP4411-Impressionist/build",
+  "command": "/usr/bin/clang++   -I../. -I.././fltk-1.3.3 -I/usr/local/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk   -std=gnu++2a -o CMakeFiles/proj1.dir/PaintView.cpp.o -c /Users/dannylau/Program/COMP4411-Impressionist/PaintView.cpp",
+  "file": "/Users/dannylau/Program/COMP4411-Impressionist/PaintView.cpp"
+},
+
+{
+  "directory": "/Users/dannylau/Program/COMP4411-Impressionist/build",
+  "command": "/usr/bin/clang++   -I../. -I.././fltk-1.3.3 -I/usr/local/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk   -std=gnu++2a -o CMakeFiles/proj1.dir/PointBrush.cpp.o -c /Users/dannylau/Program/COMP4411-Impressionist/PointBrush.cpp",
+  "file": "/Users/dannylau/Program/COMP4411-Impressionist/PointBrush.cpp"
+}
+]
