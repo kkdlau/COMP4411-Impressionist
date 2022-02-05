@@ -1,3 +1,0 @@
-/Users/dannylau/Program/COMP4411-Impressionist/build/CMakeFiles/rebuild_cache.dir
-/Users/dannylau/Program/COMP4411-Impressionist/build/CMakeFiles/edit_cache.dir
-/Users/dannylau/Program/COMP4411-Impressionist/build/CMakeFiles/proj1.dir
