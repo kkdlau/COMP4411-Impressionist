@@ -11,7 +11,6 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 
-
 /*
 //------------------------------ Widget Examples
 ------------------------------------------------- Here is some example code for
@@ -236,7 +235,7 @@ void ImpressionistUI::cb_about(Fl_Menu_ *o, void *v) {
 }
 
 //------- UI should keep track of the current for all the controls for answering
-//the query from Doc ---------
+// the query from Doc ---------
 //-------------------------------------------------------------
 // Sets the type of brush to use to the one chosen in the brush
 // choice.
@@ -269,6 +268,11 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget *o, void *v) {
 void ImpressionistUI::cb_sizeSlides(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))->m_nSize =
       int(((Fl_Slider *)o)->value());
+}
+
+void ImpressionistUI::cb_toggleOriginalView(Fl_Widget *o, void *v) {
+  ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
+  pDoc->toggleOriginalView();
 }
 
 //---------------------------------- per instance functions
@@ -340,7 +344,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Help", 0, 0, 0, FL_SUBMENU},
     {"&About", FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_about},
     {0},
-
+    {"Toggle Original View", 0, 0, 0, FL_MENU_TOGGLE,
+     .callback_ = (Fl_Callback *)ImpressionistUI::cb_toggleOriginalView},
     {0}};
 
 // Brush choice menu definition
