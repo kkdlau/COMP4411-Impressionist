@@ -64,11 +64,4 @@ private:
 };
 
 extern void MessageBox(char *message);
-
-static inline void destroy(auto &p) {
-  if (p == nullptr)
-    return;
-  delete[] p;
-  p = nullptr;
-}
 #endif

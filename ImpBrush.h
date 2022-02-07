@@ -55,12 +55,6 @@ public:
 
 #define FOR_EACH_BRUSH(v) for (short v = 0; i < ImpBrush::c_nBrushCount; v++)
 
-static constexpr const char *class_name(auto this_ptr) {
-  return typeid(this_ptr).name();
-}
-
-#define __CLASS__NAME__ class_name(this)
-
 class ImpBrush {
 protected:
   ImpBrush(ImpressionistDoc *pDoc = NULL, const char *name = NULL);

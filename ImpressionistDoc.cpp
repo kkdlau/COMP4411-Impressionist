@@ -50,7 +50,7 @@ ImpressionistDoc::ImpressionistDoc() {
                       new PointBrush(this, "Scattered Circles"));
 
   // make one of the brushes current
-  m_pCurrentBrush = ImpBrush::c_pBrushes[1];
+  m_pCurrentBrush = ImpBrush::c_pBrushes[0];
 }
 
 //---------------------------------------------------------
