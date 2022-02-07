@@ -31,7 +31,9 @@ public:
   void setBrushType(int type); // called by the UI to set the brushType
   int getSize();               // get the UI size
   void setSize(int size);      // set the UI size
-  char *getImageName();        // get the current image name
+  float getRad();
+  char *getImageName(); // get the current image name
+  void force_update_canvas();
 
   // Attributes
 public:

@@ -13,6 +13,7 @@
 #include "ImpBrush.h"
 
 // Include individual brush headers here.
+#include "LineBrush.hpp"
 #include "PointBrush.h"
 
 #define DESTROY(p)                                                             \
@@ -35,21 +36,21 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::c_nBrushCount = NUM_BRUSH_TYPE;
   ImpBrush::c_pBrushes = new ImpBrush *[ImpBrush::c_nBrushCount];
 
-  ImpBrush::c_pBrushes[BRUSH_POINTS] = new PointBrush(this, "Points");
+  ImpBrush::set_brush(BRUSH_POINTS, new PointBrush(this, "Points"));
 
   // Note: You should implement these 5 brushes.  They are set the same
   // (PointBrush) for now
-  ImpBrush::c_pBrushes[BRUSH_LINES] = new PointBrush(this, "Lines");
-  ImpBrush::c_pBrushes[BRUSH_CIRCLES] = new PointBrush(this, "Circles");
-  ImpBrush::c_pBrushes[BRUSH_SCATTERED_POINTS] =
-      new PointBrush(this, "Scattered Points");
-  ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES] =
-      new PointBrush(this, "Scattered Lines");
-  ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES] =
-      new PointBrush(this, "Scattered Circles");
+  ImpBrush::set_brush(BRUSH_LINES, new LineBrush(this, "Lines"));
+  ImpBrush::set_brush(BRUSH_CIRCLES, new PointBrush(this, "Circles"));
+  ImpBrush::set_brush(BRUSH_SCATTERED_POINTS,
+                      new PointBrush(this, "Scattered Points"));
+  ImpBrush::set_brush(BRUSH_SCATTERED_LINES,
+                      new PointBrush(this, "Scattered Lines"));
+  ImpBrush::set_brush(BRUSH_SCATTERED_CIRCLES,
+                      new PointBrush(this, "Scattered Circles"));
 
   // make one of the brushes current
-  m_pCurrentBrush = ImpBrush::c_pBrushes[0];
+  m_pCurrentBrush = ImpBrush::c_pBrushes[1];
 }
 
 //---------------------------------------------------------
@@ -74,6 +75,7 @@ void ImpressionistDoc::setBrushType(int type) {
 // Returns the size of the brush.
 //---------------------------------------------------------
 int ImpressionistDoc::getSize() { return m_pUI->getSize(); }
+float ImpressionistDoc::getRad() { return 3.1415 / 6; }
 
 //---------------------------------------------------------
 // Load the specified image
@@ -186,4 +188,13 @@ GLubyte *ImpressionistDoc::GetOriginalPixel(const Point p) {
 
 void ImpressionistDoc::toggleOriginalView() {
   // TODO： toggle original view
+}
+
+void ImpressionistDoc::force_update_canvas() {
+
+#ifdef __APPLE__
+  m_pUI->m_paintView->refresh();
+  m_pUI->m_origView->refresh();
+  m_pUI->m_mainWindow->redraw();
+#endif
 }

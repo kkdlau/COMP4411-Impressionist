@@ -7,6 +7,7 @@
 //
 
 #include "pointbrush.h"
+#include "gl_helper.hpp"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 
@@ -35,12 +36,14 @@ void PointBrush::BrushMove(const Point source, const Point target) {
     return;
   }
 
-  glBegin(GL_POINTS);
-  {
+  gl_draw(GL_POINT, [&] {
+    debugger("%s\n", target.toString());
+
     SetColor(source);
-    glVertex2d(target.x, target.y);
-  }
-  glEnd();
+    gl_set_point(target);
+  });
+
+  pDoc->force_update_canvas();
 }
 
 void PointBrush::BrushEnd(const Point source, const Point target) {

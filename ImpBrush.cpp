@@ -7,14 +7,20 @@
 #include "ImpBrush.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
-
+#include <cstring>
 
 // Static class member initializations
 int ImpBrush::c_nBrushCount = 0;
-ImpBrush **ImpBrush::c_pBrushes = NULL;
+ImpBrush **ImpBrush::c_pBrushes = nullptr;
 
-ImpBrush::ImpBrush(ImpressionistDoc *pDoc, char *name)
-    : m_pDoc(pDoc), m_pBrushName(name) {}
+ImpBrush::ImpBrush(ImpressionistDoc *pDoc, const char *name)
+    : m_pDoc(pDoc), m_pBrushName(name) {
+  // ImpBrush **brush_list = new ImpBrush *[c_nBrushCount + 1];
+  // FOR_EACH_BRUSH(i) { brush_list[i] = c_pBrushes[i]; }
+  // brush_list[c_nBrushCount++] = this;
+  // delete[] c_pBrushes;
+  // c_pBrushes = brush_list;
+}
 
 //---------------------------------------------------
 // Return m_pDoc, which connects the UI and brushes
@@ -24,7 +30,7 @@ ImpressionistDoc *ImpBrush::GetDocument(void) { return m_pDoc; }
 //---------------------------------------------------
 // Return the name of the current brush
 //---------------------------------------------------
-char *ImpBrush::BrushName(void) { return m_pBrushName; }
+const char *ImpBrush::BrushName(void) { return m_pBrushName; }
 
 //----------------------------------------------------
 // Set the color to paint with to the color at source,
@@ -39,4 +45,18 @@ void ImpBrush::SetColor(const Point source) {
   memcpy(color, pDoc->GetOriginalPixel(source), 3);
 
   glColor3ubv(color);
+}
+
+ImpBrush *ImpBrush::get_brush(char const *const name) {
+  FOR_EACH_BRUSH(i) {
+    ImpBrush *b = c_pBrushes[i];
+    if (strcmp(b->BrushName(), name) == 0)
+      return b;
+  }
+
+  return nullptr;
+}
+
+void ImpBrush::set_brush(int index, ImpBrush *b) {
+  ImpBrush::c_pBrushes[index] = b;
 }

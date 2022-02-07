@@ -178,8 +178,13 @@ ImpressionistUI *ImpressionistUI::whoami(Fl_Menu_ *o) {
 //------------------------------------------------------------------
 void ImpressionistUI::cb_load_image(Fl_Menu_ *o, void *v) {
   ImpressionistDoc *pDoc = whoami(o)->getDocument();
-
+#if PROJ_DEBUG
+  char *newfile =
+      "/Users/dannylau/Program/COMP4411-Impressionist/images/babyraptor.bmp";
+#else
   char *newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+#endif
+
   if (newfile != NULL) {
     pDoc->loadImage(newfile);
   }
@@ -344,8 +349,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Help", 0, 0, 0, FL_SUBMENU},
     {"&About", FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_about},
     {0},
-    {"Toggle Original View", 0, 0, 0, FL_MENU_TOGGLE,
-     .callback_ = (Fl_Callback *)ImpressionistUI::cb_toggleOriginalView},
+
     {0}};
 
 // Brush choice menu definition
@@ -385,15 +389,14 @@ ImpressionistUI::ImpressionistUI() {
   Fl_Group *group = new Fl_Group(0, 25, 600, 275);
 
   // install paint view window
-  m_paintView =
-      new PaintView(300, 25, 300, 275, "This is the paint view"); // 0jon
-  m_paintView->box(FL_DOWN_FRAME);
-
   // install original view window
   m_origView =
       new OriginalView(0, 25, 300, 275, "This is the orig view"); // 300jon
   m_origView->box(FL_DOWN_FRAME);
   m_origView->deactivate();
+  m_paintView =
+      new PaintView(300, 25, 300, 275, "This is the paint view"); // 0jon
+  m_paintView->box(FL_DOWN_FRAME);
 
   group->end();
   Fl_Group::current()->resizable(group);

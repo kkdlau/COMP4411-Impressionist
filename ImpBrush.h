@@ -7,7 +7,10 @@
 // The header file of virtual brush. All the other brushes inherit from it.
 //
 
+#include <cmath>
 #include <stdlib.h>
+#include <string>
+#include <typeinfo>
 
 // Each brush type has an associated constant.
 enum {
@@ -31,11 +34,36 @@ public:
   };
 
   int x, y;
+
+  friend Point operator+(const Point &p1, const Point &p2) {
+    return Point(p1.x + p2.x, p1.y + p2.y);
+  }
+
+  const char *toString() const {
+    return (std::to_string(x) + ", " + std::to_string(y)).c_str();
+  }
+
+  Point shift_x(int x) const { return Point(this->x + x, y); }
+  Point shift_y(int y) const { return Point(x, this->y + y); }
+  Point rotate(float rad) const {
+    return Point((int)(cos(rad) * (x)-sin(rad) * y),
+                 (int)(sin(rad) * (x)-cos(rad) * y));
+  }
+
+  static Point zero() { return Point(0, 0); }
 };
+
+#define FOR_EACH_BRUSH(v) for (short v = 0; i < ImpBrush::c_nBrushCount; v++)
+
+static constexpr const char *class_name(auto this_ptr) {
+  return typeid(this_ptr).name();
+}
+
+#define __CLASS__NAME__ class_name(this)
 
 class ImpBrush {
 protected:
-  ImpBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL);
+  ImpBrush(ImpressionistDoc *pDoc = NULL, const char *name = NULL);
 
 public:
   // The implementation of your brush should realize these virtual functions
@@ -50,16 +78,18 @@ public:
   ImpressionistDoc *GetDocument(void);
 
   // Return the name of the brush (not used in this version).
-  char *BrushName(void);
+  const char *BrushName(void);
 
   static int c_nBrushCount;     // How many brushes we have,
   static ImpBrush **c_pBrushes; // and what they are.
+  static ImpBrush *get_brush(char const *const name);
+  static void set_brush(int index, ImpBrush *b);
 
 private:
   ImpressionistDoc *m_pDoc;
 
   // Brush's name (not used in this version).
-  char *m_pBrushName;
+  const char *m_pBrushName;
 };
 
 #endif
