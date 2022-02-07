@@ -1,9 +1,11 @@
 #if !defined(__LINE_BRUSH_H__)
 #define __LINE_BRUSH_H__
 #include "ImpBrush.h"
-#include "gl_helper.hpp"
+#include "gl_helper.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+
+using namespace GLHelper;
 
 class LineBrush : public ImpBrush {
 public:

@@ -7,9 +7,11 @@
 //
 
 #include "pointbrush.h"
-#include "gl_helper.hpp"
+#include "gl_helper.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+
+using namespace GLHelper;
 
 extern float frand();
 
@@ -37,7 +39,7 @@ void PointBrush::BrushMove(const Point source, const Point target) {
   }
 
   gl_draw(GL_POINT, [&] {
-    debugger("%s\n", target.toString());
+    debugger("%d, %d\n", target.x, target.y);
 
     SetColor(source);
     gl_set_point(target);

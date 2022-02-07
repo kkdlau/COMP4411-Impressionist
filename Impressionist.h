@@ -6,7 +6,6 @@
 #include <stdio.h>
 
 #include "ImpBrush.h"
-#include "gl_helper.hpp"
 
 #define TRUE 1
 #define FALSE 0

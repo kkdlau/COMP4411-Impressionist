@@ -16,7 +16,6 @@
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
 
-
 #include "Impressionist.h"
 #include "OriginalView.h"
 #include "PaintView.h"
@@ -39,6 +38,9 @@ public:
   Fl_Choice *m_BrushTypeChoice;
 
   Fl_Slider *m_BrushSizeSlider;
+  Fl_Slider *m_BrushWidthSlider;
+  Fl_Slider *m_BrushAngleSlider;
+  Fl_Slider *m_BrushAlphaSlider;
   Fl_Button *m_ClearCanvasButton;
 
   // Member functions
@@ -53,12 +55,24 @@ public:
   int getSize();
   void setSize(int size);
 
+  int getWidth();
+  void setWidth(int width);
+
+  int getAngle();
+  void setAngle(int angle);
+
+  float getAlpha();
+  void setAlpha(float a);
+
 private:
   ImpressionistDoc
       *m_pDoc; // pointer to document to communicate with the document
 
   // All attributes here
   int m_nSize;
+  int m_nWidth;
+  int m_nAngle;
+  float m_fAlpha;
 
   // Static class members
   static Fl_Menu_Item menuitems[];
@@ -76,7 +90,10 @@ private:
   static void cb_about(Fl_Menu_ *o, void *v);
   static void cb_brushChoice(Fl_Widget *o, void *v);
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);
-  static void cb_sizeSlides(Fl_Widget *o, void *v);
+  static void cb_sizeUpdate(Fl_Widget *o, void *v);
+  static void cb_widthUpdate(Fl_Widget *o, void *v);
+  static void cb_angleUpdate(Fl_Widget *o, void *v);
+  static void cb_alphaUpdate(Fl_Widget *o, void *v);
   static void cb_toggleOriginalView(Fl_Widget *o, void *v);
 };
 

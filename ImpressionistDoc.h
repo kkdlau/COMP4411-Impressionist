@@ -34,6 +34,7 @@ public:
   float getRad();
   char *getImageName(); // get the current image name
   void force_update_canvas();
+  bool outOfRegion(const Point &p) const;
 
   // Attributes
 public:

@@ -15,6 +15,7 @@
 // Include individual brush headers here.
 #include "LineBrush.hpp"
 #include "PointBrush.h"
+#include "gl_helper.h"
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -26,7 +27,10 @@
 
 ImpressionistDoc::ImpressionistDoc() {
   // Set NULL image name as init.
+
   m_imageName[0] = '\0';
+
+  GLHelper::set_doc(this);
 
   m_nWidth = -1;
   m_ucBitmap = NULL;
@@ -75,7 +79,8 @@ void ImpressionistDoc::setBrushType(int type) {
 // Returns the size of the brush.
 //---------------------------------------------------------
 int ImpressionistDoc::getSize() { return m_pUI->getSize(); }
-float ImpressionistDoc::getRad() { return 3.1415 / 6; }
+
+float ImpressionistDoc::getRad() { return m_pUI->getAngle() / 180.0 * M_PI; }
 
 //---------------------------------------------------------
 // Load the specified image
@@ -197,4 +202,9 @@ void ImpressionistDoc::force_update_canvas() {
   m_pUI->m_origView->refresh();
   m_pUI->m_mainWindow->redraw();
 #endif
+}
+
+bool ImpressionistDoc::outOfRegion(const Point &p) const {
+  return !(p.x >= 0 && p.y >= 0 && p.x <= m_nPaintWidth &&
+           p.y <= m_nPaintHeight);
 }
