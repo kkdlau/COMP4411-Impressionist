@@ -76,7 +76,6 @@ public:
 
   static int c_nBrushCount;     // How many brushes we have,
   static ImpBrush **c_pBrushes; // and what they are.
-  static ImpBrush *get_brush(char const *const name);
   static void set_brush(int index, ImpBrush *b);
 
 private:

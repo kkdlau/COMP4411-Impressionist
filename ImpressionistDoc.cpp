@@ -13,9 +13,11 @@
 #include "ImpBrush.h"
 
 // Include individual brush headers here.
+#include "CircleBrush.hpp"
 #include "LineBrush.hpp"
 #include "PointBrush.h"
 #include "gl_helper.h"
+
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -45,7 +47,7 @@ ImpressionistDoc::ImpressionistDoc() {
   // Note: You should implement these 5 brushes.  They are set the same
   // (PointBrush) for now
   ImpBrush::set_brush(BRUSH_LINES, new LineBrush(this, "Lines"));
-  ImpBrush::set_brush(BRUSH_CIRCLES, new PointBrush(this, "Circles"));
+  ImpBrush::set_brush(BRUSH_CIRCLES, new CircleBrush(this, "Circles"));
   ImpBrush::set_brush(BRUSH_SCATTERED_POINTS,
                       new PointBrush(this, "Scattered Points"));
   ImpBrush::set_brush(BRUSH_SCATTERED_LINES,
