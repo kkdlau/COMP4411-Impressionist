@@ -364,7 +364,7 @@ void ImpressionistUI::setAngle(int angle) {
   m_nAngle = angle;
 
   if (angle <= 360)
-    m_BrushWidthSlider->value(m_nAngle);
+    m_BrushAngleSlider->value(m_nAngle);
 }
 
 void ImpressionistUI::setAlpha(float a) {
@@ -484,17 +484,17 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushWidthSlider->align(FL_ALIGN_RIGHT);
   m_BrushWidthSlider->callback(cb_widthUpdate);
 
-  m_BrushWidthSlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Line Angle");
-  m_BrushWidthSlider->user_data((void *)(this));
-  m_BrushWidthSlider->type(FL_HOR_NICE_SLIDER);
-  m_BrushWidthSlider->labelfont(FL_COURIER);
-  m_BrushWidthSlider->labelsize(12);
-  m_BrushWidthSlider->minimum(0);
-  m_BrushWidthSlider->maximum(360);
-  m_BrushWidthSlider->step(1);
-  m_BrushWidthSlider->value(m_nAngle);
-  m_BrushWidthSlider->align(FL_ALIGN_RIGHT);
-  m_BrushWidthSlider->callback(cb_angleUpdate);
+  m_BrushAngleSlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Line Angle");
+  m_BrushAngleSlider->user_data((void *)(this));
+  m_BrushAngleSlider->type(FL_HOR_NICE_SLIDER);
+  m_BrushAngleSlider->labelfont(FL_COURIER);
+  m_BrushAngleSlider->labelsize(12);
+  m_BrushAngleSlider->minimum(0);
+  m_BrushAngleSlider->maximum(360);
+  m_BrushAngleSlider->step(1);
+  m_BrushAngleSlider->value(m_nAngle);
+  m_BrushAngleSlider->align(FL_ALIGN_RIGHT);
+  m_BrushAngleSlider->callback(cb_angleUpdate);
 
   m_BrushAlphaSlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Alpha");
   m_BrushAlphaSlider->user_data(

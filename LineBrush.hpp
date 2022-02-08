@@ -18,13 +18,13 @@ public:
 
     int size = pDoc->getSize();
 
-    glPointSize((float)size);
+    glLineWidth(size);
 
     BrushMove(source, target);
   }
   void BrushMove(const Point source, const Point target) {
     ImpressionistDoc *pDoc = GetDocument();
-    const int half = pDoc->getSize() / 2;
+    const int half = pDoc->m_pUI->getWidth() / 2;
     const float r = pDoc->getRad();
 
     gl_draw_shape(GL_LINES, [&] {
