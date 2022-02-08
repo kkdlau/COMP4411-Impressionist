@@ -4,6 +4,7 @@
 #include "gl_helper.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include <cmath>
 
 using namespace GLHelper;
 
@@ -41,9 +42,11 @@ public:
   void BrushMove(const Point source, const Point target) {
     ImpressionistDoc *pDoc = GetDocument();
     const int half = pDoc->getSize() / 2;
-    for (float x = -half; x <= half; x += frand() * half) {
-      for (float y = -half; y <= half; y += frand() * half) {
-        Point rand = {(int)x, (int)y};
+
+    for (int x = -half; x <= half; x += 1) {
+      for (int y = -half; y <= half; y += 1) {
+        if (frand() <= 0.7) continue;
+        Point rand = {x, y};
         PointBrush::BrushMove(source, rand + target);
       }
     }

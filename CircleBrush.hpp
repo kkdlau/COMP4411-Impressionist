@@ -18,7 +18,10 @@ public:
 
     int size = pDoc->getSize();
 
-    glPointSize((float)size);
+    glPointSize((float)size / 2);
+
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 
     BrushMove(source, target);
   }
@@ -26,20 +29,9 @@ public:
     ImpressionistDoc *pDoc = GetDocument();
     const int radius = pDoc->getSize() / 2;
 
-    // for (float r = 0, PI2 = M_PI * 2; r <= PI2; r += M_PI / 10.0) {
-    //   gl_draw(GL_TRIANGLE_FAN, [&] {
-    //     Point p = target + Point::zero().shift_x(radius).rotate(r);
-    //     gl_set_point(target);
-    //     gl_set_point(Point(p.x, target.y));
-    //     gl_set_point(Point(p.x, p.y));
-    //   });
-    // }
-    gl_draw(GL_POLYGON, [&] {
+    gl_draw(GL_POINTS, [&] {
       SetColor(source);
-      for (float r = 0, PI2 = M_PI * 2; r <= PI2; r += M_PI / 10.0) {
-        Point p = Point(target) + Point::zero().shift_x(radius).rotate(r);
-        gl_set_point(p);
-      }
+      gl_set_point(target);
     });
 
     pDoc->force_update_canvas();

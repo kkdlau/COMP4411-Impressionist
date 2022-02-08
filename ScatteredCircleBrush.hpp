@@ -38,14 +38,12 @@ public:
   void BrushMove(const Point source, const Point target) {
     ImpressionistDoc *pDoc = GetDocument();
     const int half = pDoc->getSize() / 2;
-    for (float x = -half; x <= half; x += frand() * half) {
-      for (float y = -half; y <= half; y += frand() * half) {
+    for (int x = -half; x <= half; x += 1) {
+      for (int y = -half; y <= half; y += 1) {
         if (within_circle(x, y, half)) {
-          debugger("draw");
-          Point rand = {(int)x, (int)y};
-          PointBrush::BrushMove(source, Point{(int)x, (int)y} + target);
-        } else {
-          debugger("gg");
+          if (frand() <= 0.7) continue;
+          Point src = Point{x, y} + target;
+          PointBrush::BrushMove(src, src);
         }
       }
     }

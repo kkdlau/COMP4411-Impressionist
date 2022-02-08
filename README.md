@@ -7,7 +7,6 @@
   - [x] scattered lines
     - scattered brushes should sample from each location they color individually, not just use a single color for each splotch.
   - [x] (filled) circles
-    - [ ] Smoother small circle
   - [x] scattered (filled) circles
 - sliders to control various brush attributes
   - [x] line thickness
