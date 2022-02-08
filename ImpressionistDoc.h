@@ -32,6 +32,7 @@ public:
   int getSize();               // get the UI size
   void setSize(int size);      // set the UI size
   float getRad();
+  float getAlpha();
   char *getImageName(); // get the current image name
   void force_update_canvas();
   bool outOfRegion(const Point &p) const;

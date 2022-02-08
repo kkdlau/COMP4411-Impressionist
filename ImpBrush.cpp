@@ -40,11 +40,13 @@ const char *ImpBrush::BrushName(void) { return m_pBrushName; }
 void ImpBrush::SetColor(const Point source) {
   ImpressionistDoc *pDoc = GetDocument();
 
-  GLubyte color[3];
+  GLubyte color[4];
 
   memcpy(color, pDoc->GetOriginalPixel(source), 3);
+  const float alpha = pDoc->getAlpha();
+  color[3] = (GLubyte)(alpha * 255.0f);
 
-  glColor3ubv(color);
+  glColor4ubv(color);
 }
 
 void ImpBrush::set_brush(int index, ImpBrush *b) {
