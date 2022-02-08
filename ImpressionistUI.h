@@ -69,10 +69,10 @@ private:
       *m_pDoc; // pointer to document to communicate with the document
 
   // All attributes here
-  int m_nSize;
-  int m_nWidth;
-  int m_nAngle;
-  float m_fAlpha;
+  int m_nSize = 10;
+  int m_nWidth = 1;
+  int m_nAngle = 0;
+  float m_fAlpha = 1.0;
 
   // Static class members
   static Fl_Menu_Item menuitems[];

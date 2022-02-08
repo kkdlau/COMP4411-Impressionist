@@ -16,8 +16,10 @@
 #include "CircleBrush.hpp"
 #include "LineBrush.hpp"
 #include "PointBrush.h"
+#include "ScatteredCircleBrush.hpp"
+#include "ScatteredLineBrush.hpp"
+#include "ScatteredPointBrush.hpp"
 #include "gl_helper.h"
-
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -49,11 +51,11 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::set_brush(BRUSH_LINES, new LineBrush(this, "Lines"));
   ImpBrush::set_brush(BRUSH_CIRCLES, new CircleBrush(this, "Circles"));
   ImpBrush::set_brush(BRUSH_SCATTERED_POINTS,
-                      new PointBrush(this, "Scattered Points"));
+                      new ScatteredPointBrush(this, "Scattered Points"));
   ImpBrush::set_brush(BRUSH_SCATTERED_LINES,
-                      new PointBrush(this, "Scattered Lines"));
+                      new ScatteredLineBrush(this, "Scattered Lines"));
   ImpBrush::set_brush(BRUSH_SCATTERED_CIRCLES,
-                      new PointBrush(this, "Scattered Circles"));
+                      new ScatteredCircleBrush(this, "Scattered Circles"));
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];

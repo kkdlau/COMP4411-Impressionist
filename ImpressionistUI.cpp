@@ -441,13 +441,6 @@ ImpressionistUI::ImpressionistUI() {
   Fl_Group::current()->resizable(group);
   m_mainWindow->end();
 
-  // init values
-
-  m_nSize = 10;
-  m_nWidth = 1;
-  m_nAngle = 0;
-  m_fAlpha = 1.0;
-
   // brush dialog definition
   m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
   // Add a brush type choice to the dialog

@@ -39,6 +39,10 @@ public:
     return Point(p1.x + p2.x, p1.y + p2.y);
   }
 
+  friend Point operator-(const Point &p1, const Point &p2) {
+    return Point(p1.x - p2.x, p1.y - p2.y);
+  }
+
   const char *toString() const {
     return (std::to_string(x) + ", " + std::to_string(y)).c_str();
   }

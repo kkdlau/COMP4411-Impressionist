@@ -49,12 +49,23 @@ static void gl_draw(int drawing_mode, function<void()> drawing_funcs) {
 static void gl_set_point(const Point &p) {
   if (pDoc && pDoc->outOfRegion(p)) {
     invalid = true;
-    debugger("drawing is disable.");
+    // debugger("drawing is disable.");
   }
   if (invalid)
     return;
   glVertex2f(p.x, p.y);
 }
+
+static void r2_generator(float start, float end,
+                         function<void(float, float)> handler,
+                         function<float()> step_gen) {
+  for (float x = -start; x <= end; x += step_gen()) {
+    for (float y = -start; y <= end; y += step_gen()) {
+      handler(x, y);
+    }
+  }
+}
+
 } // namespace GLHelper
 
 #endif // __GL_HELPER__
