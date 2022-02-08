@@ -38,7 +38,8 @@ void PointBrush::BrushMove(const Point source, const Point target) {
     printf("PointBrush::BrushMove  document is NULL\n");
     return;
   }
-  glPointSize(1);
+  const int size = pDoc->getSize();
+  glPointSize(size);
 
   gl_draw(GL_POINTS, [&] {
     debugger("%d, %d\n", target.x, target.y);
