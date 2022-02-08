@@ -26,7 +26,15 @@ public:
     ImpressionistDoc *pDoc = GetDocument();
     const int radius = pDoc->getSize() / 2;
 
-    gl_draw(GL_LINE_LOOP, [&] {
+    // for (float r = 0, PI2 = M_PI * 2; r <= PI2; r += M_PI / 10.0) {
+    //   gl_draw(GL_TRIANGLE_FAN, [&] {
+    //     Point p = target + Point::zero().shift_x(radius).rotate(r);
+    //     gl_set_point(target);
+    //     gl_set_point(Point(p.x, target.y));
+    //     gl_set_point(Point(p.x, p.y));
+    //   });
+    // }
+    gl_draw(GL_POLYGON, [&] {
       SetColor(source);
       for (float r = 0, PI2 = M_PI * 2; r <= PI2; r += M_PI / 10.0) {
         Point p = Point(target) + Point::zero().shift_x(radius).rotate(r);
