@@ -39,7 +39,7 @@ void PointBrush::BrushMove(const Point source, const Point target) {
     return;
   }
 
-  gl_draw(GL_POINTS, [&] {
+  gl_draw_shape(GL_POINTS, [&] {
     debugger("%d, %d\n", target.x, target.y);
     SetColor(source);
     gl_set_point(target);
