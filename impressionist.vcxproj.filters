@@ -68,6 +68,7 @@
     <ClInclude Include="PointBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gl_helper.h">
     <ClInclude Include="ScatteredPointBrush.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
