@@ -37,6 +37,13 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
   m_nWindowHeight = h;
 }
 
+static unsigned char *paint;
+
+void backup(void *p) {
+  paint = new unsigned char[pDoc->m_nPaintWidth * pDoc->m_nPaintHeight * 3];
+  memcpy(paint, p, pDoc->m_nPaintWidth * pDoc->m_nPaintHeight * 3);
+}
+
 void PaintView::draw() {
 #ifndef MESA
   // To avoid flicker on some machines.
@@ -99,9 +106,10 @@ void PaintView::draw() {
     case LEFT_MOUSE_DOWN:
       m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
-    case LEFT_MOUSE_DRAG:
+    case LEFT_MOUSE_DRAG: {
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
       break;
+    }
     case LEFT_MOUSE_UP: {
       m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
 
@@ -122,10 +130,11 @@ void PaintView::draw() {
       break;
     }
     case RIGHT_MOUSE_UP: {
-      Point diff = line_end - line_start;
+      Point diff = target - line_start;
       m_pDoc->m_pUI->setAngle(
           (int)(tan((float)diff.y / diff.x) / (M_PI * 2) * 360));
       RestoreContent();
+
       break;
     }
 
@@ -200,7 +209,7 @@ void PaintView::resizeWindow(int width, int height) {
 void PaintView::SaveCurrentContent() {
   // Tell openGL to read from the front buffer when capturing
   // out paint strokes
-  glReadBuffer(GL_FRONT);
+  glReadBuffer(GL_FRONT_AND_BACK);
 
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_PACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
@@ -224,15 +233,15 @@ void PaintView::RestoreContent() {
 }
 
 void PaintView::draw_line(GLubyte r, GLubyte g, GLubyte b) {
-  debugger("draw");
-  glPointSize(3.0f);
-  gl_draw_shape(GL_LINES, [&] {
-    const GLubyte color[3] = {r, g, b};
-    glColor3ubv(color);
 
-    gl_set_point(line_start);
-    gl_set_point(line_end);
-  });
+  glLineWidth(3.0f);
+  glEnable(GL_LINE_SMOOTH);
+  glBegin(GL_LINES);
+  const GLubyte color[3] = {r, g, b};
+  glColor3ubv(color);
+  gl_set_point(line_start);
+  gl_set_point(line_end);
+  glEnd();
 
   pDoc->force_update_canvas();
 }
