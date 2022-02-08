@@ -3,21 +3,22 @@
 ## Basic Requirment
 
 - Implement 5 different brush types
-  - [ ] single line
-  - [ ] scattered lines
+  - [x] single line
+  - [x] scattered lines
     - scattered brushes should sample from each location they color individually, not just use a single color for each splotch.
-  - [ ] (filled) circles
-  - [ ] cattered (filled) circles
+  - [x] (filled) circles
+    - [ ] Smoother small circle
+  - [x] scattered (filled) circles
 - sliders to control various brush attributes
-  - [ ] line thickness
-  - [ ] brush angle
+  - [x] line thickness
+  - [x] brush angle
 - control the brush direction: The stroke direction should be controlled **four different ways**. You can use a radio box to allow the user to select which method to use.
-  - [ ] slider value
+  - [x] slider value
   - [ ] right mouse button to drag out a direction line
   - [ ] using the direction of the cursor movement
   - [ ] using directions that are perpendicular to the gradient of the image
 - [ ] Allow the user to change the opacity (alpha value) of the brush stroke
-- [ ] An alpha value slider should be added to the controls window.
+- [x] An alpha value slider should be added to the controls window.
 ## Bonus
 
 > W: Whistle, B: Bell

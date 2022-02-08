@@ -28,7 +28,8 @@ public:
     for (float x = -half; x <= half; x += frand() * half) {
       for (float y = -half; y <= half; y += frand() * half) {
         Point rand = {(int)x, (int)y};
-        LineBrush::BrushMove(source, Point{(int)x, (int)y} + target);
+        Point src = Point{(int)x, (int)y} + target;
+        LineBrush::BrushMove(src, src);
       }
     }
   }

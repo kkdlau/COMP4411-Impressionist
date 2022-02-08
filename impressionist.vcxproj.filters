@@ -69,6 +69,22 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gl_helper.h">
+    <ClInclude Include="ScatteredPointBrush.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScatteredLineBrush.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScatteredCircleBrush.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LineBrush.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleBrush.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_inc.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
