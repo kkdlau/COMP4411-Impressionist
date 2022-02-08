@@ -7,6 +7,7 @@
 #define __GL__INC_H__
 
 #if defined(__APPLE__)
+#include <FL/glut.H>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #else
@@ -14,6 +15,7 @@
 //
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <GL/glut.H>
 #endif
 
 #endif // __GL__INC_H__

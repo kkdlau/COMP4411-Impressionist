@@ -358,6 +358,9 @@ void ImpressionistUI::setWidth(int width) {
 }
 
 void ImpressionistUI::setAngle(int angle) {
+  if (angle < 0) {
+    angle += 360;
+  }
   m_nAngle = angle;
 
   if (angle <= 360)

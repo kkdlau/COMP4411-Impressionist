@@ -27,7 +27,7 @@ public:
     const int half = pDoc->getSize() / 2;
     const float r = pDoc->getRad();
 
-    gl_draw(GL_LINES, [&] {
+    gl_draw_shape(GL_LINES, [&] {
       SetColor(source);
       Point p1 = target + Point::zero().shift_x(-half).rotate(r);
       Point p2 = target + Point::zero().shift_x(half).rotate(r);

@@ -19,7 +19,8 @@ using namespace std;
 /**
  * @brief variable for deciding give up drawing or not.
  *
- * Each time when you call gl_draw, it always assume the drawing is "legal".
+ * Each time when you call gl_draw_shape, it always assume the drawing is
+ * "legal".
  *
  * However, sometimes the drawing is considered as "illagel", for example, out
  * of boundary drawing.
@@ -37,7 +38,7 @@ extern ImpressionistDoc *pDoc;
 
 static void inline set_doc(ImpressionistDoc *doc) { pDoc = doc; }
 
-static void gl_draw(int drawing_mode, function<void()> drawing_funcs) {
+static void gl_draw_shape(int drawing_mode, function<void()> drawing_funcs) {
   invalid = false;
   glBegin(drawing_mode);
 

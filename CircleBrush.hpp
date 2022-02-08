@@ -29,7 +29,7 @@ public:
     ImpressionistDoc *pDoc = GetDocument();
     const int radius = pDoc->getSize() / 2;
 
-    gl_draw(GL_POINTS, [&] {
+    gl_draw_shape(GL_POINTS, [&] {
       SetColor(source);
       gl_set_point(target);
     });

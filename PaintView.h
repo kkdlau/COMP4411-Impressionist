@@ -15,12 +15,16 @@
 #else
 #include <GL/glu.h>
 #endif
+#include "ImpBrush.h"
 #include <stdlib.h>
 
 class ImpressionistDoc;
 
 class PaintView : public Fl_Gl_Window {
 public:
+  Point line_start;
+  Point line_end;
+
   PaintView(int x, int y, int w, int h, const char *l);
   void draw();
   int handle(int event);
@@ -32,6 +36,8 @@ public:
   void SaveCurrentContent();
 
   void RestoreContent();
+
+  void draw_line(GLubyte r, GLubyte g, GLubyte b);
 
   ImpressionistDoc *m_pDoc;
 
