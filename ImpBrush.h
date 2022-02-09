@@ -12,6 +12,8 @@
 #include <string>
 #include <typeinfo>
 
+extern float frand();
+
 // Each brush type has an associated constant.
 enum {
   BRUSH_POINTS = 0,
@@ -72,6 +74,10 @@ public:
   }
 
   static Point zero() { return Point(0, 0); }
+  static Point rand(float min, float max) {
+    const float span = max - min;
+    return Point(frand() * span + min, frand() * span + min);
+  }
 };
 
 #define FOR_EACH_BRUSH(v) for (short v = 0; i < ImpBrush::c_nBrushCount; v++)

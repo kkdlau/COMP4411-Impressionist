@@ -1,6 +1,6 @@
 #if !defined(__SCATTERED_CIRCLE_BRUSH_H_)
 #define __SCATTERED_CIRCLE_BRUSH_H_
-#include "PointBrush.h"
+#include "CircleBrush.hpp"
 #include "gl_helper.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
@@ -11,10 +11,10 @@ using namespace std;
 
 extern float frand();
 
-class ScatteredCircleBrush : public PointBrush {
+class ScatteredCircleBrush : public CircleBrush {
 public:
   ScatteredCircleBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
-      : PointBrush(pDoc, name) {}
+      : CircleBrush(pDoc, name) {}
 
   void BrushBegin(const Point source, const Point target) {
     glPointSize(1);
@@ -38,14 +38,11 @@ public:
   void BrushMove(const Point source, const Point target) {
     ImpressionistDoc *pDoc = GetDocument();
     const int half = pDoc->getSize() / 2;
-    for (int x = -half; x <= half; x += 1) {
-      for (int y = -half; y <= half; y += 1) {
-        if (within_circle(x, y, half)) {
-          if (frand() <= 0.7) continue;
-          Point src = Point{x, y} + target;
-          PointBrush::BrushMove(src, src);
-        }
-      }
+    const int num_points = 3;
+
+    for (int i = 0; i < num_points; i++) {
+      Point t = target + Point::rand(-half, half);
+      CircleBrush::BrushMove(t, t);
     }
   }
 };
