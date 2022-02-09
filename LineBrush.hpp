@@ -1,5 +1,6 @@
 #if !defined(__LINE_BRUSH_H__)
 #define __LINE_BRUSH_H__
+#include "ImageUtils.hpp"
 #include "ImpBrush.h"
 #include "gl_helper.h"
 #include "impressionistDoc.h"

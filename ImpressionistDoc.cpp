@@ -88,7 +88,7 @@ int ImpressionistDoc::getWidth() { return m_pUI->getWidth(); }
 
 float ImpressionistDoc::getRad() { return m_pUI->getAngle() / 180.0 * M_PI; }
 
-float ImpressionistDoc::getAlpha() { return m_pUI->getAlpha();  }
+float ImpressionistDoc::getAlpha() { return m_pUI->getAlpha(); }
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is
@@ -196,6 +196,20 @@ GLubyte *ImpressionistDoc::GetOriginalPixel(int x, int y) {
 //----------------------------------------------------------------
 GLubyte *ImpressionistDoc::GetOriginalPixel(const Point p) {
   return GetOriginalPixel(p.x, p.y);
+}
+
+vector<GLubyte *> ImpressionistDoc::getNeighbors(const Point p) {
+  getNeighbors(p.x, p.y);
+}
+vector<GLubyte *> ImpressionistDoc::getNeighbors(int x, int y) {
+  vector<GLubyte *> result = {};
+  for (int _x = x - 1; _x <= x + 1; _x++) {
+    for (int _y = y - 1; _y <= y + 1; _y++) {
+      result.push_back(GetOriginalPixel(_x, _y));
+    }
+  }
+
+  return result;
 }
 
 void ImpressionistDoc::toggleOriginalView() {

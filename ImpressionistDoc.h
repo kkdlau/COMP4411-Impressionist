@@ -9,6 +9,8 @@
 
 #include "bitmap.h"
 #include "impressionist.h"
+#include <vector>
+using namespace std;
 
 class ImpressionistUI;
 
@@ -61,6 +63,9 @@ public:
   GLubyte *GetOriginalPixel(int x, int y);
   // Get the color of the original picture at the specified point
   GLubyte *GetOriginalPixel(const Point p);
+
+  vector<GLubyte *> getNeighbors(const Point p);
+  vector<GLubyte *> getNeighbors(int x, int y);
 
 private:
   char m_imageName[256];

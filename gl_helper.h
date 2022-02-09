@@ -49,15 +49,17 @@ static void gl_draw_shape(int drawing_mode, function<void()> drawing_funcs) {
   glEnd();
 }
 
-static void gl_set_point(const Point &p) {
-  if (pDoc && pDoc->outOfRegion(p)) {
+static void gl_set_point(double x, double y) {
+  if (pDoc && pDoc->outOfRegion(Point{(int)x, (int)y})) {
     invalid = true;
     debugger("drawing is disable.");
   }
   if (invalid)
     return;
-  glVertex2d(p.x, p.y);
+  glVertex2d(x, y);
 }
+
+static void gl_set_point(const Point &p) { gl_set_point(p.x, p.y); }
 
 static void r2_generator(float start, float end,
                          function<void(float, float)> handler,

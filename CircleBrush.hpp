@@ -20,18 +20,20 @@ public:
 
     glPointSize((float)size);
 
-    glEnable(GL_POINT_SMOOTH);
-    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-
     BrushMove(source, target);
   }
   void BrushMove(const Point source, const Point target) {
     ImpressionistDoc *pDoc = GetDocument();
-    const int radius = pDoc->getSize() / 2;
+    const double radius = pDoc->getSize() / 2.0;
 
-    gl_draw_shape(GL_POINTS, [&] {
+    gl_draw_shape(GL_POLYGON, [&] {
       SetColor(source);
-      gl_set_point(target);
+      for (double i = 0; i <= 2 * M_PI; i += 0.1) {
+        double dx = cos(i) * radius;
+        double dy = sin(i) * radius;
+
+        gl_set_point(target.x + dx, target.y + dy);
+      }
     });
 
     pDoc->force_update_canvas();
