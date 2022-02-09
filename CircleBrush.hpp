@@ -16,9 +16,9 @@ public:
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
 
-    int width = pDoc->m_pUI->getWidth();
+    int size = pDoc->m_pUI->getSize();
 
-    glPointSize((float)width);
+    glPointSize((float)size);
 
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
