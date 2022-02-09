@@ -44,6 +44,15 @@ void backup(void *p) {
   memcpy(paint, p, pDoc->m_nPaintWidth * pDoc->m_nPaintHeight * 3);
 }
 
+void abort_event(int &event, ImpressionistDoc &doc) {
+  StrokeDirection d = doc.m_pUI->get_direction();
+  if (d != SLIDER_RIGHT_MOUSE) {
+    // abort right click event
+    if (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP)
+      event = 0;
+  }
+}
+
 void PaintView::draw() {
 #ifndef MESA
   // To avoid flicker on some machines.
@@ -93,15 +102,15 @@ void PaintView::draw() {
   }
 
   if (m_pDoc->m_ucPainting && isAnEvent) {
-
     // Clear it after processing.
     isAnEvent = 0;
+
+    abort_event(eventToDo, *m_pDoc);
 
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
     Point target(coord.x, m_nWindowHeight - coord.y);
 
     // This is the event handler
-    debugger("%d", eventToDo);
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
       m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
@@ -130,11 +139,8 @@ void PaintView::draw() {
       break;
     }
     case RIGHT_MOUSE_UP: {
-      Point diff = target - line_start;
-      m_pDoc->m_pUI->setAngle(
-          (int)(tan((float)diff.y / diff.x) / (M_PI * 2) * 360));
+      m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
       RestoreContent();
-
       break;
     }
 

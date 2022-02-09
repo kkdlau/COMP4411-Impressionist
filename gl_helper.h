@@ -69,6 +69,8 @@ static void r2_generator(float start, float end,
   }
 }
 
+static float rad_to_deg(const float rad) { return rad / (2 * M_PI) * 360; }
+
 } // namespace GLHelper
 
 #endif // __GL_HELPER__
