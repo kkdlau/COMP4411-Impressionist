@@ -50,26 +50,16 @@ static void gl_draw_shape(int drawing_mode, function<void()> drawing_funcs) {
 }
 
 static void gl_set_point(double x, double y) {
-  if (pDoc && pDoc->outOfRegion(Point{(int)x, (int)y})) {
-    invalid = true;
-    debugger("drawing is disable.");
-  }
-  if (invalid)
-    return;
+  // if (pDoc && pDoc->outOfRegion(Point{(int)x, (int)y})) {
+  //   invalid = true;
+  //   debugger("drawing is disable.");
+  // }
+  // if (invalid)
+  //   return;
   glVertex2d(x, y);
 }
 
 static void gl_set_point(const Point &p) { gl_set_point(p.x, p.y); }
-
-static void r2_generator(float start, float end,
-                         function<void(float, float)> handler,
-                         function<float()> step_gen) {
-  for (float x = -start; x <= end; x += step_gen()) {
-    for (float y = -start; y <= end; y += step_gen()) {
-      handler(x, y);
-    }
-  }
-}
 
 static float rad_to_deg(const float rad) { return rad / (2 * M_PI) * 360; }
 

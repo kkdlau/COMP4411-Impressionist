@@ -15,6 +15,7 @@
 #else
 #include <GL/glu.h>
 #endif
+#include "Image.hpp"
 #include "ImpBrush.h"
 #include <stdlib.h>
 

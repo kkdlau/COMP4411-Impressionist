@@ -34,7 +34,9 @@ public:
     float r = pDoc->getRad();
     switch (pDoc->m_pUI->get_direction()) {
     case GRADIENT_DIRECTION: {
-      // TODO: implement gradient direction
+      auto result =
+          ImageUtils::sobel(pDoc->m_pUI->m_origView->img, target.y, target.x);
+      r = get<2>(result);
     } break;
 
     case BRUSH_DIRECTION: {

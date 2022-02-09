@@ -1,48 +1,35 @@
 #if !defined(__IMAGE_UTILS__)
 #define __IMAGE_UTILS__
+#include "Image.hpp"
 #include <tuple>
 #include <vector>
 
 using namespace std;
 
-class ImageUtils {
-  static const short sobel_x[3][3];
+namespace ImageUtils {
+static const short sobel_x[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
 
-  static const short sobel_y[3][3];
-  static ImageUtils *instance;
+static const short sobel_y[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
 
-  ImageUtils() {}
-
-public:
-  static ImageUtils &I() {
-    if (instance == nullptr)
-      instance = new ImageUtils();
-
-    return *instance;
-  }
-  tuple<int, int, float> sobel(const vector<vector<GLubyte *>> &colors) {
-    int gx = .0f;
-    int gy = .0f;
-
-    for (int y = 0; y < 3; y++) {
-      for (int x = 0; x < 3; x++) {
-        GLubyte *color = colors[y][x];
-        int grey = (int)(0.2126 * color[0] / 255.0 + 0.7152 * color[1] / 255.0 +
-                         0.0722 * color[2] / 255.0);
-        gx += grey * sobel_x[y][x];
-        gy += grey * sobel_y[y][x];
+static tuple<float, float, float> sobel(Image &img, int y, int x) {
+  float gx = 0;
+  float gy = 0;
+  y--;
+  x--;
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      if (img.valid_point(x + j, y + i)) {
+        auto colors = img(x + j, y + i);
+        float grey =
+            0.299F * colors[0] + 0.587F * colors[1] + 0.114F * colors[2];
+        gx += sobel_x[i][j] * grey;
+        gx += sobel_y[i][j] * grey;
       }
     }
-
-    return {gx, gy, atan2(gy, gx)};
   }
-  ~ImageUtils() {}
-};
 
-const short ImageUtils::sobel_x[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
-
-const short ImageUtils::sobel_y[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
-
-ImageUtils *ImageUtils::instance = nullptr;
+  return {gx, gy, atan2(gy, gx)};
+}
+} // namespace ImageUtils
 
 #endif // __IMAGE_UTILS__

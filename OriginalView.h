@@ -21,7 +21,9 @@
 
 #include <stdlib.h>
 
+#include "Image.hpp"
 #include "ImpBrush.h"
+
 
 class ImpressionistDoc;
 
@@ -35,6 +37,7 @@ public:
   void resizeWindow(int width, int height);
 
   ImpressionistDoc *m_pDoc;
+  Image img;
 
 private:
   int m_nWindowWidth, m_nWindowHeight;

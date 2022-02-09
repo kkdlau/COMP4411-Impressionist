@@ -117,6 +117,7 @@ int ImpressionistDoc::loadImage(char *iname) {
     delete[] m_ucPainting;
 
   m_ucBitmap = data;
+  m_pUI->m_origView->img.set(m_ucBitmap, width, height);
 
   // allocate space for draw view
   m_ucPainting = new unsigned char[width * height * 3];
