@@ -253,6 +253,16 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
   int type = (int)(size_t)v;
 
   pDoc->setBrushType(type);
+  switch (type) {
+  case 0: case 2: case 3: case 5:
+      pUI->m_BrushWidthSlider->deactivate();
+      pUI->m_BrushAngleSlider->deactivate();
+      break;
+  case 1: case 4:
+      pUI->m_BrushWidthSlider->activate();
+      pUI->m_BrushAngleSlider->activate();
+      break;
+  }
 }
 
 //------------------------------------------------------------
@@ -371,7 +381,7 @@ void ImpressionistUI::setAlpha(float a) {
   m_fAlpha = a;
 
   if (a <= 1.0)
-    m_BrushWidthSlider->value(m_fAlpha);
+    m_BrushAlphaSlider->value(m_fAlpha);
 }
 
 // Main menu definition
@@ -483,6 +493,7 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushWidthSlider->value(m_nWidth);
   m_BrushWidthSlider->align(FL_ALIGN_RIGHT);
   m_BrushWidthSlider->callback(cb_widthUpdate);
+  m_BrushWidthSlider->deactivate(); // match Point as default brush
 
   m_BrushAngleSlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Line Angle");
   m_BrushAngleSlider->user_data((void *)(this));
@@ -495,6 +506,7 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushAngleSlider->value(m_nAngle);
   m_BrushAngleSlider->align(FL_ALIGN_RIGHT);
   m_BrushAngleSlider->callback(cb_angleUpdate);
+  m_BrushAngleSlider->deactivate(); // match Point as default brush
 
   m_BrushAlphaSlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Alpha");
   m_BrushAlphaSlider->user_data(
