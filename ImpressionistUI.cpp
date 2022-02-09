@@ -550,6 +550,6 @@ ImpressionistUI::ImpressionistUI() {
 }
 
 StrokeDirection ImpressionistUI::get_direction() { return m_direction; }
-StrokeDirection ImpressionistUI::set_direction(StrokeDirection d) {
+void ImpressionistUI::set_direction(StrokeDirection d) {
   m_StrokeDirection->value(d);
 }

@@ -66,7 +66,7 @@ public:
   void setAlpha(float a);
 
   StrokeDirection get_direction();
-  StrokeDirection set_direction(StrokeDirection d);
+  void set_direction(StrokeDirection d);
 
 private:
   ImpressionistDoc
