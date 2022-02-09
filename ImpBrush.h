@@ -23,6 +23,13 @@ enum {
   NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
+enum StrokeDirection {
+  SLIDER_RIGHT_MOUSE,
+  GRADIENT_DIRECTION,
+  BRUSH_DIRECTION,
+  NUM_STROKE_DIRECTION_METHODS
+};
+
 class ImpressionistDoc; // Pre-declaring class
 
 class Point {
@@ -41,6 +48,16 @@ public:
 
   friend Point operator-(const Point &p1, const Point &p2) {
     return Point(p1.x - p2.x, p1.y - p2.y);
+  }
+
+  /**
+   * @brief Point division operation.
+   *
+   * This function will return the radian by calculating tan((p2.y - p1.y) /
+   * (p2.x - p1.x)).
+   */
+  friend float operator/(const Point &p1, const Point &p2) {
+    return atan2((float)(p2.y - p1.y), (float)(p2.x - p1.x));
   }
 
   const char *toString() const {
@@ -71,6 +88,10 @@ public:
 
   // according to the source image and the position, determine the draw color
   void SetColor(const Point source);
+
+  // TODO: implement all UI enable / disable business logic in here.
+  virtual void select() {}
+  virtual void disselect() {}
 
   // get Doc to communicate with it
   ImpressionistDoc *GetDocument(void);

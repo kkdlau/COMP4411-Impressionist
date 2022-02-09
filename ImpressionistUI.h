@@ -36,6 +36,7 @@ public:
   // for brush dialog
   Fl_Window *m_brushDialog;
   Fl_Choice *m_BrushTypeChoice;
+  Fl_Choice *m_StrokeDirection;
 
   Fl_Slider *m_BrushSizeSlider;
   Fl_Slider *m_BrushWidthSlider;
@@ -64,6 +65,9 @@ public:
   float getAlpha();
   void setAlpha(float a);
 
+  StrokeDirection get_direction();
+  StrokeDirection set_direction(StrokeDirection d);
+
 private:
   ImpressionistDoc
       *m_pDoc; // pointer to document to communicate with the document
@@ -73,10 +77,12 @@ private:
   int m_nWidth = 1;
   int m_nAngle = 0;
   float m_fAlpha = 1.0;
+  StrokeDirection m_direction = SLIDER_RIGHT_MOUSE;
 
   // Static class members
   static Fl_Menu_Item menuitems[];
   static Fl_Menu_Item brushTypeMenu[NUM_BRUSH_TYPE + 1];
+  static Fl_Menu_Item strokeDirectionMenu[NUM_STROKE_DIRECTION_METHODS + 1];
 
   static ImpressionistUI *whoami(Fl_Menu_ *o);
 
@@ -89,6 +95,7 @@ private:
   static void cb_exit(Fl_Menu_ *o, void *v);
   static void cb_about(Fl_Menu_ *o, void *v);
   static void cb_brushChoice(Fl_Widget *o, void *v);
+  static void cb_strokeDirectionChoice(Fl_Widget *o, void *v);
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);
   static void cb_sizeUpdate(Fl_Widget *o, void *v);
   static void cb_widthUpdate(Fl_Widget *o, void *v);

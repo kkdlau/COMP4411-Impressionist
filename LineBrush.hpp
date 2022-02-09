@@ -4,10 +4,13 @@
 #include "gl_helper.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include <cmath>
 
 using namespace GLHelper;
 
 class LineBrush : public ImpBrush {
+  Point last;
+
 public:
   LineBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
@@ -16,6 +19,8 @@ public:
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
 
+    last = target;
+    int size = pDoc->getSize();
     int width = pDoc->getWidth();
 
     glLineWidth(width);
@@ -24,21 +29,33 @@ public:
   }
   void BrushMove(const Point source, const Point target) {
     ImpressionistDoc *pDoc = GetDocument();
-    const int half = pDoc->m_pUI->getSize() / 2;
-    const float r = pDoc->getRad();
+    const int half = pDoc->m_pUI->getWidth() / 2;
+    float r = pDoc->getRad();
+    switch (pDoc->m_pUI->get_direction()) {
+    case GRADIENT_DIRECTION: {
+      // TODO: implement gradient direction
+    } break;
+
+    case BRUSH_DIRECTION: {
+      r = target / last;
+    } break;
+    }
+
+    if (isnan(r))
+      return;
 
     gl_draw_shape(GL_LINES, [&] {
       SetColor(source);
       Point p1 = target + Point::zero().shift_x(-half).rotate(r);
       Point p2 = target + Point::zero().shift_x(half).rotate(r);
 
-      debugger(p1.toString());
-      debugger(p2.toString());
       gl_set_point(p1);
       gl_set_point(p2);
     });
 
     pDoc->force_update_canvas();
+
+    last = target;
   }
   void BrushEnd(const Point source, const Point target) {}
 };

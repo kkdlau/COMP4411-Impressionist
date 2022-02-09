@@ -265,6 +265,11 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
   }
 }
 
+void ImpressionistUI::cb_strokeDirectionChoice(Fl_Widget *o, void *v) {
+  ImpressionistUI *pUI = ((ImpressionistUI *)(o->user_data()));
+  pUI->m_direction = (StrokeDirection)(size_t)v;
+}
+
 //------------------------------------------------------------
 // Clears the paintview canvas.
 // Called by the UI when the clear canvas button is pushed
@@ -423,6 +428,19 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_SCATTERED_CIRCLES},
     {0}};
 
+Fl_Menu_Item
+    ImpressionistUI::strokeDirectionMenu[NUM_STROKE_DIRECTION_METHODS + 1] = {
+        {"Slider/RIght Mouse", FL_ALT + 's',
+         (Fl_Callback *)ImpressionistUI::cb_strokeDirectionChoice,
+         (void *)SLIDER_RIGHT_MOUSE},
+        {"Gradient", FL_ALT + 'g',
+         (Fl_Callback *)ImpressionistUI::cb_strokeDirectionChoice,
+         (void *)GRADIENT_DIRECTION},
+        {"Brush Direction", FL_ALT + 'b',
+         (Fl_Callback *)ImpressionistUI::cb_strokeDirectionChoice,
+         (void *)BRUSH_DIRECTION},
+        {0}};
+
 //----------------------------------------------------
 // Constructor.  Creates all of the widgets.
 // Add new widgets here
@@ -462,6 +480,13 @@ ImpressionistUI::ImpressionistUI() {
       (void *)(this)); // record self to be used by static callback functions
   m_BrushTypeChoice->menu(brushTypeMenu);
   m_BrushTypeChoice->callback(cb_brushChoice);
+
+  // stroke direction
+  m_StrokeDirection = new Fl_Choice(115, 40, 150, 25, "&Stroke Direction");
+  m_StrokeDirection->user_data(
+      (void *)(this)); // record self to be used by static callback functions
+  m_StrokeDirection->menu(strokeDirectionMenu);
+  m_StrokeDirection->callback(cb_strokeDirectionChoice);
 
   m_ClearCanvasButton = new Fl_Button(240, 10, 150, 25, "&Clear Canvas");
   m_ClearCanvasButton->user_data((void *)(this));
@@ -522,4 +547,9 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushAlphaSlider->callback(cb_alphaUpdate);
 
   m_brushDialog->end();
+}
+
+StrokeDirection ImpressionistUI::get_direction() { return m_direction; }
+StrokeDirection ImpressionistUI::set_direction(StrokeDirection d) {
+  m_StrokeDirection->value(d);
 }
