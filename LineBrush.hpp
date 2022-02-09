@@ -21,8 +21,9 @@ public:
 
     last = target;
     int size = pDoc->getSize();
+    int width = pDoc->getWidth();
 
-    glLineWidth(size);
+    glLineWidth(width);
 
     BrushMove(source, target);
   }
