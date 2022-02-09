@@ -84,6 +84,8 @@ void ImpressionistDoc::setBrushType(int type) {
 //---------------------------------------------------------
 int ImpressionistDoc::getSize() { return m_pUI->getSize(); }
 
+int ImpressionistDoc::getWidth() { return m_pUI->getWidth(); }
+
 float ImpressionistDoc::getRad() { return m_pUI->getAngle() / 180.0 * M_PI; }
 
 float ImpressionistDoc::getAlpha() { return m_pUI->getAlpha();  }
