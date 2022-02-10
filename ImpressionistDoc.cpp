@@ -203,7 +203,7 @@ GLubyte *ImpressionistDoc::GetOriginalPixel(const Point p) {
 }
 
 vector<GLubyte *> ImpressionistDoc::getNeighbors(const Point p) {
-  getNeighbors(p.x, p.y);
+  return getNeighbors(p.x, p.y);
 }
 vector<GLubyte *> ImpressionistDoc::getNeighbors(int x, int y) {
   vector<GLubyte *> result = {};
