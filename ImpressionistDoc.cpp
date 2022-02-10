@@ -34,8 +34,6 @@ ImpressionistDoc::ImpressionistDoc() {
 
   m_imageName[0] = '\0';
 
-  GLHelper::set_doc(this);
-
   m_nWidth = -1;
   m_ucBitmap = NULL;
   m_ucPainting = NULL;
@@ -59,12 +57,16 @@ ImpressionistDoc::ImpressionistDoc() {
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
+  GLHelper::set_doc(this);
 }
 
 //---------------------------------------------------------
 // Set the current UI
 //---------------------------------------------------------
-void ImpressionistDoc::setUI(ImpressionistUI *ui) { m_pUI = ui; }
+void ImpressionistDoc::setUI(ImpressionistUI *ui) {
+  m_pUI = ui;
+  GLHelper::set_ui(m_pUI);
+}
 
 //---------------------------------------------------------
 // Returns the active picture/painting name

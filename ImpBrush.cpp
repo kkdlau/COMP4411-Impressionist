@@ -42,7 +42,12 @@ void ImpBrush::SetColor(const Point source) {
 
   GLubyte color[4];
 
-  memcpy(color, pDoc->GetOriginalPixel(source), 3);
+  auto pixel = pDoc->m_pUI->m_origView->original_img(source.y, source.x);
+
+  color[0] = get<0>(pixel);
+  color[1] = get<1>(pixel);
+  color[2] = get<2>(pixel);
+
   const float alpha = pDoc->getAlpha();
   color[3] = (GLubyte)(alpha * 255.0f);
 

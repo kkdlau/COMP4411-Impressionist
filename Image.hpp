@@ -3,6 +3,7 @@
 
 #include "ImpBrush.h"
 #include "gl_helper.h"
+#include <functional>
 #include <tuple>
 #include <vector>
 
@@ -12,10 +13,10 @@ typedef tuple<GLubyte, GLubyte, GLubyte> RGB888;
 
 class Image {
   vector<GLubyte> img;
-  int width;
-  int height;
 
 public:
+  int width;
+  int height;
   Image(GLubyte *buf, int w, int h) { set(buf, w, h); }
 
   void set(GLubyte *buf, int w, int h) {
@@ -48,11 +49,22 @@ public:
 
   void set_pixel(int y, int x, const RGB888 &rgb) {
     auto color = (*this)(y, x);
-    debugger("r:%d g:%d b:%d", get<0>(color), get<1>(color), get<2>(color));
-    get<0>(color) = 0;
-    get<1>(color) = 0;
-    get<2>(color) = 0;
+    get<0>(color) = get<0>(rgb);
+    get<1>(color) = get<1>(rgb);
+    get<2>(color) = get<2>(rgb);
+  }
+
+  void set_pixel(const Point &p, const RGB888 &rgb) {
+    set_pixel(p.y, p.x, rgb);
+  }
+
+  void for_range_pixel(const Point &s, const Point &e,
+                       function<void(int, int)> handler) {
+    for (int y = s.y; y <= e.y; y++) {
+      for (int x = s.x; x <= e.x; x++) {
+        handler(y, x);
+      }
+    }
   }
 };
-
 #endif // __IMAGE_H_

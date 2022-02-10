@@ -31,12 +31,19 @@ using namespace std;
  * This variable is reset to false every time a new drawing is triggered.
  */
 
+#define RED_COLOR 255, 0, 0
 namespace GLHelper {
 extern bool invalid;
 
 extern ImpressionistDoc *pDoc;
+extern ImpressionistUI *pUI;
 
-static void inline set_doc(ImpressionistDoc *doc) { pDoc = doc; }
+static void inline set_ui(ImpressionistUI *ui) { pUI = ui; }
+
+static void inline set_doc(ImpressionistDoc *doc) {
+  pDoc = doc;
+  set_ui(pDoc->m_pUI);
+}
 
 static void gl_draw_shape(int drawing_mode, function<void()> drawing_funcs) {
   invalid = false;

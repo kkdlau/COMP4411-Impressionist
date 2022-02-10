@@ -38,7 +38,6 @@ void OriginalView::draw() {
     // note that both OpenGL pixel storage and the Windows BMP format
     // store pixels left-to-right, BOTTOM-to-TOP!!  thus all the fiddling
     // around with startrow.
-
     m_nWindowWidth = w();
     m_nWindowHeight = h();
 
@@ -77,6 +76,7 @@ void OriginalView::resizeWindow(int width, int height) {
 }
 
 void OriginalView::update_img(Image &img) {
-  m_pDoc->m_ucPainting = img.raw_fmt();
-  refresh();
+  m_pDoc->m_ucBitmap = img.raw_fmt();
+  this->resizeWindow(img.width, img.height);
+  this->refresh();
 }

@@ -25,8 +25,6 @@ using namespace GLHelper;
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #endif
 
-#define RED_COLOR 255, 0, 0
-
 static int eventToDo;
 static int isAnEvent = 0;
 static Point coord;
@@ -51,11 +49,6 @@ void abort_event(int &event, ImpressionistDoc &doc) {
     if (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP)
       event = 0;
   }
-}
-
-static inline bool is_mouse_event(int event) {
-  return (event >= LEFT_MOUSE_DOWN && event <= LEFT_MOUSE_UP) ||
-         (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP);
 }
 
 void PaintView::draw() {
@@ -115,15 +108,6 @@ void PaintView::draw() {
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
     Point target(coord.x, m_nWindowHeight - coord.y);
 
-    if (is_mouse_event(eventToDo)) {
-      // OriginalView &view = *pDoc->m_pUI->m_origView;
-      // Image &orig = view.original_img;
-      // Image &new_img = view.img;
-      // new_img = orig;
-      // orig.set_pixel(target.y, target.x, {255, 0, 0});
-      // view.update_img(orig);
-    }
-
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
@@ -131,10 +115,22 @@ void PaintView::draw() {
       break;
     case LEFT_MOUSE_DRAG: {
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+      OriginalView &view = *pDoc->m_pUI->m_origView;
+      Image &orig = view.original_img;
+      Image &new_img = view.img;
+      new_img = orig;
+      Point top_left = target.shift_x(-3).shift_y(-3);
+      Point bottom_right = target.shift_x(3).shift_y(3);
+      new_img.for_range_pixel(top_left, bottom_right, [&](int y, int x) {
+        new_img.set_pixel(y, x, {RED_COLOR});
+      });
+      view.update_img(new_img);
       break;
     }
     case LEFT_MOUSE_UP: {
       m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
+      pDoc->m_pUI->m_origView->update_img(
+          pDoc->m_pUI->m_origView->original_img);
 
       SaveCurrentContent();
       RestoreContent();
