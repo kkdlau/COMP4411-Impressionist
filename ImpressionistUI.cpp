@@ -265,20 +265,7 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
   int type = (int)(size_t)v;
 
   pDoc->setBrushType(type);
-  switch (type) {
-  case 0:
-  case 2:
-  case 3:
-  case 5:
-    pUI->m_BrushWidthSlider->deactivate();
-    pUI->m_BrushAngleSlider->deactivate();
-    break;
-  case 1:
-  case 4:
-    pUI->m_BrushWidthSlider->activate();
-    pUI->m_BrushAngleSlider->activate();
-    break;
-  }
+  pDoc->m_pCurrentBrush->select();
 }
 
 void ImpressionistUI::cb_strokeDirectionChoice(Fl_Widget *o, void *v) {

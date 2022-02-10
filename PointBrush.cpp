@@ -19,6 +19,7 @@ PointBrush::PointBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {}
 
 void PointBrush::BrushBegin(const Point source, const Point target) {
+    select();
   ImpressionistDoc *pDoc = GetDocument();
   ImpressionistUI *dlg = pDoc->m_pUI;
 
@@ -50,4 +51,11 @@ void PointBrush::BrushMove(const Point source, const Point target) {
 
 void PointBrush::BrushEnd(const Point source, const Point target) {
   // do nothing so far
+}
+
+void PointBrush::select() {
+    ImpressionistDoc* pDoc = GetDocument();
+    pDoc->m_pUI->m_BrushWidthSlider->deactivate();
+    pDoc->m_pUI->m_BrushAngleSlider->deactivate();
+    pDoc->m_pUI->m_StrokeDirection->deactivate();
 }
