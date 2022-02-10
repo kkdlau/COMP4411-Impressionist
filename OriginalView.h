@@ -24,7 +24,6 @@
 #include "Image.hpp"
 #include "ImpBrush.h"
 
-
 class ImpressionistDoc;
 
 class OriginalView : public Fl_Gl_Window {
@@ -36,8 +35,11 @@ public:
 
   void resizeWindow(int width, int height);
 
+  void update_img(Image &img);
+
   ImpressionistDoc *m_pDoc;
   Image img;
+  Image original_img;
 
 private:
   int m_nWindowWidth, m_nWindowHeight;

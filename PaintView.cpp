@@ -53,6 +53,11 @@ void abort_event(int &event, ImpressionistDoc &doc) {
   }
 }
 
+static inline bool is_mouse_event(int event) {
+  return (event >= LEFT_MOUSE_DOWN && event <= LEFT_MOUSE_UP) ||
+         (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP);
+}
+
 void PaintView::draw() {
 #ifndef MESA
   // To avoid flicker on some machines.
@@ -109,6 +114,15 @@ void PaintView::draw() {
 
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
     Point target(coord.x, m_nWindowHeight - coord.y);
+
+    if (is_mouse_event(eventToDo)) {
+      OriginalView &view = *pDoc->m_pUI->m_origView;
+      Image &orig = view.original_img;
+      Image &new_img = view.img;
+      new_img = orig;
+      orig.set_pixel(target.y, target.x, {255, 0, 0});
+      view.update_img(orig);
+    }
 
     // This is the event handler
     switch (eventToDo) {

@@ -13,7 +13,8 @@
 #endif
 
 OriginalView::OriginalView(int x, int y, int w, int h, const char *l)
-    : Fl_Gl_Window(x, y, w, h, l), img{nullptr, 0, 0} {
+    : Fl_Gl_Window(x, y, w, h, l), img{nullptr, 0, 0}, original_img{nullptr, 0,
+                                                                    0} {
   m_nWindowWidth = w;
   m_nWindowHeight = h;
 }
@@ -73,4 +74,9 @@ void OriginalView::refresh() { redraw(); }
 
 void OriginalView::resizeWindow(int width, int height) {
   resize(x(), y(), width, height);
+}
+
+void OriginalView::update_img(Image &img) {
+  m_pDoc->m_ucPainting = img.raw_fmt();
+  refresh();
 }

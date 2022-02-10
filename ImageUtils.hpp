@@ -19,9 +19,9 @@ static tuple<float, float, float> sobel(Image &img, int y, int x) {
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
       if (img.valid_point(x + j, y + i)) {
-        auto colors = img(x + j, y + i);
-        const float grey =
-            0.299F * colors[0] + 0.587F * colors[1] + 0.114F * colors[2];
+        auto color = img(y + i, x + j);
+        const float grey = 0.299F * get<0>(color) + 0.587F * get<1>(color) +
+                           0.114F * get<2>(color);
         gx += sobel_x[i][j] * grey;
         gy += sobel_y[i][j] * grey;
       }

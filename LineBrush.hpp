@@ -34,8 +34,8 @@ public:
     float r = pDoc->getRad();
     switch (pDoc->m_pUI->get_direction()) {
     case GRADIENT_DIRECTION: {
-      auto result =
-          ImageUtils::sobel(pDoc->m_pUI->m_origView->img, target.y, target.x);
+      auto result = ImageUtils::sobel(pDoc->m_pUI->m_origView->original_img,
+                                      target.y, target.x);
       r = get<2>(result);
     } break;
 
