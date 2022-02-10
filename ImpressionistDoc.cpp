@@ -55,7 +55,6 @@ ImpressionistDoc::ImpressionistDoc() {
                       new ScatteredLineBrush(this, "Scattered Lines"));
   ImpBrush::set_brush(BRUSH_SCATTERED_CIRCLES,
                       new ScatteredCircleBrush(this, "Scattered Circles"));
-
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
   GLHelper::set_doc(this);

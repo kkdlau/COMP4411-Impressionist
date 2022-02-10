@@ -13,7 +13,6 @@ public:
       : ImpBrush(pDoc, name) {}
 
   void BrushBegin(const Point source, const Point target) {
-      select();
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
 

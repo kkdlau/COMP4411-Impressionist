@@ -19,7 +19,6 @@ PointBrush::PointBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {}
 
 void PointBrush::BrushBegin(const Point source, const Point target) {
-    select();
   ImpressionistDoc *pDoc = GetDocument();
   ImpressionistUI *dlg = pDoc->m_pUI;
 

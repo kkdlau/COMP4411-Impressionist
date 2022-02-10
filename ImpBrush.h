@@ -63,7 +63,7 @@ public:
   }
 
   const char *toString() const {
-    return (std::to_string(x) + ", " + std::to_string(y)).c_str();
+    return (std::to_string(this->x) + ", " + std::to_string(this->y)).c_str();
   }
 
   Point shift_x(int x) const { return Point(this->x + x, y); }

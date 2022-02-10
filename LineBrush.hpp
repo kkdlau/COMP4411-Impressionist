@@ -17,7 +17,6 @@ public:
       : ImpBrush(pDoc, name) {}
 
   void BrushBegin(const Point source, const Point target) {
-      select();
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
 
@@ -25,13 +24,13 @@ public:
     int size = pDoc->getSize();
     int width = pDoc->getWidth();
 
-    glLineWidth(size);
+    glLineWidth(width);
 
     BrushMove(source, target);
   }
   void BrushMove(const Point source, const Point target) {
     ImpressionistDoc *pDoc = GetDocument();
-    const int half = pDoc->m_pUI->getWidth() / 2;
+    const int half = pDoc->m_pUI->getSize() / 2;
     float r = pDoc->getRad();
     switch (pDoc->m_pUI->get_direction()) {
     case GRADIENT_DIRECTION: {
