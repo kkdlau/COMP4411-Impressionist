@@ -20,14 +20,13 @@ static tuple<float, float, float> sobel(Image &img, int y, int x) {
     for (int j = 0; j < 3; j++) {
       if (img.valid_point(x + j, y + i)) {
         auto colors = img(x + j, y + i);
-        float grey =
+        const float grey =
             0.299F * colors[0] + 0.587F * colors[1] + 0.114F * colors[2];
         gx += sobel_x[i][j] * grey;
-        gx += sobel_y[i][j] * grey;
+        gy += sobel_y[i][j] * grey;
       }
     }
   }
-
   return {gx, gy, atan2(gy, gx)};
 }
 } // namespace ImageUtils
