@@ -17,6 +17,7 @@ public:
       : ImpBrush(pDoc, name) {}
 
   void BrushBegin(const Point source, const Point target) {
+      select();
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
 
@@ -61,6 +62,13 @@ public:
     last = target;
   }
   void BrushEnd(const Point source, const Point target) {}
+
+  void select() {
+      ImpressionistDoc* pDoc = GetDocument();
+      pDoc->m_pUI->m_BrushWidthSlider->activate();
+      pDoc->m_pUI->m_BrushAngleSlider->activate();
+      pDoc->m_pUI->m_StrokeDirection->activate();
+  }
 };
 
 #endif // __LINE_BRUSH_H__

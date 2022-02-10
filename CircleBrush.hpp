@@ -13,6 +13,7 @@ public:
       : ImpBrush(pDoc, name) {}
 
   void BrushBegin(const Point source, const Point target) {
+      select();
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
 
@@ -39,6 +40,12 @@ public:
     pDoc->force_update_canvas();
   }
   void BrushEnd(const Point source, const Point target) {}
+  void select() {
+      ImpressionistDoc* pDoc = GetDocument();
+      pDoc->m_pUI->m_BrushWidthSlider->deactivate();
+      pDoc->m_pUI->m_BrushAngleSlider->deactivate();
+      pDoc->m_pUI->m_StrokeDirection->deactivate();
+  }
 };
 
 #endif // __CIRCLE_BRUSH__

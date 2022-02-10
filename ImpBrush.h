@@ -97,7 +97,7 @@ public:
 
   // TODO: implement all UI enable / disable business logic in here.
   virtual void select() {}
-  virtual void disselect() {}
+  //virtual void disselect() {}
 
   // get Doc to communicate with it
   ImpressionistDoc *GetDocument(void);

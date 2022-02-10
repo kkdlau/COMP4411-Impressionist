@@ -18,7 +18,7 @@
   - [x] using directions that are perpendicular to the gradient of the image
 - [x] Allow the user to change the opacity (alpha value) of the brush stroke
 - [x] An alpha value slider should be added to the controls window.
-- [ ] Implement the UI logic when the user selects a brush. - move from impressionistUI to ImpBrush
+- [x] Implement the UI logic when the user selects a brush. - move from impressionistUI to ImpBrush
   - By overriding `select()` and `disselect()`. 
 ## Bonus
 
