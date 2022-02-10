@@ -7,7 +7,7 @@
   - [x] scattered lines
     - scattered brushes should sample from each location they color individually, not just use a single color for each splotch.
   - [x] (filled) circles
-  - [ ] scattered (filled) circles - 3 random circles 
+  - [x] scattered (filled) circles - 3 random circles 
 - sliders to control various brush attributes
   - [x] line thickness
   - [x] brush angle
@@ -15,7 +15,7 @@
   - [x] slider value
   - [x] right mouse button to drag out a direction line
   - [x] using the direction of the cursor movement
-  - [ ] using directions that are perpendicular to the gradient of the image
+  - [x] using directions that are perpendicular to the gradient of the image
 - [x] Allow the user to change the opacity (alpha value) of the brush stroke
 - [x] An alpha value slider should be added to the controls window.
 - [ ] Implement the UI logic when the user selects a brush. - move from impressionistUI to ImpBrush
