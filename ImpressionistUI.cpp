@@ -222,6 +222,18 @@ void ImpressionistUI::cb_clear_canvas(Fl_Menu_ *o, void *v) {
   pDoc->clearCanvas();
 }
 
+void ImpressionistUI::cb_undo(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+  pDoc->undo_painting();
+}
+
+void ImpressionistUI::cb_swap_content(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+  pDoc->swap_content();
+}
+
 //------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
@@ -254,14 +266,18 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
 
   pDoc->setBrushType(type);
   switch (type) {
-  case 0: case 2: case 3: case 5:
-      pUI->m_BrushWidthSlider->deactivate();
-      pUI->m_BrushAngleSlider->deactivate();
-      break;
-  case 1: case 4:
-      pUI->m_BrushWidthSlider->activate();
-      pUI->m_BrushAngleSlider->activate();
-      break;
+  case 0:
+  case 2:
+  case 3:
+  case 5:
+    pUI->m_BrushWidthSlider->deactivate();
+    pUI->m_BrushAngleSlider->deactivate();
+    break;
+  case 1:
+  case 4:
+    pUI->m_BrushWidthSlider->activate();
+    pUI->m_BrushAngleSlider->activate();
+    break;
   }
 }
 
@@ -397,9 +413,10 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
+    {"&Undo", FL_ALT + 'u', (Fl_Callback *)ImpressionistUI::cb_undo, 0},
+    {"&Swap", FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_swap_content, 0},
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
-
     {"&Quit", FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit},
     {0},
 

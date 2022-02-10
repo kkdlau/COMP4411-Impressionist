@@ -17,6 +17,7 @@ class Image {
 public:
   int width;
   int height;
+  Image() : Image{nullptr, 0, 0} {}
   Image(GLubyte *buf, int w, int h) { set(buf, w, h); }
 
   void set(GLubyte *buf, int w, int h) {
@@ -46,6 +47,7 @@ public:
   }
 
   GLubyte *raw_fmt() { return img.data(); }
+  GLubyte *paint_byte() { return img.data() + height * 3; }
 
   void set_pixel(int y, int x, const RGB888 &rgb) {
     auto color = (*this)(y, x);

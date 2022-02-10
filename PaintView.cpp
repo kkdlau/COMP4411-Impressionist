@@ -4,7 +4,7 @@
 // The code maintaining the painting view of the input images
 //
 
-#include "paintview.h"
+#include "Paintview.h"
 #include "ImpBrush.h"
 #include "gl_helper.h"
 #include "impressionist.h"
@@ -33,13 +33,6 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
     : Fl_Gl_Window(x, y, w, h, l) {
   m_nWindowWidth = w;
   m_nWindowHeight = h;
-}
-
-static unsigned char *paint;
-
-void backup(void *p) {
-  paint = new unsigned char[pDoc->m_nPaintWidth * pDoc->m_nPaintHeight * 3];
-  memcpy(paint, p, pDoc->m_nPaintWidth * pDoc->m_nPaintHeight * 3);
 }
 
 void abort_event(int &event, ImpressionistDoc &doc) {
@@ -111,26 +104,20 @@ void PaintView::draw() {
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
+      save_current_to(prev);
+
       m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
     case LEFT_MOUSE_DRAG: {
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
       OriginalView &view = *pDoc->m_pUI->m_origView;
-      Image &orig = view.original_img;
-      Image &new_img = view.img;
-      new_img = orig;
-      Point top_left = target.shift_x(-3).shift_y(-3);
-      Point bottom_right = target.shift_x(3).shift_y(3);
-      new_img.for_range_pixel(top_left, bottom_right, [&](int y, int x) {
-        new_img.set_pixel(y, x, {RED_COLOR});
-      });
-      view.update_img(new_img);
+      view.set_cursor(target);
       break;
     }
     case LEFT_MOUSE_UP: {
       m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
-      pDoc->m_pUI->m_origView->update_img(
-          pDoc->m_pUI->m_origView->original_img);
+      OriginalView &view = *pDoc->m_pUI->m_origView;
+      view.hide_cusor();
 
       SaveCurrentContent();
       RestoreContent();
@@ -260,4 +247,14 @@ void PaintView::draw_line(GLubyte r, GLubyte g, GLubyte b) {
   glEnd();
 
   pDoc->force_update_canvas();
+}
+
+void PaintView::save_current_to(Image &img) {
+  img.set(m_pDoc->m_ucPainting, m_nDrawWidth, m_nDrawHeight);
+}
+
+void PaintView::set_current_img(Image &img) {
+  cur = img;
+  m_pDoc->m_ucPainting = cur.raw_fmt();
+  refresh();
 }

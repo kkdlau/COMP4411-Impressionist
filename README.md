@@ -36,12 +36,12 @@
   - [ ] random polygon
   - [ ] random scattered polygon
 - [ ] **(1W)** clipped brushes (M)
-- [ ] **(1W)** cursor on original image (D)
-- [ ] (1W) swap content and original (D)
+- [x] **(1W)** cursor on original image (D)
+- [x] (1W) swap content and original (D)
 - [ ] (1B) change color of image (change channel) (M)
   - [ ] add color source checkbox 
 - [ ] **(1B)** blur brush and sharpen brush (M)
-- [ ] **(1B)** undo (D)
+- [x] **(1B)** undo (D)
 - [ ] (1B) Dissolve one image into another (D)
   - [ ] (1B1W) original image overlay
 - [ ] _(1B1W)_ mural image (load another image without resetting)

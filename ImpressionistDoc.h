@@ -64,8 +64,8 @@ public:
   // Get the color of the original picture at the specified point
   GLubyte *GetOriginalPixel(const Point p);
 
-  vector<GLubyte *> getNeighbors(const Point p);
-  vector<GLubyte *> getNeighbors(int x, int y);
+  void swap_content();
+  void undo_painting();
 
 private:
   char m_imageName[256];

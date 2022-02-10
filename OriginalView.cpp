@@ -75,8 +75,30 @@ void OriginalView::resizeWindow(int width, int height) {
   resize(x(), y(), width, height);
 }
 
-void OriginalView::update_img(Image &img) {
-  m_pDoc->m_ucBitmap = img.raw_fmt();
-  this->resizeWindow(img.width, img.height);
+void OriginalView::set_current_img(Image &img) {
+  this->img = img;
+  original_img = img;
+  m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
+  this->resizeWindow(original_img.width, original_img.height);
+  this->refresh();
+}
+
+void OriginalView::set_cursor(const Point &p) {
+  Image &orig = this->original_img;
+  Image &new_img = this->img;
+  new_img = orig;
+  Point top_left = p.shift_x(-3).shift_y(-3);
+  Point bottom_right = p.shift_x(3).shift_y(3);
+  new_img.for_range_pixel(top_left, bottom_right, [&](int y, int x) {
+    new_img.set_pixel(y, x, {RED_COLOR});
+  });
+  m_pDoc->m_ucBitmap = new_img.raw_fmt();
+  this->resizeWindow(new_img.width, new_img.height);
+  this->refresh();
+}
+
+void OriginalView::hide_cusor() {
+  m_pDoc->m_ucBitmap = original_img.raw_fmt();
+  this->resizeWindow(original_img.width, original_img.height);
   this->refresh();
 }

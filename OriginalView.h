@@ -35,7 +35,11 @@ public:
 
   void resizeWindow(int width, int height);
 
-  void update_img(Image &img);
+  void set_current_img(Image &img);
+
+  void set_cursor(const Point &p);
+
+  void hide_cusor();
 
   ImpressionistDoc *m_pDoc;
   Image img;

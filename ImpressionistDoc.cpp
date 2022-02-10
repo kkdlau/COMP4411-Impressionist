@@ -14,6 +14,7 @@
 
 // Include individual brush headers here.
 #include "CircleBrush.hpp"
+#include "Image.hpp"
 #include "LineBrush.hpp"
 #include "PointBrush.h"
 #include "ScatteredCircleBrush.hpp"
@@ -137,6 +138,8 @@ int ImpressionistDoc::loadImage(char *iname) {
   m_pUI->m_paintView->resizeWindow(width, height);
   m_pUI->m_paintView->refresh();
 
+  m_pUI->m_paintView->prev.set(m_ucPainting, width, height);
+  m_pUI->m_paintView->cur.set(m_ucPainting, width, height);
   return 1;
 }
 
@@ -202,20 +205,6 @@ GLubyte *ImpressionistDoc::GetOriginalPixel(const Point p) {
   return GetOriginalPixel(p.x, p.y);
 }
 
-vector<GLubyte *> ImpressionistDoc::getNeighbors(const Point p) {
-  getNeighbors(p.x, p.y);
-}
-vector<GLubyte *> ImpressionistDoc::getNeighbors(int x, int y) {
-  vector<GLubyte *> result = {};
-  for (int _x = x - 1; _x <= x + 1; _x++) {
-    for (int _y = y - 1; _y <= y + 1; _y++) {
-      result.push_back(GetOriginalPixel(_x, _y));
-    }
-  }
-
-  return result;
-}
-
 void ImpressionistDoc::toggleOriginalView() {
   // TODO： toggle original view
 }
@@ -232,4 +221,15 @@ void ImpressionistDoc::force_update_canvas() {
 bool ImpressionistDoc::outOfRegion(const Point &p) const {
   return !(p.x >= 0 && p.y >= 0 && p.x <= m_nPaintWidth &&
            p.y <= m_nPaintHeight);
+}
+
+void ImpressionistDoc::swap_content() {
+  Image left_canvas_img = m_pUI->m_origView->original_img;
+  Image right_canvas_img = m_pUI->m_paintView->cur;
+  m_pUI->m_paintView->set_current_img(left_canvas_img);
+  m_pUI->m_origView->set_current_img(right_canvas_img);
+}
+void ImpressionistDoc::undo_painting() {
+  PaintView &canvas = *m_pUI->m_paintView;
+  canvas.set_current_img(canvas.prev);
 }

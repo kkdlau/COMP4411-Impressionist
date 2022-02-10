@@ -25,6 +25,8 @@ class PaintView : public Fl_Gl_Window {
 public:
   Point line_start;
   Point line_end;
+  Image prev;
+  Image cur;
 
   PaintView(int x, int y, int w, int h, const char *l);
   void draw();
@@ -39,6 +41,9 @@ public:
   void RestoreContent();
 
   void draw_line(GLubyte r, GLubyte g, GLubyte b);
+
+  void save_current_to(Image &img);
+  void set_current_img(Image &img);
 
   ImpressionistDoc *m_pDoc;
 
