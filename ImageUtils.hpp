@@ -18,7 +18,7 @@ static tuple<float, float, float> sobel(Image &img, int y, int x) {
   x--;
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
-      if (img.valid_point(x + j, y + i)) {
+      if (img.valid_point(y + i, x + j)) {
         auto color = img(y + i, x + j);
         const float grey = 0.299F * get<0>(color) + 0.587F * get<1>(color) +
                            0.114F * get<2>(color);
@@ -28,6 +28,22 @@ static tuple<float, float, float> sobel(Image &img, int y, int x) {
     }
   }
   return {gx, gy, atan2(gy, gx)};
+}
+
+static Image dissolve(Image &source, Image &target) {
+  Image output = target;
+
+  output.for_each_pixel([&](int y, int x) {
+    auto color = output(y, x);
+    if (source.valid_point(y, x)) {
+      RGB888 avg_color = (source(y, x) + color) / 2;
+      get<0>(color) = get<0>(avg_color);
+      get<1>(color) = get<1>(avg_color);
+      get<2>(color) = get<2>(avg_color);
+    }
+  });
+
+  return output;
 }
 } // namespace ImageUtils
 

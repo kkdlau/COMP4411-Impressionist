@@ -8,6 +8,7 @@
 
 #include <math.h>
 
+#include "ImageUtils.hpp"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 
@@ -228,6 +229,21 @@ void ImpressionistUI::cb_undo(Fl_Menu_ *o, void *v) {
   pDoc->undo_painting();
 }
 
+void ImpressionistUI::cb_dissolve_iamge(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+#ifdef PROJ_DEBUG
+  char *newfile =
+      "/Users/dannylau/Program/COMP4411-Impressionist/images/bean.bmp";
+#else
+  char *newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+#endif
+  Image src = Image::from(newfile);
+  debugger("w:%d h:%d", src.width, src.height);
+  Image output = ImageUtils::dissolve(src, pDoc->m_pUI->m_paintView->cur);
+  pDoc->m_pUI->m_paintView->set_current_img(output);
+}
+
 void ImpressionistUI::cb_swap_content(Fl_Menu_ *o, void *v) {
   ImpressionistDoc *pDoc = whoami(o)->getDocument();
 
@@ -415,6 +431,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
     {"&Undo", FL_ALT + 'u', (Fl_Callback *)ImpressionistUI::cb_undo, 0},
     {"&Swap", FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_swap_content, 0},
+    {"&Dissolve", FL_ALT + 'd',
+     (Fl_Callback *)ImpressionistUI::cb_dissolve_iamge, 0},
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
     {"&Quit", FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit},

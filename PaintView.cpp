@@ -118,7 +118,7 @@ void PaintView::draw() {
       m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
       OriginalView &view = *pDoc->m_pUI->m_origView;
       view.hide_cusor();
-
+      save_current_to(cur);
       SaveCurrentContent();
       RestoreContent();
       break;
