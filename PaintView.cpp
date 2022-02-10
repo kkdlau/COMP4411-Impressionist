@@ -116,12 +116,12 @@ void PaintView::draw() {
     Point target(coord.x, m_nWindowHeight - coord.y);
 
     if (is_mouse_event(eventToDo)) {
-      OriginalView &view = *pDoc->m_pUI->m_origView;
-      Image &orig = view.original_img;
-      Image &new_img = view.img;
-      new_img = orig;
-      orig.set_pixel(target.y, target.x, {255, 0, 0});
-      view.update_img(orig);
+      // OriginalView &view = *pDoc->m_pUI->m_origView;
+      // Image &orig = view.original_img;
+      // Image &new_img = view.img;
+      // new_img = orig;
+      // orig.set_pixel(target.y, target.x, {255, 0, 0});
+      // view.update_img(orig);
     }
 
     // This is the event handler

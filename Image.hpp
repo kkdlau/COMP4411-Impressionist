@@ -18,11 +18,6 @@ class Image {
 public:
   Image(GLubyte *buf, int w, int h) { set(buf, w, h); }
 
-  Image(const Image &another_img) : img{another_img.img} {
-    this->width = another_img.width;
-    this->height = another_img.height;
-  }
-
   void set(GLubyte *buf, int w, int h) {
     width = w, height = h;
     img = {};
@@ -44,15 +39,14 @@ public:
     return true;
   }
 
-  tuple<GLubyte &, GLubyte &, GLubyte &> operator()(int y, int x) {
+  const tuple<GLubyte &, GLubyte &, GLubyte &> operator()(int y, int x) {
     int i = 3 * (y * width + x);
-    return tuple<GLubyte &, GLubyte &, GLubyte &>{img[i], img[i + 1],
-                                                  img[i + 2]};
+    return {img[i], img[i + 1], img[i + 2]};
   }
 
   GLubyte *raw_fmt() { return img.data(); }
 
-  void set_pixel(int y, int x, RGB888 rgb) {
+  void set_pixel(int y, int x, const RGB888 &rgb) {
     auto color = (*this)(y, x);
     debugger("r:%d g:%d b:%d", get<0>(color), get<1>(color), get<2>(color));
     get<0>(color) = 0;
