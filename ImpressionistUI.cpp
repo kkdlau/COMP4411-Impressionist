@@ -448,6 +448,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
     {"Scattered Circles", FL_ALT + 'd',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_SCATTERED_CIRCLES},
+     {"Fans", FL_ALT + 'f', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_FANS},
     {0}};
 
 Fl_Menu_Item
