@@ -21,6 +21,7 @@
 #include "ScatteredLineBrush.hpp"
 #include "ScatteredPointBrush.hpp"
 #include "FanBrush.hpp"
+#include "CurveBrush.hpp"
 #include "gl_helper.h"
 
 #define DESTROY(p)                                                             \
@@ -58,6 +59,8 @@ ImpressionistDoc::ImpressionistDoc() {
                       new ScatteredCircleBrush(this, "Scattered Circles"));
   ImpBrush::set_brush(BRUSH_FANS,
                       new FanBrush(this, "Fans"));
+  ImpBrush::set_brush(BRUSH_CURVES,
+                      new CurveBrush(this, "Fans"));
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
   GLHelper::set_doc(this);

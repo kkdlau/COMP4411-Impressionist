@@ -450,6 +450,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_SCATTERED_CIRCLES},
      {"Fans", FL_ALT + 'f', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
      (void*)BRUSH_FANS},
+     {"Curves", FL_ALT + 'r', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_CURVES},
     {0}};
 
 Fl_Menu_Item
@@ -511,6 +513,7 @@ ImpressionistUI::ImpressionistUI() {
       (void *)(this)); // record self to be used by static callback functions
   m_StrokeDirection->menu(strokeDirectionMenu);
   m_StrokeDirection->callback(cb_strokeDirectionChoice);
+  m_StrokeDirection->deactivate(); // match Point as default brush
 
   m_ClearCanvasButton = new Fl_Button(240, 10, 150, 25, "&Clear Canvas");
   m_ClearCanvasButton->user_data((void *)(this));
