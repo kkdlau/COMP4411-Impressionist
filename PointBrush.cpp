@@ -20,6 +20,7 @@ PointBrush::PointBrush(ImpressionistDoc *pDoc, char *name)
 
 void PointBrush::BrushBegin(const Point source, const Point target) {
   ImpressionistDoc *pDoc = GetDocument();
+
   ImpressionistUI *dlg = pDoc->m_pUI;
 
   const float size = pDoc->getSize();
@@ -35,9 +36,14 @@ void PointBrush::BrushMove(const Point source, const Point target) {
   ImpressionistUI *dlg = pDoc->m_pUI;
 
   if (pDoc == NULL) {
-    printf("PointBrush::BrushMove  document is NULL\n");
+    printf("PointBrush::BrushMove document is NULL\n");
     return;
   }
+  if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 || source.y >= pDoc->m_nPaintHeight) {
+      printf("Go back in\n"); // TODO - Remove 
+      return;
+  }
+  printf("Source (%d, %d)\n", source.x, source.y);
 
   gl_draw_shape(GL_POINTS, [&] {
     debugger("%d, %d\n", target.x, target.y);
