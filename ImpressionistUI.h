@@ -15,7 +15,8 @@
 #include <FL/Fl_Value_Slider.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
-
+#include <FL/Fl_Check_Button.H>
+#include <FL/Fl_Color_Chooser.H>
 #include "Impressionist.h"
 #include "OriginalView.h"
 #include "PaintView.h"
@@ -43,6 +44,11 @@ public:
   Fl_Slider *m_BrushAngleSlider;
   Fl_Slider *m_BrushAlphaSlider;
   Fl_Button *m_ClearCanvasButton;
+  Fl_Check_Button* m_ColorBlending;
+
+  // for color blending dialog
+  Fl_Window* m_ColorDialog;
+  Fl_Color_Chooser* m_ColorChooser;
 
   // Member functions
   void setDocument(ImpressionistDoc *doc);
@@ -65,8 +71,13 @@ public:
   float getAlpha();
   void setAlpha(float a);
 
+  int getColorBlending();
+  void setColorBlending(int a);
+
   StrokeDirection get_direction();
   void set_direction(StrokeDirection d);
+
+  vector<double> getUserColor();
 
 private:
   ImpressionistDoc
@@ -77,6 +88,7 @@ private:
   int m_nWidth = 1;
   int m_nAngle = 0;
   float m_fAlpha = 1.0;
+  int m_fColorBlending = 0;
   StrokeDirection m_direction = SLIDER_RIGHT_MOUSE;
 
   // Static class members
@@ -97,6 +109,7 @@ private:
   static void cb_undo(Fl_Menu_ *o, void *v);
   static void cb_swap_content(Fl_Menu_ *o, void *v);
   static void cb_dissolve_iamge(Fl_Menu_ *o, void *v);
+  static void cb_color_blending(Fl_Menu_* o, void* v);
   static void cb_brushChoice(Fl_Widget *o, void *v);
   static void cb_strokeDirectionChoice(Fl_Widget *o, void *v);
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);
@@ -105,6 +118,7 @@ private:
   static void cb_angleUpdate(Fl_Widget *o, void *v);
   static void cb_alphaUpdate(Fl_Widget *o, void *v);
   static void cb_toggleOriginalView(Fl_Widget *o, void *v);
+  static void cb_colorBlendingUpdate(Fl_Widget* o, void* v);
 };
 
 #endif

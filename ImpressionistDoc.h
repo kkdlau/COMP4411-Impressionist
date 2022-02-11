@@ -37,6 +37,8 @@ public:
   float getRad();
   float getAlpha();
   char *getImageName(); // get the current image name
+  int getColorBlending();
+  vector<double> getUserColor();
   void force_update_canvas();
   bool outOfRegion(const Point &p) const;
 

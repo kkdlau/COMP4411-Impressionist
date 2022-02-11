@@ -97,6 +97,10 @@ int ImpressionistDoc::getWidth() { return m_pUI->getWidth(); }
 float ImpressionistDoc::getRad() { return m_pUI->getAngle() / 180.0 * M_PI; }
 
 float ImpressionistDoc::getAlpha() { return m_pUI->getAlpha(); }
+
+int ImpressionistDoc::getColorBlending() { return m_pUI->getColorBlending(); }
+
+vector<double> ImpressionistDoc::getUserColor() { return m_pUI->getUserColor(); }
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is
