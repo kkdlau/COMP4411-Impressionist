@@ -41,17 +41,17 @@ void ImpBrush::SetColor(const Point source) {
   ImpressionistDoc *pDoc = GetDocument();
   GLubyte color[4];
   int colorBlending = pDoc->getColorBlending();
+  auto pixel = pDoc->m_pUI->m_origView->original_img(source.y, source.x);
   if (colorBlending == 0) {
-      auto pixel = pDoc->m_pUI->m_origView->original_img(source.y, source.x);
-
       color[0] = get<0>(pixel);
       color[1] = get<1>(pixel);
       color[2] = get<2>(pixel);
   }
   else {
       vector<double> rgb = pDoc->getUserColor();
-      for (int i = 0; i < 3; ++i)
-          color[i] = (GLubyte)(rgb[i] * 255.0f);
+      color[0] = get<0>(pixel) * rgb[0];
+      color[1] = get<1>(pixel) * rgb[1];
+      color[2] = get<2>(pixel) * rgb[2];
   }
 
   const float alpha = pDoc->getAlpha();

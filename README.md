@@ -40,7 +40,6 @@
 - [x] **(1W)** cursor on original image (D)
 - [x] (1W) swap content and original (D)
 - [x] (1B) change color of image (change channel) (M)
-  - [ ] add color source checkbox 
 - [ ] **(1B)** blur brush and sharpen brush (M)
 - [x] **(1B)** undo (D)
 - [x] (1B) Dissolve one image into another (D)
