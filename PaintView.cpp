@@ -19,6 +19,7 @@ using namespace GLHelper;
 #define RIGHT_MOUSE_DOWN 4
 #define RIGHT_MOUSE_DRAG 5
 #define RIGHT_MOUSE_UP 6
+#define MOUSE_MOVE 7
 
 #ifndef WIN32
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -105,7 +106,6 @@ void PaintView::draw() {
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
       save_current_to(prev);
-
       m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
     case LEFT_MOUSE_DRAG: {
@@ -141,6 +141,10 @@ void PaintView::draw() {
       break;
     }
 
+    case MOUSE_MOVE: {
+      OriginalView &view = *pDoc->m_pUI->m_origView;
+      view.set_cursor(target);
+    } break;
     default: {
       printf("Unknown event!!\n");
       break;
@@ -194,6 +198,10 @@ int PaintView::handle(int event) {
   case FL_MOVE:
     coord.x = Fl::event_x();
     coord.y = Fl::event_y();
+    eventToDo = MOUSE_MOVE;
+    isAnEvent = 1;
+
+    redraw();
     break;
   default:
     return 0;
@@ -207,6 +215,8 @@ void PaintView::refresh() { redraw(); }
 
 void PaintView::resizeWindow(int width, int height) {
   resize(x(), y(), width, height);
+
+  glGenFramebuffers(1, &fbo);
 }
 
 void PaintView::SaveCurrentContent() {
@@ -255,6 +265,6 @@ void PaintView::save_current_to(Image &img) {
 
 void PaintView::set_current_img(Image &img) {
   cur = img;
-  m_pDoc->m_ucPainting = cur.raw_fmt();
+  // m_pDoc->m_ucPainting = cur.raw_fmt();
   refresh();
 }

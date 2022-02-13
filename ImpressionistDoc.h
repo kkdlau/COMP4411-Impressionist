@@ -39,6 +39,7 @@ public:
   char *getImageName(); // get the current image name
   void force_update_canvas();
   bool outOfRegion(const Point &p) const;
+  Point clip(const Point &p);
 
   // Attributes
 public:

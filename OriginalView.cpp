@@ -34,7 +34,7 @@ void OriginalView::draw() {
 
   glClear(GL_COLOR_BUFFER_BIT);
 
-  if (m_pDoc->m_ucBitmap) {
+  if (img.bytes.size() > 0) {
     // note that both OpenGL pixel storage and the Windows BMP format
     // store pixels left-to-right, BOTTOM-to-TOP!!  thus all the fiddling
     // around with startrow.
@@ -48,15 +48,15 @@ void OriginalView::draw() {
     Point scrollpos; // = GetScrollPosition();
     scrollpos.x = scrollpos.y = 0;
 
-    drawWidth = min(m_nWindowWidth, m_pDoc->m_nWidth);
-    drawHeight = min(m_nWindowHeight, m_pDoc->m_nHeight);
+    drawWidth = min(m_nWindowWidth, img.width);
+    drawHeight = min(m_nWindowHeight, img.height);
 
-    int startrow = m_pDoc->m_nHeight - (scrollpos.y + drawHeight);
+    int startrow = img.height - (scrollpos.y + drawHeight);
     if (startrow < 0)
       startrow = 0;
 
     bitstart =
-        m_pDoc->m_ucBitmap + 3 * ((m_pDoc->m_nWidth * startrow) + scrollpos.x);
+        img.raw_fmt() + 3 * ((m_pDoc->m_nWidth * startrow) + scrollpos.x);
 
     // just copy image to GLwindow conceptually
     glRasterPos2i(0, m_nWindowHeight - drawHeight);
@@ -78,7 +78,7 @@ void OriginalView::resizeWindow(int width, int height) {
 void OriginalView::set_current_img(Image &img) {
   this->img = img;
   original_img = img;
-  m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
+  // m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
   this->resizeWindow(original_img.width, original_img.height);
   this->refresh();
 }
@@ -92,13 +92,8 @@ void OriginalView::set_cursor(const Point &p) {
   new_img.for_range_pixel(top_left, bottom_right, [&](int y, int x) {
     new_img.set_pixel(y, x, {RED_COLOR});
   });
-  m_pDoc->m_ucBitmap = new_img.raw_fmt();
-  this->resizeWindow(new_img.width, new_img.height);
+  this->img = new_img;
   this->refresh();
 }
 
-void OriginalView::hide_cusor() {
-  m_pDoc->m_ucBitmap = original_img.raw_fmt();
-  this->resizeWindow(original_img.width, original_img.height);
-  this->refresh();
-}
+void OriginalView::hide_cusor() { set_current_img(original_img); }
