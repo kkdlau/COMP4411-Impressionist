@@ -1,5 +1,5 @@
-#if !defined(__CURVE_BRUSH__)
-#define __CURVE_BRUSH__
+#if !defined(__FAN_BRUSH__)
+#define __FAN_BRUSH__
 #include "ImpBrush.h"
 #include "gl_helper.h"
 #include "impressionistDoc.h"
@@ -7,27 +7,23 @@
 
 using namespace GLHelper;
 
-class CurveBrush : public ImpBrush {
+class FanBrush : public ImpBrush {
     Point last;
 public:
-    CurveBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
+    FanBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
 
     void BrushBegin(const Point source, const Point target) {
         ImpressionistDoc* pDoc = GetDocument();
         last = target;
-        const int width = pDoc->getWidth();
-        glPointSize(width);
         BrushMove(source, target);
     }
 
     void BrushMove(const Point source, const Point target) {
         ImpressionistDoc* pDoc = GetDocument();
-
-        const double radius = 2 * pDoc->getSize();
-        const int width = pDoc->getWidth();
+        
+        const double radius = pDoc->getSize();
         float r = pDoc->getRad();
-
         switch (pDoc->m_pUI->get_direction()) {
         case GRADIENT_DIRECTION: {
             auto result = ImageUtils::sobel(pDoc->m_pUI->m_origView->original_img,
@@ -39,11 +35,12 @@ public:
         } break;
         }
 
-        if (isnan(r)) return;
+        if (isnan(r)) return;    
 
-        gl_draw_shape(GL_POINTS, [&] {
+        gl_draw_shape(GL_TRIANGLE_FAN, [&] {
             SetColor(source);
-            for (double i = M_PI / 4; i <= 3 * M_PI / 4; i += 0.01) {
+            gl_set_point(target.x, target.y);
+            for (double i = M_PI / 6; i <= 5 * M_PI / 6; i += 0.1) {
                 double angle = i + r;
                 double dx = cos(angle) * radius;
                 double dy = sin(angle) * radius;
@@ -56,7 +53,7 @@ public:
     void BrushEnd(const Point source, const Point target) {}
     void select() {
         ImpressionistDoc* pDoc = GetDocument();
-        pDoc->m_pUI->m_BrushWidthSlider->activate();
+        pDoc->m_pUI->m_BrushWidthSlider->deactivate();
         pDoc->m_pUI->m_BrushAngleSlider->activate();
         pDoc->m_pUI->m_StrokeDirection->activate();
     }

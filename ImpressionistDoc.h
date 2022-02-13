@@ -31,12 +31,14 @@ public:
 
   int clearCanvas();           // called by the UI to clear the drawing canvas
   void setBrushType(int type); // called by the UI to set the brushType
-  int getSize();               // get the UI size
-  void setSize(int size);      // set the UI size
+  int getSize();               // get the brush size
+  void setSize(int size);      // set the brush size
   int getWidth();
   float getRad();
   float getAlpha();
   char *getImageName(); // get the current image name
+  int getColorBlending();
+  vector<double> getUserColor();
   void force_update_canvas();
   bool outOfRegion(const Point &p) const;
   Point clip(const Point &p);

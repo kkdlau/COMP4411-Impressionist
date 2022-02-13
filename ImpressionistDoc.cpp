@@ -20,6 +20,8 @@
 #include "ScatteredCircleBrush.hpp"
 #include "ScatteredLineBrush.hpp"
 #include "ScatteredPointBrush.hpp"
+#include "FanBrush.hpp"
+#include "CurveBrush.hpp"
 #include "gl_helper.h"
 
 #define DESTROY(p)                                                             \
@@ -55,6 +57,10 @@ ImpressionistDoc::ImpressionistDoc() {
                       new ScatteredLineBrush(this, "Scattered Lines"));
   ImpBrush::set_brush(BRUSH_SCATTERED_CIRCLES,
                       new ScatteredCircleBrush(this, "Scattered Circles"));
+  ImpBrush::set_brush(BRUSH_FANS,
+                      new FanBrush(this, "Fans"));
+  ImpBrush::set_brush(BRUSH_CURVES,
+                      new CurveBrush(this, "Fans"));
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
   GLHelper::set_doc(this);
@@ -91,6 +97,10 @@ int ImpressionistDoc::getWidth() { return m_pUI->getWidth(); }
 float ImpressionistDoc::getRad() { return m_pUI->getAngle() / 180.0 * M_PI; }
 
 float ImpressionistDoc::getAlpha() { return m_pUI->getAlpha(); }
+
+int ImpressionistDoc::getColorBlending() { return m_pUI->getColorBlending(); }
+
+vector<double> ImpressionistDoc::getUserColor() { return m_pUI->getUserColor(); }
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is

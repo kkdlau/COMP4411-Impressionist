@@ -33,13 +33,13 @@
 - [ ] (1W each) more brushes (M)
   - [ ] pattern brush
   - [ ] pixelize brush
-  - [ ] random polygon
+  - [x] random polygon
+  - [x] curve brush
   - [ ] random scattered polygon
 - [ ] **(1W)** clipped brushes (M)
 - [x] **(1W)** cursor on original image (D)
 - [x] (1W) swap content and original (D)
-- [ ] (1B) change color of image (change channel) (M)
-  - [ ] add color source checkbox 
+- [x] (1B) change color of image (change channel) (M)
 - [ ] **(1B)** blur brush and sharpen brush (M)
 - [x] **(1B)** undo (D)
 - [x] (1B) Dissolve one image into another (D)

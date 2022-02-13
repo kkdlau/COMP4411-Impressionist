@@ -250,6 +250,10 @@ void ImpressionistUI::cb_swap_content(Fl_Menu_ *o, void *v) {
   pDoc->swap_content();
 }
 
+void ImpressionistUI::cb_color_blending(Fl_Menu_* o, void* v) {
+    whoami(o)->m_ColorDialog->show();
+}
+
 //------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
@@ -328,7 +332,10 @@ void ImpressionistUI::cb_toggleOriginalView(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
   pDoc->toggleOriginalView();
 }
-
+void ImpressionistUI::cb_colorBlendingUpdate(Fl_Widget* o, void* v) {
+    ((ImpressionistUI*)(o->user_data()))
+        ->setColorBlending(int(((Fl_Check_Button*)o)->value()));
+}
 //---------------------------------- per instance functions
 //--------------------------------------
 
@@ -373,6 +380,7 @@ int ImpressionistUI::getSize() { return m_nSize; }
 int ImpressionistUI::getWidth() { return m_nWidth; }
 int ImpressionistUI::getAngle() { return m_nAngle; }
 float ImpressionistUI::getAlpha() { return m_fAlpha; }
+int ImpressionistUI::getColorBlending() { return m_fColorBlending;  }
 
 //-------------------------------------------------
 // Set the brush size
@@ -408,6 +416,15 @@ void ImpressionistUI::setAlpha(float a) {
     m_BrushAlphaSlider->value(m_fAlpha);
 }
 
+void ImpressionistUI::setColorBlending(int a) {
+    m_fColorBlending = a;
+}
+
+vector<double> ImpressionistUI::getUserColor() {
+    vector<double> rgb = { m_ColorChooser->r(), m_ColorChooser->g(), m_ColorChooser->b() };
+    return rgb;
+}
+
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&File", 0, 0, 0, FL_SUBMENU},
@@ -420,6 +437,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Swap", FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_swap_content, 0},
     {"&Dissolve", FL_ALT + 'd',
      (Fl_Callback *)ImpressionistUI::cb_dissolve_iamge, 0},
+    {"&Color Blending", FL_ALT + 'k',
+     (Fl_Callback*)ImpressionistUI::cb_color_blending, 0},
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
     {"&Quit", FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit},
@@ -448,6 +467,10 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
     {"Scattered Circles", FL_ALT + 'd',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_SCATTERED_CIRCLES},
+     {"Fans", FL_ALT + 'f', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_FANS},
+     {"Curves", FL_ALT + 'r', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_CURVES},
     {0}};
 
 Fl_Menu_Item
@@ -509,6 +532,7 @@ ImpressionistUI::ImpressionistUI() {
       (void *)(this)); // record self to be used by static callback functions
   m_StrokeDirection->menu(strokeDirectionMenu);
   m_StrokeDirection->callback(cb_strokeDirectionChoice);
+  m_StrokeDirection->deactivate(); // match Point as default brush
 
   m_ClearCanvasButton = new Fl_Button(240, 10, 150, 25, "&Clear Canvas");
   m_ClearCanvasButton->user_data((void *)(this));
@@ -568,7 +592,20 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushAlphaSlider->align(FL_ALIGN_RIGHT);
   m_BrushAlphaSlider->callback(cb_alphaUpdate);
 
+  // checkbox for color source (original picture or color blending)
+  m_ColorBlending = new Fl_Check_Button(10, y += 30, 20, 20, "Color Blending");
+  m_ColorBlending->user_data(
+      (void*)(this));
+  m_ColorBlending->labelfont(FL_COURIER);
+  m_ColorBlending->value(0);
+  m_ColorBlending->align(FL_ALIGN_RIGHT);
+  m_ColorBlending->callback(cb_colorBlendingUpdate);
   m_brushDialog->end();
+
+  // color dialog definition
+  m_ColorDialog = new Fl_Window(300, 150, "Color Dialog");
+  m_ColorChooser = new Fl_Color_Chooser(0, 0, 300, 143, "Choose Colors");
+  m_ColorDialog->end();
 }
 
 StrokeDirection ImpressionistUI::get_direction() { return m_direction; }
