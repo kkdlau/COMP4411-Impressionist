@@ -12,9 +12,6 @@
 // Static class member initializations
 int ImpBrush::c_nBrushCount = 0;
 ImpBrush **ImpBrush::c_pBrushes = nullptr;
-const short ImpBrush::mean_filter[3][3] = {
-    {1, 1, 1}, {1, 1, 1}, {1, 1, 1}
-};
 const short ImpBrush::gaussian_filter[3][3] = {
     {1, 2, 1}, {2, 4, 2}, {1, 2, 1}
 };
@@ -49,15 +46,16 @@ void ImpBrush::SetColor(const Point source) {
   BrushFilter brush_filter = pDoc->m_pUI->get_filter();
   std::vector<int> int_color{ 0, 0, 0 };
   auto pixel = pDoc->m_pUI->m_origView->original_img(source.y, source.x);
-
+  color[0] = get<0>(pixel);
+  color[1] = get<1>(pixel);
+  color[2] = get<2>(pixel);
+  
   switch (brush_filter) {
   case FILTER_NONE:
-      color[0] = get<0>(pixel);
-      color[1] = get<1>(pixel);
-      color[2] = get<2>(pixel);
       break;
   
   case FILTER_BLUR:
+      //filterMean(5, source, int_color); //<- can do variable filtering
       filter(gaussian_filter, 16, 3, source, int_color);
       color[0] = int_color[0];
       color[1] = int_color[1];
@@ -105,6 +103,30 @@ void ImpBrush::filter(const short filter[][3], const int divisor, const int dim,
     color[2] = b / divisor;
 }
 
+void ImpBrush::filterMean(const int dim, const Point source, std::vector<int>& color) {
+    short offset = (dim - 1) / 2;
+    ImpressionistDoc* pDoc = GetDocument();
+    int r = 0, g = 0, b = 0;
+    for (int i = 0; i < dim; i++) {
+        for (int j = 0; j < dim; j++) {
+            int x = source.x - i + offset;
+            int y = source.y - i + offset;
+            if (x < 0) x = 0;
+            else if (x >= pDoc->m_nPaintWidth) x = pDoc->m_nPaintWidth - 1;
+            if (y < 0) y = 0;
+            else if (y >= pDoc->m_nPaintHeight) y = pDoc->m_nPaintHeight - 1;
+
+            auto pixel = pDoc->m_pUI->m_origView->original_img(y, x);
+            r += get<0>(pixel);
+            g += get<1>(pixel);
+            b += get<2>(pixel);
+        }
+    }
+    int total_pixels = dim * dim;
+    color[0] = r / total_pixels;
+    color[1] = g / total_pixels;
+    color[2] = b / total_pixels;
+}
 void ImpBrush::set_brush(int index, ImpBrush *b) {
   ImpBrush::c_pBrushes[index] = b;
 }
