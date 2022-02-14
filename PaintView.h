@@ -53,9 +53,9 @@ public:
 
   void resizeWindow(int width, int height);
 
-  void SaveCurrentContent();
+  void SaveCurrentContent(GLvoid *ptr);
 
-  void RestoreContent();
+  void RestoreContent(GLvoid *ptr);
 
   void draw_line(GLubyte r, GLubyte g, GLubyte b);
 
