@@ -46,7 +46,6 @@ static void inline set_doc(ImpressionistDoc *doc) {
 }
 
 static void gl_draw_shape(int drawing_mode, function<void()> drawing_funcs) {
-  invalid = false;
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
   glBegin(drawing_mode);

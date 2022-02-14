@@ -90,7 +90,7 @@ void PaintView::draw() {
   m_nEndCol = m_nStartCol + drawWidth;
 
   if (m_pDoc->m_ucPainting && !isAnEvent) {
-    RestoreContent();
+    RestoreContent(m_pPaintBitstart);
   }
 
   if (m_pDoc->m_ucPainting && isAnEvent) {
@@ -106,6 +106,7 @@ void PaintView::draw() {
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
       save_current_to(prev);
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
       m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
     case LEFT_MOUSE_DRAG: {
@@ -116,11 +117,12 @@ void PaintView::draw() {
     }
     case LEFT_MOUSE_UP: {
       m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
       OriginalView &view = *pDoc->m_pUI->m_origView;
       view.hide_cusor();
       save_current_to(cur);
-      SaveCurrentContent();
-      RestoreContent();
+      SaveCurrentContent(m_pPaintBitstart);
+      RestoreContent(m_pPaintBitstart);
       break;
     }
     case RIGHT_MOUSE_DOWN: {
@@ -130,14 +132,14 @@ void PaintView::draw() {
     }
     case RIGHT_MOUSE_DRAG: {
       line_end = target;
-      RestoreContent();
+      RestoreContent(m_pPaintBitstart);
       draw_line(RED_COLOR);
 
       break;
     }
     case RIGHT_MOUSE_UP: {
       m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
-      RestoreContent();
+      RestoreContent(m_pPaintBitstart);
       break;
     }
 
@@ -219,7 +221,7 @@ void PaintView::resizeWindow(int width, int height) {
   glGenFramebuffers(1, &fbo);
 }
 
-void PaintView::SaveCurrentContent() {
+void PaintView::SaveCurrentContent(GLvoid *ptr) {
   // Tell openGL to read from the front buffer when capturing
   // out paint strokes
   glReadBuffer(GL_FRONT_AND_BACK);
@@ -228,10 +230,10 @@ void PaintView::SaveCurrentContent() {
   glPixelStorei(GL_PACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
 
   glReadPixels(0, m_nWindowHeight - m_nDrawHeight, m_nDrawWidth, m_nDrawHeight,
-               GL_RGB, GL_UNSIGNED_BYTE, m_pPaintBitstart);
+               GL_RGB, GL_UNSIGNED_BYTE, ptr);
 }
 
-void PaintView::RestoreContent() {
+void PaintView::RestoreContent(GLvoid *ptr) {
   glDrawBuffer(GL_BACK);
 
   glClear(GL_COLOR_BUFFER_BIT);
@@ -239,8 +241,7 @@ void PaintView::RestoreContent() {
   glRasterPos2i(0, m_nWindowHeight - m_nDrawHeight);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
-  glDrawPixels(m_nDrawWidth, m_nDrawHeight, GL_RGB, GL_UNSIGNED_BYTE,
-               m_pPaintBitstart);
+  glDrawPixels(m_nDrawWidth, m_nDrawHeight, GL_RGB, GL_UNSIGNED_BYTE, ptr);
 
   //	glDrawBuffer(GL_FRONT);
 }
