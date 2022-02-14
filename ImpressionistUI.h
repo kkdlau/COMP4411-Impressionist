@@ -38,6 +38,7 @@ public:
   Fl_Window *m_brushDialog;
   Fl_Choice *m_BrushTypeChoice;
   Fl_Choice *m_StrokeDirection;
+  Fl_Choice* m_BrushFilterChoice;
 
   Fl_Slider *m_BrushSizeSlider;
   Fl_Slider *m_BrushWidthSlider;
@@ -79,6 +80,9 @@ public:
 
   vector<double> getUserColor();
 
+  BrushFilter get_filter();
+  void set_filter(BrushFilter f);
+
 private:
   ImpressionistDoc
       *m_pDoc; // pointer to document to communicate with the document
@@ -90,11 +94,13 @@ private:
   float m_fAlpha = 1.0;
   int m_fColorBlending = 0;
   StrokeDirection m_direction = SLIDER_RIGHT_MOUSE;
+  BrushFilter m_filter = FILTER_NONE;
 
   // Static class members
   static Fl_Menu_Item menuitems[];
   static Fl_Menu_Item brushTypeMenu[NUM_BRUSH_TYPE + 1];
   static Fl_Menu_Item strokeDirectionMenu[NUM_STROKE_DIRECTION_METHODS + 1];
+  static Fl_Menu_Item brushFilterMenu[NUM_BRUSH_FILTER + 1];
 
   static ImpressionistUI *whoami(Fl_Menu_ *o);
 
@@ -119,6 +125,7 @@ private:
   static void cb_alphaUpdate(Fl_Widget *o, void *v);
   static void cb_toggleOriginalView(Fl_Widget *o, void *v);
   static void cb_colorBlendingUpdate(Fl_Widget* o, void* v);
+  static void cb_brushFilterChoice(Fl_Widget* o, void* v);
 };
 
 #endif

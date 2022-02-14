@@ -34,6 +34,11 @@ enum StrokeDirection {
   NUM_STROKE_DIRECTION_METHODS
 };
 
+enum BrushFilter {
+    FILTER_NONE = 0,
+    FILTER_BLUR,
+    NUM_BRUSH_FILTER
+};
 class ImpressionistDoc; // Pre-declaring class
 
 class Point {
