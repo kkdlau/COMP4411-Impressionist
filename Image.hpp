@@ -26,9 +26,9 @@ static RGB888 operator*(RGB888 c1, double d) {
 }
 
 class Image {
-  vector<GLubyte> img;
-
 public:
+  vector<GLubyte> bytes;
+
   int width;
   int height;
   Image() : Image{nullptr, 0, 0} {}
@@ -44,10 +44,10 @@ public:
 
   void set(GLubyte *buf, int w, int h) {
     width = w, height = h;
-    img = {};
+    bytes = {};
     const int length = w * h * 3;
     for (int i = 0; i < length; i++) {
-      img.push_back(buf[i]);
+      bytes.push_back(buf[i]);
     }
   }
 
@@ -63,13 +63,27 @@ public:
     return true;
   }
 
-  const tuple<GLubyte &, GLubyte &, GLubyte &> operator()(int y, int x) {
-    int i = 3 * (y * width + x);
-    return {img[i], img[i + 1], img[i + 2]};
+  Point clip(const Point &p) { return clip(p.x, p.y); }
+
+  Point clip(int x, int y) {
+    if (x < 0)
+      x = 0;
+    if (y < 0)
+      y = 0;
+    if (x >= width)
+      x = width - 1;
+    if (y >= height)
+      y = height - 1;
+    return Point{x, y};
   }
 
-  GLubyte *raw_fmt() { return img.data(); }
-  GLubyte *paint_byte() { return img.data() + height * 3; }
+  const tuple<GLubyte &, GLubyte &, GLubyte &> operator()(int y, int x) {
+    int i = 3 * (y * width + x);
+    return {bytes[i], bytes[i + 1], bytes[i + 2]};
+  }
+
+  GLubyte *raw_fmt() { return bytes.data(); }
+  GLubyte *paint_byte() { return bytes.data() + height * 3; }
 
   void set_pixel(int y, int x, const RGB888 &rgb) {
     auto color = (*this)(y, x);
@@ -97,6 +111,15 @@ public:
         handler(y, x);
       }
     }
+  }
+
+  void set_alpha(float a) {
+    this->for_each_pixel([&](int y, int x) {
+      auto c = (*this)(y, x);
+      get<0>(c) = get<0>(c) / 2;
+      get<1>(c) = get<1>(c) / 2;
+      get<2>(c) = get<2>(c) / 2;
+    });
   }
 };
 #endif // __IMAGE_H_

@@ -41,6 +41,7 @@ public:
   vector<double> getUserColor();
   void force_update_canvas();
   bool outOfRegion(const Point &p) const;
+  Point clip(const Point &p);
 
   // Attributes
 public:

@@ -140,8 +140,7 @@ int ImpressionistDoc::loadImage(char *iname) {
                               m_pUI->m_mainWindow->y(), width * 2, height + 25);
 
   // display it on origView
-  m_pUI->m_origView->resizeWindow(width, height);
-  m_pUI->m_origView->refresh();
+  m_pUI->m_origView->set_current_img(m_pUI->m_origView->original_img);
 
   // refresh paint view as well
   m_pUI->m_paintView->resizeWindow(width, height);
@@ -149,6 +148,7 @@ int ImpressionistDoc::loadImage(char *iname) {
 
   m_pUI->m_paintView->prev.set(m_ucPainting, width, height);
   m_pUI->m_paintView->cur.set(m_ucPainting, width, height);
+
   return 1;
 }
 
@@ -230,6 +230,10 @@ void ImpressionistDoc::force_update_canvas() {
 bool ImpressionistDoc::outOfRegion(const Point &p) const {
   return !(p.x >= 0 && p.y >= 0 && p.x <= m_nPaintWidth &&
            p.y <= m_nPaintHeight);
+}
+
+Point ImpressionistDoc::clip(const Point &p) {
+  return m_pUI->m_origView->img.clip(p);
 }
 
 void ImpressionistDoc::swap_content() {

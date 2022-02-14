@@ -240,8 +240,8 @@ void ImpressionistUI::cb_dissolve_iamge(Fl_Menu_ *o, void *v) {
 #endif
   Image src = Image::from(newfile);
   debugger("w:%d h:%d", src.width, src.height);
-  Image output = ImageUtils::dissolve(src, pDoc->m_pUI->m_paintView->cur);
-  pDoc->m_pUI->m_paintView->set_current_img(output);
+  Image output = ImageUtils::dissolve(src, pDoc->m_pUI->m_origView->img);
+  pDoc->m_pUI->m_origView->set_current_img(output);
 }
 
 void ImpressionistUI::cb_swap_content(Fl_Menu_ *o, void *v) {
