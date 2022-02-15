@@ -293,6 +293,11 @@ void ImpressionistUI::cb_strokeDirectionChoice(Fl_Widget *o, void *v) {
   pUI->m_direction = (StrokeDirection)(size_t)v;
 }
 
+void ImpressionistUI::cb_brushFilterChoice(Fl_Widget* o, void* v) {
+    ImpressionistUI* pUI = ((ImpressionistUI*)(o->user_data()));
+    pUI->m_filter = (BrushFilter)(size_t)v;
+}
+
 //------------------------------------------------------------
 // Clears the paintview canvas.
 // Called by the UI when the clear canvas button is pushed
@@ -486,6 +491,17 @@ Fl_Menu_Item
          (void *)BRUSH_DIRECTION},
         {0}};
 
+Fl_Menu_Item
+ImpressionistUI::brushFilterMenu[NUM_BRUSH_FILTER + 1] = {
+    {"None", FL_ALT + 'n',
+    (Fl_Callback*)ImpressionistUI::cb_brushFilterChoice,
+    (void*)FILTER_NONE},
+    {"Blurring", FL_ALT + 'u',
+    (Fl_Callback*)ImpressionistUI::cb_brushFilterChoice,
+    (void*)FILTER_BLUR},
+    {0}
+};
+
 //----------------------------------------------------
 // Constructor.  Creates all of the widgets.
 // Add new widgets here
@@ -600,6 +616,13 @@ ImpressionistUI::ImpressionistUI() {
   m_ColorBlending->value(0);
   m_ColorBlending->align(FL_ALIGN_RIGHT);
   m_ColorBlending->callback(cb_colorBlendingUpdate);
+
+  m_BrushFilterChoice = new Fl_Choice(45, y += 30, 150, 25, "&Filter");
+  m_BrushFilterChoice->user_data(
+      (void*)(this)); // record self to be used by static callback functions
+  m_BrushFilterChoice->menu(brushFilterMenu);
+  m_BrushFilterChoice->callback(cb_brushFilterChoice);
+
   m_brushDialog->end();
 
   // color dialog definition
@@ -611,4 +634,12 @@ ImpressionistUI::ImpressionistUI() {
 StrokeDirection ImpressionistUI::get_direction() { return m_direction; }
 void ImpressionistUI::set_direction(StrokeDirection d) {
   m_StrokeDirection->value(d);
+}
+
+BrushFilter ImpressionistUI::get_filter() {
+    return m_filter;
+}
+
+void ImpressionistUI::set_filter(BrushFilter f) {
+    m_BrushFilterChoice->value(f);
 }

@@ -10,6 +10,7 @@
 #include <cmath>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 #include <typeinfo>
 
 extern float frand();
@@ -34,6 +35,11 @@ enum StrokeDirection {
   NUM_STROKE_DIRECTION_METHODS
 };
 
+enum BrushFilter {
+    FILTER_NONE = 0,
+    FILTER_BLUR,
+    NUM_BRUSH_FILTER
+};
 class ImpressionistDoc; // Pre-declaring class
 
 class Point {
@@ -97,6 +103,10 @@ public:
   // according to the source image and the position, determine the draw color
   void SetColor(const Point source);
 
+  void filter(const short filter[][3], const int divisor, const int dim, const Point source, std::vector<int>& color);
+
+  void filterMean(const int dim, const Point source, std::vector<int>& color);
+
   // TODO: implement all UI enable / disable business logic in here.
   virtual void select() {}
   //virtual void disselect() {}
@@ -110,6 +120,7 @@ public:
   static int c_nBrushCount;     // How many brushes we have,
   static ImpBrush **c_pBrushes; // and what they are.
   static void set_brush(int index, ImpBrush *b);
+  static const short gaussian_filter[3][3];
 
 private:
   ImpressionistDoc *m_pDoc;
