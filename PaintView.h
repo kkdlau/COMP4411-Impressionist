@@ -36,14 +36,7 @@ public:
    */
   Image cur;
 
-  /**
-   * @brief the image for rendering on the screen.
-   *
-   * This image maybe combine with the original to render image overlay.
-   */
-  Image painting_content;
-
-  unsigned int fbo;
+  Image painting_buffer;
 
   PaintView(int x, int y, int w, int h, const char *l);
   void draw();
@@ -53,13 +46,12 @@ public:
 
   void resizeWindow(int width, int height);
 
-  void SaveCurrentContent(GLvoid *ptr);
+  void save_content(GLvoid *ptr);
 
-  void RestoreContent(GLvoid *ptr);
+  void restore_content(GLvoid *ptr);
 
-  void draw_line(GLubyte r, GLubyte g, GLubyte b);
+  void draw_line(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
 
-  void save_current_to(Image &img);
   void set_current_img(Image &img);
 
   ImpressionistDoc *m_pDoc;

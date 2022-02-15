@@ -36,7 +36,7 @@ static Image dissolve(Image &source, Image &target) {
   output.for_each_pixel([&](int y, int x) {
     auto color = output(y, x);
     if (source.valid_point(y, x)) {
-      RGB888 avg_color = (source(y, x) + color) / 2;
+      RGBA avg_color = (source(y, x) + color) / 2;
       get<0>(color) = get<0>(avg_color);
       get<1>(color) = get<1>(avg_color);
       get<2>(color) = get<2>(avg_color);

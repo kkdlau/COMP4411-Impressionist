@@ -31,7 +31,7 @@ using namespace std;
  * This variable is reset to false every time a new drawing is triggered.
  */
 
-#define RED_COLOR 255, 0, 0
+#define RED_COLOR 255, 0, 0, 255
 namespace GLHelper {
 extern bool invalid;
 

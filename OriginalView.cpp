@@ -63,7 +63,7 @@ void OriginalView::draw() {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glPixelStorei(GL_UNPACK_ROW_LENGTH, m_pDoc->m_nWidth);
     glDrawBuffer(GL_BACK);
-    glDrawPixels(drawWidth, drawHeight, GL_RGB, GL_UNSIGNED_BYTE, bitstart);
+    glDrawPixels(drawWidth, drawHeight, GL_RGBA, GL_UNSIGNED_BYTE, bitstart);
   }
 
   glFlush();
@@ -78,7 +78,7 @@ void OriginalView::resizeWindow(int width, int height) {
 void OriginalView::set_current_img(Image &img) {
   this->img = img;
   original_img = img;
-  // m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
+  m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
   this->resizeWindow(original_img.width, original_img.height);
   this->refresh();
 }

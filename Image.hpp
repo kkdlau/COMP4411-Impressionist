@@ -10,22 +10,26 @@
 
 using namespace std;
 
-typedef tuple<GLubyte, GLubyte, GLubyte> RGB888;
+typedef tuple<GLubyte, GLubyte, GLubyte, GLubyte> RGBA;
 
-static RGB888 operator+(RGB888 c1, RGB888 c2) {
+static RGBA operator+(RGBA c1, RGBA c2) {
   return {get<0>(c1) + get<0>(c2), get<1>(c1) + get<1>(c2),
-          get<2>(c1) + get<2>(c2)};
+          get<2>(c1) + get<2>(c2), get<3>(c1) + get<3>(c2)};
 }
 
-static RGB888 operator/(RGB888 c1, double d) {
-  return {(int)(get<0>(c1) / d), (int)(get<1>(c1) / d), int(get<2>(c1) / d)};
+static RGBA operator/(RGBA c1, double d) {
+  return {(int)(get<0>(c1) / d), (int)(get<1>(c1) / d), int(get<2>(c1) / d),
+          int(get<3>(c1) / d)};
 }
 
-static RGB888 operator*(RGB888 c1, double d) {
-  return {(int)(get<0>(c1) * d), (int)(get<1>(c1) * d), int(get<2>(c1) * d)};
+static RGBA operator*(RGBA c1, double d) {
+  return {(int)(get<0>(c1) * d), (int)(get<1>(c1) * d), int(get<2>(c1) * d),
+          int(get<3>(c1) * d)};
 }
 
 class Image {
+  static const int NUM_CHANNEL = 4;
+
 public:
   vector<GLubyte> bytes;
 
@@ -46,8 +50,13 @@ public:
     width = w, height = h;
     bytes = {};
     const int length = w * h * 3;
+    short count = 0;
     for (int i = 0; i < length; i++) {
       bytes.push_back(buf[i]);
+      if (++count == 3) {
+        count = 0;
+        bytes.push_back(255);
+      }
     }
   }
 
@@ -77,24 +86,25 @@ public:
     return Point{x, y};
   }
 
-  const tuple<GLubyte &, GLubyte &, GLubyte &> operator()(int y, int x) {
-    int i = 3 * (y * width + x);
-    return {bytes[i], bytes[i + 1], bytes[i + 2]};
+  const tuple<GLubyte &, GLubyte &, GLubyte &, GLubyte &> operator()(int y,
+                                                                     int x) {
+    int i = convert_to_index(y, x);
+    return {bytes[i], bytes[i + 1], bytes[i + 2], bytes[i + 3]};
   }
 
-  GLubyte *raw_fmt() { return bytes.data(); }
-  GLubyte *paint_byte() { return bytes.data() + height * 3; }
+  int convert_to_index(int y, int x) { return NUM_CHANNEL * (y * width + x); }
 
-  void set_pixel(int y, int x, const RGB888 &rgb) {
+  GLubyte *raw_fmt() { return bytes.data(); }
+  GLubyte *paint_byte() { return bytes.data() + height * NUM_CHANNEL; }
+
+  void set_pixel(int y, int x, const RGBA &rgb) {
     auto color = (*this)(y, x);
     get<0>(color) = get<0>(rgb);
     get<1>(color) = get<1>(rgb);
     get<2>(color) = get<2>(rgb);
   }
 
-  void set_pixel(const Point &p, const RGB888 &rgb) {
-    set_pixel(p.y, p.x, rgb);
-  }
+  void set_pixel(const Point &p, const RGBA &rgb) { set_pixel(p.y, p.x, rgb); }
 
   void for_range_pixel(const Point &s, const Point &e,
                        function<void(int, int)> handler) {
@@ -114,11 +124,9 @@ public:
   }
 
   void set_alpha(float a) {
-    this->for_each_pixel([&](int y, int x) {
+    for_each_pixel([&](int y, int x) {
       auto c = (*this)(y, x);
-      get<0>(c) = get<0>(c) / 2;
-      get<1>(c) = get<1>(c) / 2;
-      get<2>(c) = get<2>(c) / 2;
+      get<3>(c) = (GLubyte)(100);
     });
   }
 };
