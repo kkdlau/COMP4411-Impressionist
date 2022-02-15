@@ -44,6 +44,10 @@ public:
       pDoc->m_pUI->m_BrushWidthSlider->deactivate();
       pDoc->m_pUI->m_BrushAngleSlider->deactivate();
       pDoc->m_pUI->m_StrokeDirection->deactivate();
+      pDoc->m_pUI->m_BrushSizeSlider->activate();
+      pDoc->m_pUI->m_BrushAlphaSlider->activate();
+      pDoc->m_pUI->m_BrushBlurSlider->deactivate();
+      pDoc->m_pUI->m_ColorBlending->activate();
   }
 };
 

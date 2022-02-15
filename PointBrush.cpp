@@ -43,7 +43,7 @@ void PointBrush::BrushMove(const Point source, const Point target) {
       printf("Go back in\n"); // TODO - Remove 
       return;
   }
-  printf("Source (%d, %d)\n", source.x, source.y);
+  //printf("Source (%d, %d)\n", source.x, source.y);
 
   gl_draw_shape(GL_POINTS, [&] {
     debugger("%d, %d\n", target.x, target.y);
@@ -60,7 +60,11 @@ void PointBrush::BrushEnd(const Point source, const Point target) {
 
 void PointBrush::select() {
     ImpressionistDoc* pDoc = GetDocument();
+    pDoc->m_pUI->m_BrushSizeSlider->activate();
     pDoc->m_pUI->m_BrushWidthSlider->deactivate();
     pDoc->m_pUI->m_BrushAngleSlider->deactivate();
     pDoc->m_pUI->m_StrokeDirection->deactivate();
+    pDoc->m_pUI->m_BrushAlphaSlider->activate();
+    pDoc->m_pUI->m_BrushBlurSlider->deactivate();
+    pDoc->m_pUI->m_ColorBlending->activate();
 }

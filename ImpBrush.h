@@ -25,6 +25,7 @@ enum {
   BRUSH_SCATTERED_CIRCLES,
   BRUSH_FANS,
   BRUSH_CURVES,
+  BRUSH_FILTER, // brush with blurring filter
   NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
@@ -104,8 +105,6 @@ public:
   void SetColor(const Point source);
 
   void filter(const short filter[][3], const int divisor, const int dim, const Point source, std::vector<int>& color);
-
-  void filterMean(const int dim, const Point source, std::vector<int>& color);
 
   // TODO: implement all UI enable / disable business logic in here.
   virtual void select() {}

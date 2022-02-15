@@ -22,6 +22,7 @@
 #include "ScatteredPointBrush.hpp"
 #include "FanBrush.hpp"
 #include "CurveBrush.hpp"
+#include "FilterBrush.hpp"
 #include "gl_helper.h"
 
 #define DESTROY(p)                                                             \
@@ -60,7 +61,10 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::set_brush(BRUSH_FANS,
                       new FanBrush(this, "Fans"));
   ImpBrush::set_brush(BRUSH_CURVES,
-                      new CurveBrush(this, "Fans"));
+                      new CurveBrush(this, "Curves"));
+  ImpBrush::set_brush(BRUSH_FILTER,
+                      new FilterBrush(this, "Blurring"));
+ 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
   GLHelper::set_doc(this);

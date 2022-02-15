@@ -293,11 +293,6 @@ void ImpressionistUI::cb_strokeDirectionChoice(Fl_Widget *o, void *v) {
   pUI->m_direction = (StrokeDirection)(size_t)v;
 }
 
-void ImpressionistUI::cb_brushFilterChoice(Fl_Widget* o, void* v) {
-    ImpressionistUI* pUI = ((ImpressionistUI*)(o->user_data()));
-    pUI->m_filter = (BrushFilter)(size_t)v;
-}
-
 //------------------------------------------------------------
 // Clears the paintview canvas.
 // Called by the UI when the clear canvas button is pushed
@@ -340,6 +335,10 @@ void ImpressionistUI::cb_toggleOriginalView(Fl_Widget *o, void *v) {
 void ImpressionistUI::cb_colorBlendingUpdate(Fl_Widget* o, void* v) {
     ((ImpressionistUI*)(o->user_data()))
         ->setColorBlending(int(((Fl_Check_Button*)o)->value()));
+}
+void ImpressionistUI::cb_blurUpdate(Fl_Widget* o, void* v) {
+    ((ImpressionistUI*)(o->user_data()))
+        ->setBlurValue(int(((Fl_Slider*)o)->value()));
 }
 //---------------------------------- per instance functions
 //--------------------------------------
@@ -386,7 +385,7 @@ int ImpressionistUI::getWidth() { return m_nWidth; }
 int ImpressionistUI::getAngle() { return m_nAngle; }
 float ImpressionistUI::getAlpha() { return m_fAlpha; }
 int ImpressionistUI::getColorBlending() { return m_fColorBlending;  }
-
+int ImpressionistUI::getBlurValue() { return m_fBlur; }
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -423,6 +422,15 @@ void ImpressionistUI::setAlpha(float a) {
 
 void ImpressionistUI::setColorBlending(int a) {
     m_fColorBlending = a;
+}
+
+void ImpressionistUI::setBlurValue(int a) {
+    m_fBlur = a;
+
+    if (a <= 10)
+        m_BrushBlurSlider->value(m_fBlur);
+    else
+        m_BrushBlurSlider->value(10);
 }
 
 vector<double> ImpressionistUI::getUserColor() {
@@ -470,12 +478,14 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_SCATTERED_LINES},
     {"Scattered Circles", FL_ALT + 'd',
-     (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_SCATTERED_CIRCLES},
-     {"Fans", FL_ALT + 'f', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
-     (void*)BRUSH_FANS},
-     {"Curves", FL_ALT + 'r', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
-     (void*)BRUSH_CURVES},
+    (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+    (void *)BRUSH_SCATTERED_CIRCLES},
+    {"Fans", FL_ALT + 'f', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+    (void*)BRUSH_FANS},
+    {"Curves", FL_ALT + 'r', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+    (void*)BRUSH_CURVES},
+    {"Blurring Filter", FL_ALT + 'u', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+    (void*)BRUSH_FILTER},
     {0}};
 
 Fl_Menu_Item
@@ -490,17 +500,6 @@ Fl_Menu_Item
          (Fl_Callback *)ImpressionistUI::cb_strokeDirectionChoice,
          (void *)BRUSH_DIRECTION},
         {0}};
-
-Fl_Menu_Item
-ImpressionistUI::brushFilterMenu[NUM_BRUSH_FILTER + 1] = {
-    {"None", FL_ALT + 'n',
-    (Fl_Callback*)ImpressionistUI::cb_brushFilterChoice,
-    (void*)FILTER_NONE},
-    {"Blurring", FL_ALT + 'u',
-    (Fl_Callback*)ImpressionistUI::cb_brushFilterChoice,
-    (void*)FILTER_BLUR},
-    {0}
-};
 
 //----------------------------------------------------
 // Constructor.  Creates all of the widgets.
@@ -608,6 +607,20 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushAlphaSlider->align(FL_ALIGN_RIGHT);
   m_BrushAlphaSlider->callback(cb_alphaUpdate);
 
+  m_BrushBlurSlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Blurring");
+  m_BrushBlurSlider->user_data(
+      (void*)(this));
+  m_BrushBlurSlider->type(FL_HOR_NICE_SLIDER);
+  m_BrushBlurSlider->labelfont(FL_COURIER);
+  m_BrushBlurSlider->labelsize(12);
+  m_BrushBlurSlider->minimum(0);
+  m_BrushBlurSlider->maximum(10);
+  m_BrushBlurSlider->step(1);
+  m_BrushBlurSlider->value(m_fBlur);
+  m_BrushBlurSlider->align(FL_ALIGN_RIGHT);
+  m_BrushBlurSlider->callback(cb_blurUpdate);
+  m_BrushBlurSlider->deactivate(); // follow Point as default
+
   // checkbox for color source (original picture or color blending)
   m_ColorBlending = new Fl_Check_Button(10, y += 30, 20, 20, "Color Blending");
   m_ColorBlending->user_data(
@@ -616,12 +629,6 @@ ImpressionistUI::ImpressionistUI() {
   m_ColorBlending->value(0);
   m_ColorBlending->align(FL_ALIGN_RIGHT);
   m_ColorBlending->callback(cb_colorBlendingUpdate);
-
-  m_BrushFilterChoice = new Fl_Choice(45, y += 30, 150, 25, "&Filter");
-  m_BrushFilterChoice->user_data(
-      (void*)(this)); // record self to be used by static callback functions
-  m_BrushFilterChoice->menu(brushFilterMenu);
-  m_BrushFilterChoice->callback(cb_brushFilterChoice);
 
   m_brushDialog->end();
 
@@ -634,12 +641,4 @@ ImpressionistUI::ImpressionistUI() {
 StrokeDirection ImpressionistUI::get_direction() { return m_direction; }
 void ImpressionistUI::set_direction(StrokeDirection d) {
   m_StrokeDirection->value(d);
-}
-
-BrushFilter ImpressionistUI::get_filter() {
-    return m_filter;
-}
-
-void ImpressionistUI::set_filter(BrushFilter f) {
-    m_BrushFilterChoice->value(f);
 }
