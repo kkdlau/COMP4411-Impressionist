@@ -261,6 +261,6 @@ void PaintView::draw_line(GLubyte r, GLubyte g, GLubyte b, GLubyte a) {
 
 void PaintView::set_current_img(Image &img) {
   cur = img;
-  m_pDoc->m_ucPainting = cur.raw_fmt();
+  // m_pDoc->m_ucPainting = cur.raw_fmt();
   refresh();
 }
