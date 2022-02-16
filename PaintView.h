@@ -52,6 +52,8 @@ public:
 
   void draw_line(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
 
+  void abort_event(int& e, Point& p);
+
   void set_current_img(Image &img);
 
   ImpressionistDoc *m_pDoc;

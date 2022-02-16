@@ -36,12 +36,16 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
   m_nWindowHeight = h;
 }
 
-void abort_event(int &event, ImpressionistDoc &doc) {
-  StrokeDirection d = doc.m_pUI->get_direction();
+void PaintView::abort_event(int &event, Point& p) {
+  StrokeDirection d = pDoc->m_pUI->get_direction();
   if (d != SLIDER_RIGHT_MOUSE) {
     // abort right click event
     if (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP)
       event = 0;
+    if (!cur.valid_point(p.x, p.y)) {
+        debugger("out-of-boundary");
+        event = 0;
+    }
   }
 }
 
@@ -101,10 +105,11 @@ void PaintView::draw() {
     // Clear it after processing.
     isAnEvent = 0;
 
-    abort_event(eventToDo, *m_pDoc);
 
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
     Point target(coord.x, m_nWindowHeight - coord.y);
+
+    abort_event(eventToDo, target);
 
     // This is the event handler
     switch (eventToDo) {
