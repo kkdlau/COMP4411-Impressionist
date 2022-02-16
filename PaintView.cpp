@@ -85,8 +85,16 @@ void PaintView::draw() {
   m_nStartCol = scrollpos.x;
   m_nEndCol = m_nStartCol + drawWidth;
 
+  OriginalView &org_view = *pDoc->m_pUI->m_origView;
+  ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
+
   if (cur.bytes.size() && !isAnEvent) {
-    restore_content(cur.paint_byte());
+    debugger("redraw");
+    restore_content(cur.raw_fmt());
+    // Image overlay = org_view.original_img;
+    // debugger("%d", overlay.bytes.size());
+    // overlay.set_alpha(0.5);
+    // restore_content(overlay.raw_fmt());
   }
 
   if (cur.bytes.size() && isAnEvent) {
@@ -97,8 +105,6 @@ void PaintView::draw() {
 
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
     Point target(coord.x, m_nWindowHeight - coord.y);
-    OriginalView &org_view = *pDoc->m_pUI->m_origView;
-    ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
 
     // This is the event handler
     switch (eventToDo) {
@@ -108,12 +114,12 @@ void PaintView::draw() {
       break;
     case LEFT_MOUSE_DRAG: {
       restore_content(cur.raw_fmt());
-      Image overlay = org_view.original_img;
-      overlay.set_alpha(0.5);
+      // Image overlay = org_view.original_img;
+      // overlay.set_alpha(0.99);
       cur_brush.BrushMove(source, target);
       org_view.set_cursor(target);
       save_content(cur.raw_fmt());
-      restore_content(overlay.raw_fmt());
+      // restore_content(overlay.raw_fmt());
       break;
     }
     case LEFT_MOUSE_UP: {
@@ -255,6 +261,6 @@ void PaintView::draw_line(GLubyte r, GLubyte g, GLubyte b, GLubyte a) {
 
 void PaintView::set_current_img(Image &img) {
   cur = img;
-  // m_pDoc->m_ucPainting = cur.raw_fmt();
+  m_pDoc->m_ucPainting = cur.raw_fmt();
   refresh();
 }

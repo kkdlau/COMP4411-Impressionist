@@ -43,7 +43,7 @@
 - [x] **(1B)** blur brush (M)
 - [x] **(1B)** undo (D)
 - [x] (1B) Dissolve one image into another (D)
-  - [x] (1B1W) original image overlay (D)
+  - [ ] (1B1W) original image overlay (D)
 - [ ] _(1B1W)_ mural image (load another image without resetting)
 - [ ] (1B1W) alpha mapping brush (need more look up)
 - [ ] **(1B1W)** auto paint (M)

@@ -14,15 +14,15 @@
 
 // Include individual brush headers here.
 #include "CircleBrush.hpp"
+#include "CurveBrush.hpp"
+#include "FanBrush.hpp"
+#include "FilterBrush.hpp"
 #include "Image.hpp"
 #include "LineBrush.hpp"
 #include "PointBrush.h"
 #include "ScatteredCircleBrush.hpp"
 #include "ScatteredLineBrush.hpp"
 #include "ScatteredPointBrush.hpp"
-#include "FanBrush.hpp"
-#include "CurveBrush.hpp"
-#include "FilterBrush.hpp"
 #include "gl_helper.h"
 
 #define DESTROY(p)                                                             \
@@ -58,13 +58,10 @@ ImpressionistDoc::ImpressionistDoc() {
                       new ScatteredLineBrush(this, "Scattered Lines"));
   ImpBrush::set_brush(BRUSH_SCATTERED_CIRCLES,
                       new ScatteredCircleBrush(this, "Scattered Circles"));
-  ImpBrush::set_brush(BRUSH_FANS,
-                      new FanBrush(this, "Fans"));
-  ImpBrush::set_brush(BRUSH_CURVES,
-                      new CurveBrush(this, "Curves"));
-  ImpBrush::set_brush(BRUSH_FILTER,
-                      new FilterBrush(this, "Blurring"));
- 
+  ImpBrush::set_brush(BRUSH_FANS, new FanBrush(this, "Fans"));
+  ImpBrush::set_brush(BRUSH_CURVES, new CurveBrush(this, "Curves"));
+  ImpBrush::set_brush(BRUSH_FILTER, new FilterBrush(this, "Blurring"));
+
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
   GLHelper::set_doc(this);
@@ -104,7 +101,9 @@ float ImpressionistDoc::getAlpha() { return m_pUI->getAlpha(); }
 
 int ImpressionistDoc::getColorBlending() { return m_pUI->getColorBlending(); }
 
-vector<double> ImpressionistDoc::getUserColor() { return m_pUI->getUserColor(); }
+vector<double> ImpressionistDoc::getUserColor() {
+  return m_pUI->getUserColor();
+}
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is
@@ -146,12 +145,10 @@ int ImpressionistDoc::loadImage(char *iname) {
   // display it on origView
   m_pUI->m_origView->set_current_img(m_pUI->m_origView->original_img);
 
-  // refresh paint view as well
-  m_pUI->m_paintView->resizeWindow(width, height);
-  m_pUI->m_paintView->refresh();
-
   m_pUI->m_paintView->prev.set(m_ucPainting, width, height);
   m_pUI->m_paintView->cur.set(m_ucPainting, width, height);
+
+  m_pUI->m_paintView->set_current_img(m_pUI->m_paintView->cur);
 
   return 1;
 }
@@ -163,7 +160,8 @@ int ImpressionistDoc::loadImage(char *iname) {
 //----------------------------------------------------------------
 int ImpressionistDoc::saveImage(char *iname) {
 
-  writeBMP(iname, m_nPaintWidth, m_nPaintHeight, m_ucPainting);
+  writeBMP(iname, m_nPaintWidth, m_nPaintHeight,
+           m_pUI->m_paintView->cur.raw_fmt());
 
   return 1;
 }
@@ -177,7 +175,7 @@ int ImpressionistDoc::saveVideo(char *iname) { return -1; }
 // This is called by the UI when the clear canvas menu item is
 // chosen
 //-----------------------------------------------------------------
-int ImpressionistDoc::clearCanvas() {
+int ImpressionistDoc::clear_canvas() {
 
   // Release old storage
   if (m_ucPainting) {
@@ -186,36 +184,11 @@ int ImpressionistDoc::clearCanvas() {
     // allocate space for draw view
     m_ucPainting = new unsigned char[m_nPaintWidth * m_nPaintHeight * 3];
     memset(m_ucPainting, 0, m_nPaintWidth * m_nPaintHeight * 3);
-
-    // refresh paint view as well
-    m_pUI->m_paintView->refresh();
+    Image img{m_ucPainting, m_nPaintWidth, m_nPaintHeight};
+    m_pUI->m_paintView->set_current_img(img);
   }
 
   return 0;
-}
-
-//------------------------------------------------------------------
-// Get the color of the pixel in the original image at coord x and y
-//------------------------------------------------------------------
-GLubyte *ImpressionistDoc::GetOriginalPixel(int x, int y) {
-  if (x < 0)
-    x = 0;
-  else if (x >= m_nWidth)
-    x = m_nWidth - 1;
-
-  if (y < 0)
-    y = 0;
-  else if (y >= m_nHeight)
-    y = m_nHeight - 1;
-
-  return (GLubyte *)(m_ucBitmap + 3 * (y * m_nWidth + x));
-}
-
-//----------------------------------------------------------------
-// Get the color of the pixel in the original image at point p
-//----------------------------------------------------------------
-GLubyte *ImpressionistDoc::GetOriginalPixel(const Point p) {
-  return GetOriginalPixel(p.x, p.y);
 }
 
 void ImpressionistDoc::toggleOriginalView() {
