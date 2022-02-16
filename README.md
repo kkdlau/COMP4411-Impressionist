@@ -36,20 +36,20 @@
   - [x] random polygon
   - [x] curve brush
   - [ ] random scattered polygon
-- [ ] **(1W)** clipped brushes (M)
+- [ ] **(1W)** clipped brushes
 - [x] **(1W)** cursor on original image (D)
 - [x] (1W) swap content and original (D)
 - [x] (1B) change color of image (change channel) (M)
-- [ ] **(1B)** blur brush and sharpen brush (M)
+- [x] **(1B)** blur brush (M)
 - [x] **(1B)** undo (D)
 - [x] (1B) Dissolve one image into another (D)
   - [ ] (1B1W) original image overlay (D)
 - [ ] _(1B1W)_ mural image (load another image without resetting)
 - [ ] (1B1W) alpha mapping brush (need more look up)
-- [ ] **(1B1W)** auto paint
+- [ ] **(1B1W)** auto paint (M)
 - [ ] **(1B1W)** gradient according to another image (D)
 - [ ] _(1B1W)_ edge clipping (need more look up) (D)
-- [ ] _(2B)_ filter kernel
+- [ ] _(2B)_ filter kernel (M)
   - [ ] need arbitrary size
   - [ ] apply button for do whole convolution
   - [ ] normalize
