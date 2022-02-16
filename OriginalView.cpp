@@ -78,7 +78,7 @@ void OriginalView::resizeWindow(int width, int height) {
 void OriginalView::set_current_img(Image &img) {
   this->img = img;
   original_img = img;
-  m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
+  // m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
   this->resizeWindow(original_img.width, original_img.height);
   this->refresh();
 }
