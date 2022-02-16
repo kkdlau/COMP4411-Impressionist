@@ -29,7 +29,7 @@ public:
 
   void toggleOriginalView();
 
-  int clearCanvas();           // called by the UI to clear the drawing canvas
+  int clear_canvas();          // called by the UI to clear the drawing canvas
   void setBrushType(int type); // called by the UI to set the brushType
   int getSize();               // get the brush size
   void setSize(int size);      // set the brush size
@@ -62,11 +62,6 @@ public:
 
   // Operations
 public:
-  // Get the color of the original picture at the specified coord
-  GLubyte *GetOriginalPixel(int x, int y);
-  // Get the color of the original picture at the specified point
-  GLubyte *GetOriginalPixel(const Point p);
-
   void swap_content();
   void undo_painting();
   void dissolve_image();

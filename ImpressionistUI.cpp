@@ -220,7 +220,7 @@ void ImpressionistUI::cb_brushes(Fl_Menu_ *o, void *v) {
 void ImpressionistUI::cb_clear_canvas(Fl_Menu_ *o, void *v) {
   ImpressionistDoc *pDoc = whoami(o)->getDocument();
 
-  pDoc->clearCanvas();
+  pDoc->clear_canvas();
 }
 
 void ImpressionistUI::cb_undo(Fl_Menu_ *o, void *v) {
@@ -300,7 +300,7 @@ void ImpressionistUI::cb_strokeDirectionChoice(Fl_Widget *o, void *v) {
 void ImpressionistUI::cb_clear_canvas_button(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
 
-  pDoc->clearCanvas();
+  pDoc->clear_canvas();
 }
 
 //-----------------------------------------------------------
