@@ -125,10 +125,8 @@ public:
   }
 
   void set_alpha(float a) {
-    for_each_pixel([&](int y, int x) {
-      auto c = (*this)(y, x);
-      get<3>(c) = (GLubyte)(100);
-    });
+    for_each_pixel(
+        [&](int y, int x) { get<3>((*this)(y, x)) = (GLubyte)(255 * a); });
   }
 
   void crop(size_t sx, size_t sy) {

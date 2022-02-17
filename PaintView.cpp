@@ -95,10 +95,10 @@ void PaintView::draw() {
   if (cur.bytes.size() && !isAnEvent) {
     debugger("redraw");
     restore_content(cur.raw_fmt());
-    // Image overlay = org_view.original_img;
-    // debugger("%d", overlay.bytes.size());
-    // overlay.set_alpha(0.5);
-    // restore_content(overlay.raw_fmt());
+    Image overlay = org_view.original_img;
+    debugger("%d", overlay.bytes.size());
+    overlay.set_alpha(0.5);
+    restore_content(overlay.raw_fmt());
   }
 
   if (cur.bytes.size() && isAnEvent) {
@@ -114,6 +114,7 @@ void PaintView::draw() {
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
       prev = cur; // for backup
+      // restore_content(cur.raw_fmt());
       cur_brush.BrushBegin(source, target);
       save_content(cur.raw_fmt());
 
