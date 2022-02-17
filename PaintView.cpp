@@ -96,12 +96,7 @@ void PaintView::draw() {
   ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
 
   if (cur.bytes.size() && !isAnEvent) {
-    debugger("redraw");
     restore_content(cur.raw_fmt());
-    Image overlay = org_view.original_img;
-    debugger("%d", overlay.bytes.size());
-    overlay.set_alpha(0.5);
-    restore_content(overlay.raw_fmt());
   }
 
   if (cur.bytes.size() && isAnEvent) {
@@ -123,12 +118,12 @@ void PaintView::draw() {
 
       break;
     case LEFT_MOUSE_DRAG: {
-      restore_content(cur.raw_fmt());
+      // restore_content(cur.raw_fmt());
       // Image overlay = org_view.original_img;
       // overlay.set_alpha(0.99);
       cur_brush.BrushMove(source, target);
       org_view.set_cursor(target);
-      save_content(cur.raw_fmt());
+      // save_content(cur.raw_fmt());
       // restore_content(overlay.raw_fmt());
       break;
     }
