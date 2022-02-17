@@ -19,6 +19,7 @@ public:
         ImpressionistUI* dlg = pDoc->m_pUI;
         // get the blurring value 
         filter_dim = dlg->getBlurValue();
+        filter_dim = (filter_dim % 2) ? filter_dim : filter_dim + 1;
         const float size = pDoc->getSize();
         glPointSize(size);
         BrushMove(source, target);

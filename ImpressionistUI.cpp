@@ -429,10 +429,13 @@ void ImpressionistUI::setColorBlending(int a) { m_fColorBlending = a; }
 void ImpressionistUI::setBlurValue(int a) {
   m_fBlur = a;
 
-  if (a <= 10)
-    m_BrushBlurSlider->value(m_fBlur);
+  if (a <= 11)
+      if (a % 2)
+          m_BrushBlurSlider->value(m_fBlur);
+      else
+          m_BrushBlurSlider->value(m_fBlur + 1);
   else
-    m_BrushBlurSlider->value(10);
+      m_BrushBlurSlider->value(11);
 }
 
 vector<double> ImpressionistUI::getUserColor() {
