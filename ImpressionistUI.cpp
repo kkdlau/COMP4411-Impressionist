@@ -254,6 +254,10 @@ void ImpressionistUI::cb_color_blending(Fl_Menu_ *o, void *v) {
   whoami(o)->m_ColorDialog->show();
 }
 
+// bring up the filter interface dialog
+void ImpressionistUI::cb_arbitrary_filter(Fl_Menu_* o, void* v) {
+    whoami(o)->m_FilterInterface->show();
+}
 void ImpressionistUI::cb_autoPaint(Fl_Widget* o, void* v) {
     ImpressionistDoc* pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
     pDoc->auto_paint();
@@ -353,6 +357,16 @@ void ImpressionistUI::cb_blurUpdate(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
       ->setBlurValue(int(((Fl_Slider *)o)->value()));
 }
+void ImpressionistUI::cb_arbFilterApply(Fl_Widget* o, void* v) {
+    ((ImpressionistUI*)(o->user_data()))
+        ->setFilterValues(); // put the filter value string into somewhere accessible
+
+}
+void ImpressionistUI::cb_arbFilterNormalize(Fl_Widget* o, void* v) {
+    ((ImpressionistUI*)(o->user_data()))
+        ->setNormalize(int(((Fl_Check_Button*)o)->value()));
+}
+
 //---------------------------------- per instance functions
 //--------------------------------------
 
@@ -465,6 +479,19 @@ vector<double> ImpressionistUI::getUserColor() {
   return rgb;
 }
 
+int ImpressionistUI::getRowNum() { return af_rownum; }
+int ImpressionistUI::getColNum() { return af_colnum; }
+void ImpressionistUI::getFilterValues(char* a) { strcpy(a, af_values); }
+void ImpressionistUI::setRowNum(int a) { af_rownum = a; }
+void ImpressionistUI::setColNum(int a) { af_colnum = a; }
+void ImpressionistUI::setFilterValues() {
+    strcpy(af_values, m_FilterValues->value());
+}
+bool ImpressionistUI::getNormalize() {
+    return (af_normalize == 1);
+}
+void ImpressionistUI::setNormalize(int a) { af_normalize = a; }
+
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&File", 0, 0, 0, FL_SUBMENU},
@@ -479,6 +506,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
      (Fl_Callback *)ImpressionistUI::cb_dissolve_iamge, 0},
     {"&Color Blending", FL_ALT + 'k',
      (Fl_Callback *)ImpressionistUI::cb_color_blending, 0},
+    {"&Custom Filter", FL_ALT + 'f',
+    (Fl_Callback *)ImpressionistUI::cb_arbitrary_filter, 0},
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
     {"&Quit", FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit},
@@ -686,6 +715,30 @@ ImpressionistUI::ImpressionistUI() {
   m_ColorDialog = new Fl_Window(300, 150, "Color Dialog");
   m_ColorChooser = new Fl_Color_Chooser(0, 0, 300, 143, "Choose Colors");
   m_ColorDialog->end();
+
+  // arbitrary filter dialog definition
+  int fy = 20;
+  m_FilterInterface = new Fl_Window(500, 450, "Filter Interface");
+  m_FilterBuff = new Fl_Text_Buffer();
+  m_FilterDisp = new Fl_Text_Display(25, fy, 450, 100, "Instructions");
+  m_FilterDisp->buffer(m_FilterBuff);
+  m_FilterBuff->text("Enter the dimensions of the rectangular filter.\nThen, enter the filter values separated with commas \nand each row on a new line.");
+  m_FilterDisp->deactivate();
+
+  m_FilterRowNum = new Fl_Int_Input(25, fy += 110, 30, 30, "# Rows");
+  m_FilterRowNum->labelfont(FL_COURIER);
+  m_FilterRowNum->align(FL_ALIGN_RIGHT);
+  m_FilterColNum = new Fl_Int_Input(125, fy, 30, 30, "# Columns");
+  m_FilterColNum->labelfont(FL_COURIER);
+  m_FilterColNum->align(FL_ALIGN_RIGHT);
+  m_FilterColNum->user_data((void*)(this));
+  m_FilterNormalize = new Fl_Check_Button(250, fy, 30, 30, "Normalize");
+  m_FilterNormalize->callback(cb_arbFilterNormalize);
+
+  m_FilterValues = new Fl_Multiline_Input(25, fy += 40, 450, 200);
+
+  m_FilterApply = new Fl_Button(350, fy += 210, 100, 20, "Apply");
+  m_FilterApply->callback(cb_arbFilterApply);
 }
 
 StrokeDirection ImpressionistUI::get_direction() { return m_direction; }

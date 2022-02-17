@@ -17,6 +17,9 @@
 #include <FL/fl_file_chooser.H> // FLTK file chooser
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Color_Chooser.H>
+#include <FL/Fl_Multiline_Input.H>
+#include <FL/Fl_Int_Input.H>
+#include <FL/FL_Text_Display.H>
 #include "Impressionist.h"
 #include "OriginalView.h"
 #include "PaintView.h"
@@ -56,6 +59,16 @@ public:
   Fl_Window* m_ColorDialog;
   Fl_Color_Chooser* m_ColorChooser;
 
+  // for arbitrary sized filters
+  Fl_Window* m_FilterInterface;
+  Fl_Text_Buffer* m_FilterBuff;
+  Fl_Text_Display* m_FilterDisp;
+  Fl_Int_Input* m_FilterRowNum;
+  Fl_Int_Input* m_FilterColNum;
+  Fl_Multiline_Input* m_FilterValues;
+  Fl_Button* m_FilterApply;
+  Fl_Check_Button* m_FilterNormalize;
+
   // Member functions
   void setDocument(ImpressionistDoc *doc);
   ImpressionistDoc *getDocument();
@@ -94,6 +107,19 @@ public:
   int getAutoPaintRandomize();
   void setAutoPaintRandomize(int a);
 
+  // arbitrary filter
+  int getRowNum();
+  void setRowNum(int a);
+  
+  int getColNum();
+  void setColNum(int a);
+
+  void getFilterValues(char* a);
+  void setFilterValues();
+
+  bool getNormalize();
+  void setNormalize(int a);
+
 private:
   ImpressionistDoc
       *m_pDoc; // pointer to document to communicate with the document
@@ -108,6 +134,11 @@ private:
   int m_fBlur = 0;
   int m_nSpacing = 5; // spacing for autopaint
   int m_nAutoPaintRandomize = 0; // no randomization of brush attribute
+  // arbitrary filter
+  int af_rownum = 0;
+  int af_colnum = 0;
+  int af_normalize = 1;
+  char af_values[400] {'0'}; // MAX size of filter is 10x10 (?)
 
   // Static class members
   static Fl_Menu_Item menuitems[];
@@ -128,6 +159,7 @@ private:
   static void cb_swap_content(Fl_Menu_ *o, void *v);
   static void cb_dissolve_iamge(Fl_Menu_ *o, void *v);
   static void cb_color_blending(Fl_Menu_* o, void* v);
+  static void cb_arbitrary_filter(Fl_Menu_* o, void* v);
   static void cb_brushChoice(Fl_Widget *o, void *v);
   static void cb_strokeDirectionChoice(Fl_Widget *o, void *v);
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);
@@ -141,6 +173,8 @@ private:
   static void cb_autoPaint(Fl_Widget* o, void* v);
   static void cb_spacingUpdate(Fl_Widget* o, void* v);
   static void cb_autoPaintRandomize(Fl_Widget* o, void* v);
+  static void cb_arbFilterApply(Fl_Widget* o, void* v);
+  static void cb_arbFilterNormalize(Fl_Widget* o, void* v);
 };
 
 #endif
