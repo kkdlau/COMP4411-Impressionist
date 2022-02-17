@@ -4,6 +4,7 @@
 #include "Bitmap.h"
 #include "ImpBrush.h"
 #include "gl_helper.h"
+#include <cmath>
 #include <functional>
 #include <tuple>
 #include <vector>
@@ -128,6 +129,23 @@ public:
       auto c = (*this)(y, x);
       get<3>(c) = (GLubyte)(100);
     });
+  }
+
+  void crop(size_t sx, size_t sy) {
+    vector<GLubyte> buf = {};
+    for_each_pixel([&](int y, int x) {
+      if (y >= sy || x >= sx)
+        return;
+      auto color = (*this)(y, x);
+      buf.push_back(get<0>(color));
+      buf.push_back(get<1>(color));
+      buf.push_back(get<2>(color));
+      buf.push_back(get<3>(color));
+    });
+
+    bytes = buf;
+    width = width > sx ? sx : width;
+    height = height > sy ? sy : height;
   }
 };
 #endif // __IMAGE_H_
