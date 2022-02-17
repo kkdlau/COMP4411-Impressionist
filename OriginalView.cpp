@@ -90,6 +90,7 @@ void OriginalView::set_cursor(const Point &p) {
   Point top_left = p.shift_x(-3).shift_y(-3);
   Point bottom_right = p.shift_x(3).shift_y(3);
   new_img.for_range_pixel(top_left, bottom_right, [&](int y, int x) {
+    if (!new_img.valid_point(y, x)) return;
     new_img.set_pixel(y, x, {RED_COLOR});
   });
   this->img = new_img;

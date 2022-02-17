@@ -38,6 +38,7 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
 
 void PaintView::abort_event(int &event, Point& p) {
   StrokeDirection d = pDoc->m_pUI->get_direction();
+  debugger(p.toString());
   if (d != SLIDER_RIGHT_MOUSE) {
     // abort right click event
     if (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP)
