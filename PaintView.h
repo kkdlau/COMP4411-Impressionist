@@ -56,6 +56,8 @@ public:
 
   void set_current_img(Image &img);
 
+  void auto_paint();
+
   ImpressionistDoc *m_pDoc;
 
 private:

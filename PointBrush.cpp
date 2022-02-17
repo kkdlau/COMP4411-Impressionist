@@ -43,12 +43,12 @@ void PointBrush::BrushMove(const Point source, const Point target) {
       printf("Go back in\n"); // TODO - Remove 
       return;
   }
-  printf("Source (%d, %d)\n", source.x, source.y);
 
   gl_draw_shape(GL_POINTS, [&] {
     debugger("%d, %d\n", target.x, target.y);
     SetColor(source);
     gl_set_point(target);
+    //printf("Source (%d, %d)\n", source.x, source.y);
   });
 
   pDoc->force_update_canvas();

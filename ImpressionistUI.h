@@ -47,6 +47,7 @@ public:
   Fl_Slider* m_BrushBlurSlider; 
   Fl_Button *m_ClearCanvasButton;
   Fl_Check_Button* m_ColorBlending;
+  Fl_Button* m_AutoPaint;
 
   // for color blending dialog
   Fl_Window* m_ColorDialog;
@@ -126,6 +127,7 @@ private:
   static void cb_toggleOriginalView(Fl_Widget *o, void *v);
   static void cb_colorBlendingUpdate(Fl_Widget* o, void* v);
   static void cb_blurUpdate(Fl_Widget* o, void* v);
+  static void cb_autoPaint(Fl_Widget* o, void* v);
 };
 
 #endif

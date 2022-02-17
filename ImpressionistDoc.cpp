@@ -223,3 +223,7 @@ void ImpressionistDoc::undo_painting() {
   PaintView &canvas = *m_pUI->m_paintView;
   canvas.set_current_img(canvas.prev);
 }
+void ImpressionistDoc::auto_paint() {
+    PaintView& canvas = *m_pUI->m_paintView;
+    canvas.auto_paint();
+}

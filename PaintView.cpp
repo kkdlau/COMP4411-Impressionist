@@ -77,6 +77,8 @@ void PaintView::draw() {
   int drawWidth, drawHeight;
   drawWidth = min(m_nWindowWidth, cur.width);
   drawHeight = min(m_nWindowHeight, cur.height);
+  m_nDrawHeight = drawHeight;
+  m_nDrawWidth = drawWidth;
 
   int startrow = cur.height - (scrollpos.y + drawHeight);
   if (startrow < 0)
@@ -269,4 +271,57 @@ void PaintView::set_current_img(Image &img) {
   cur = img;
   // m_pDoc->m_ucPainting = cur.raw_fmt();
   refresh();
+}
+
+void PaintView::auto_paint() {
+     #ifndef MESA
+    // To avoid flicker on some machines.
+    glDrawBuffer(GL_FRONT_AND_BACK);
+    #endif // !MESA
+
+    if (!valid()) {
+
+        glClearColor(0.7f, 0.7f, 0.7f, 1.0);
+
+        // We're only using 2-D, so turn off depth
+        glDisable(GL_DEPTH_TEST);
+
+        ortho();
+
+        // glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    ImpBrush& cur_brush = *m_pDoc->m_pCurrentBrush;
+    int spacing = (m_pDoc->getSize() / 2) > 5? m_pDoc->getSize() / 2 : 5;
+    int x = 0, y = 0;
+    Point source(x, y);
+    Point target(x, y);
+    for (x = 1; x < cur.width; x += spacing) {
+        for (y = 1; y < cur.height; y += spacing) {
+            source.x = x + m_nStartCol;
+            source.y = m_nEndRow - y;
+            target.x = x;
+            target.y = m_nWindowHeight - y;
+
+            if (!cur.valid_point(target.y, target.x)) {
+                printf("out-of-boundary\t"); // TODO - remove
+                continue;
+            }
+            if (x == 1 && y == 1)
+                cur_brush.BrushBegin(source, target);
+            else
+                cur_brush.BrushMove(source, target);
+            save_content(cur.raw_fmt());
+        }
+        
+    }
+    cur_brush.BrushEnd(source, target);
+    save_content(cur.raw_fmt());
+    restore_content(cur.raw_fmt());
+    glFlush();
+    #ifndef MESA
+    // To avoid flicker on some machines.
+    glDrawBuffer(GL_BACK);
+    #endif // !MESA
+    printf("Finished autopainting");
 }

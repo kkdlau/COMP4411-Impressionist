@@ -254,6 +254,10 @@ void ImpressionistUI::cb_color_blending(Fl_Menu_ *o, void *v) {
   whoami(o)->m_ColorDialog->show();
 }
 
+void ImpressionistUI::cb_autoPaint(Fl_Widget* o, void* v) {
+    ImpressionistDoc* pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
+    pDoc->auto_paint();
+}
 //------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
@@ -627,6 +631,11 @@ ImpressionistUI::ImpressionistUI() {
   m_ColorBlending->align(FL_ALIGN_RIGHT);
   m_ColorBlending->callback(cb_colorBlendingUpdate);
 
+  // button for autopainting 
+  m_AutoPaint = new Fl_Button(240, y, 150, 25, "Auto Paint");
+  m_AutoPaint->user_data((void*)(this));
+  m_AutoPaint->callback(cb_autoPaint);
+  
   m_brushDialog->end();
 
   // color dialog definition

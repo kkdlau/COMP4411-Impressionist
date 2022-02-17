@@ -65,6 +65,7 @@ public:
   void swap_content();
   void undo_painting();
   void dissolve_image();
+  void auto_paint();
 
 private:
   char m_imageName[256];
