@@ -36,15 +36,15 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
   m_nWindowHeight = h;
 }
 
-void PaintView::abort_event(int &event, Point& p) {
+void PaintView::abort_event(int &event, Point &p) {
   StrokeDirection d = pDoc->m_pUI->get_direction();
   if (d != SLIDER_RIGHT_MOUSE) {
     // abort right click event
     if (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP)
       event = 0;
     if (!cur.valid_point(p.x, p.y)) {
-        debugger("out-of-boundary");
-        event = 0;
+      debugger("out-of-boundary");
+      event = 0;
     }
   }
 }
@@ -105,7 +105,6 @@ void PaintView::draw() {
     // Clear it after processing.
     isAnEvent = 0;
 
-
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
     Point target(coord.x, m_nWindowHeight - coord.y);
 
@@ -116,6 +115,8 @@ void PaintView::draw() {
     case LEFT_MOUSE_DOWN:
       prev = cur; // for backup
       cur_brush.BrushBegin(source, target);
+      save_content(cur.raw_fmt());
+
       break;
     case LEFT_MOUSE_DRAG: {
       restore_content(cur.raw_fmt());
