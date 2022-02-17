@@ -47,6 +47,9 @@ public:
   Fl_Slider* m_BrushBlurSlider; 
   Fl_Button *m_ClearCanvasButton;
   Fl_Check_Button* m_ColorBlending;
+
+  Fl_Slider* m_BrushSpacingSlider;
+  Fl_Check_Button* m_AutoPaintRandomize;
   Fl_Button* m_AutoPaint;
 
   // for color blending dialog
@@ -85,6 +88,12 @@ public:
   int getBlurValue();
   void setBlurValue(int a);
 
+  int getSpacing();
+  void setSpacing(int a);
+
+  int getAutoPaintRandomize();
+  void setAutoPaintRandomize(int a);
+
 private:
   ImpressionistDoc
       *m_pDoc; // pointer to document to communicate with the document
@@ -97,6 +106,8 @@ private:
   int m_fColorBlending = 0;
   StrokeDirection m_direction = SLIDER_RIGHT_MOUSE;
   int m_fBlur = 0;
+  int m_nSpacing = 5; // spacing for autopaint
+  int m_nAutoPaintRandomize = 0; // no randomization of brush attribute
 
   // Static class members
   static Fl_Menu_Item menuitems[];
@@ -128,6 +139,8 @@ private:
   static void cb_colorBlendingUpdate(Fl_Widget* o, void* v);
   static void cb_blurUpdate(Fl_Widget* o, void* v);
   static void cb_autoPaint(Fl_Widget* o, void* v);
+  static void cb_spacingUpdate(Fl_Widget* o, void* v);
+  static void cb_autoPaintRandomize(Fl_Widget* o, void* v);
 };
 
 #endif

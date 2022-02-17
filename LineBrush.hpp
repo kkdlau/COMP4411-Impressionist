@@ -28,7 +28,7 @@ public:
 
     BrushMove(source, target);
   }
-  void BrushMove(const Point source, const Point target) {
+  void BrushMove(const Point source, const Point target, bool randomize=false) {
     ImpressionistDoc *pDoc = GetDocument();
     const int half = pDoc->m_pUI->getSize() / 2;
     float r = pDoc->getRad();
@@ -46,6 +46,8 @@ public:
 
     if (isnan(r))
       return;
+    if (randomize && frand() >= 0.75)
+        RandomizeAttributes();
 
     gl_draw_shape(GL_LINES, [&] {
       SetColor(source);
@@ -71,6 +73,10 @@ public:
       pDoc->m_pUI->m_BrushAlphaSlider->activate();
       pDoc->m_pUI->m_BrushBlurSlider->deactivate();
       pDoc->m_pUI->m_ColorBlending->activate();
+  }
+
+  void RandomizeAttributes() {
+      glLineWidth(40);
   }
 };
 

@@ -104,6 +104,9 @@ int ImpressionistDoc::getColorBlending() { return m_pUI->getColorBlending(); }
 vector<double> ImpressionistDoc::getUserColor() {
   return m_pUI->getUserColor();
 }
+int ImpressionistDoc::getSpacing() { return m_pUI->getSpacing(); }
+
+int ImpressionistDoc::getAutoPaintRandomize() { return m_pUI->getAutoPaintRandomize(); }
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is

@@ -9,6 +9,7 @@ using namespace GLHelper;
 
 class FanBrush : public ImpBrush {
     Point last;
+    double radius;
 public:
     FanBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
@@ -19,10 +20,10 @@ public:
         BrushMove(source, target);
     }
 
-    void BrushMove(const Point source, const Point target) {
+    void BrushMove(const Point source, const Point target, bool randomize=false) {
         ImpressionistDoc* pDoc = GetDocument();
         
-        const double radius = pDoc->getSize();
+        radius = pDoc->getSize();
         float r = pDoc->getRad();
         switch (pDoc->m_pUI->get_direction()) {
         case GRADIENT_DIRECTION: {
@@ -36,6 +37,9 @@ public:
         }
 
         if (isnan(r)) return;    
+
+        if (randomize && frand() >= 0.75)
+            RandomizeAttributes();
 
         gl_draw_shape(GL_TRIANGLE_FAN, [&] {
             SetColor(source);
@@ -51,6 +55,11 @@ public:
         pDoc->force_update_canvas();
     }
     void BrushEnd(const Point source, const Point target) {}
+
+    void RandomizeAttributes() {
+        radius = irand(20);
+    }
+
     void select() {
         ImpressionistDoc* pDoc = GetDocument();
         pDoc->m_pUI->m_BrushWidthSlider->deactivate();

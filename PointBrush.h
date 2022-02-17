@@ -14,8 +14,9 @@ public:
   PointBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL);
 
   void BrushBegin(const Point source, const Point target);
-  void BrushMove(const Point source, const Point target);
+  void BrushMove(const Point source, const Point target, bool randomize=false);
   void BrushEnd(const Point source, const Point target);
+  void RandomizeAttributes();
   void select();
 
   char *BrushName(void);

@@ -36,7 +36,7 @@
   - [x] random polygon
   - [x] curve brush
   - [ ] random scattered polygon
-- [ ] **(1W)** clipped brushes
+- [x] **(1W)** clipped brushes (D)
 - [x] **(1W)** cursor on original image (D)
 - [x] (1W) swap content and original (D)
 - [x] (1B) change color of image (change channel) (M)
@@ -46,7 +46,7 @@
   - [ ] (1B1W) original image overlay (D)
 - [ ] _(1B1W)_ mural image (load another image without resetting)
 - [ ] (1B1W) alpha mapping brush (need more look up)
-- [ ] **(1B1W)** auto paint (M)
+- [x] **(1B1W)** auto paint (M)
 - [ ] **(1B1W)** gradient according to another image (D)
 - [ ] _(1B1W)_ edge clipping (need more look up) (D)
 - [ ] _(2B)_ filter kernel (M)

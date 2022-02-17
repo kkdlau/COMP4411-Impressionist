@@ -31,7 +31,7 @@ void PointBrush::BrushBegin(const Point source, const Point target) {
   BrushMove(source, target);
 }
 
-void PointBrush::BrushMove(const Point source, const Point target) {
+void PointBrush::BrushMove(const Point source, const Point target, bool randomize) {
   ImpressionistDoc *pDoc = GetDocument();
   ImpressionistUI *dlg = pDoc->m_pUI;
 
@@ -43,6 +43,8 @@ void PointBrush::BrushMove(const Point source, const Point target) {
       printf("Go back in\n"); // TODO - Remove 
       return;
   }
+  if (randomize == true && frand() > 0.5) 
+      RandomizeAttributes();
 
   gl_draw_shape(GL_POINTS, [&] {
     debugger("%d, %d\n", target.x, target.y);
@@ -56,6 +58,10 @@ void PointBrush::BrushMove(const Point source, const Point target) {
 
 void PointBrush::BrushEnd(const Point source, const Point target) {
   // do nothing so far
+}
+
+void PointBrush::RandomizeAttributes() {
+    glPointSize(irand(40));
 }
 
 void PointBrush::select() {

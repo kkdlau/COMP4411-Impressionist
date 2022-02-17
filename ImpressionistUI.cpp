@@ -258,6 +258,15 @@ void ImpressionistUI::cb_autoPaint(Fl_Widget* o, void* v) {
     ImpressionistDoc* pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
     pDoc->auto_paint();
 }
+
+void ImpressionistUI::cb_spacingUpdate(Fl_Widget* o, void* v) {
+    ((ImpressionistUI*)(o->user_data()))
+        ->setSpacing(int(((Fl_Slider*)o)->value()));
+}
+void ImpressionistUI::cb_autoPaintRandomize(Fl_Widget* o, void* v) {
+    ((ImpressionistUI*)(o->user_data()))
+        ->setAutoPaintRandomize(int(((Fl_Slider*)o)->value()));
+}
 //------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
@@ -390,6 +399,8 @@ int ImpressionistUI::getAngle() { return m_nAngle; }
 float ImpressionistUI::getAlpha() { return m_fAlpha; }
 int ImpressionistUI::getColorBlending() { return m_fColorBlending; }
 int ImpressionistUI::getBlurValue() { return m_fBlur; }
+int ImpressionistUI::getSpacing() { return m_nSpacing; }
+int ImpressionistUI::getAutoPaintRandomize() { return m_nAutoPaintRandomize; }
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -433,9 +444,19 @@ void ImpressionistUI::setBlurValue(int a) {
       if (a % 2)
           m_BrushBlurSlider->value(m_fBlur);
       else
-          m_BrushBlurSlider->value(m_fBlur + 1);
+          m_BrushBlurSlider->value((int)m_fBlur + 1);
   else
       m_BrushBlurSlider->value(11);
+}
+
+void ImpressionistUI::setSpacing(int a) {
+    m_nSpacing = a;
+    if (a <= 16)
+        m_BrushSpacingSlider->value(m_nSpacing);
+}
+
+void ImpressionistUI::setAutoPaintRandomize(int a) {
+    m_nAutoPaintRandomize = a;
 }
 
 vector<double> ImpressionistUI::getUserColor() {
@@ -634,8 +655,28 @@ ImpressionistUI::ImpressionistUI() {
   m_ColorBlending->align(FL_ALIGN_RIGHT);
   m_ColorBlending->callback(cb_colorBlendingUpdate);
 
-  // button for autopainting 
-  m_AutoPaint = new Fl_Button(240, y, 150, 25, "Auto Paint");
+  // autopainting section
+  // 1. spacing slider 
+  m_BrushSpacingSlider = new Fl_Value_Slider(10, y += 30, 180, 20, "Spacing");
+  m_BrushSpacingSlider->user_data((void*)(this));
+  m_BrushSpacingSlider->type(FL_HOR_NICE_SLIDER);
+  m_BrushSpacingSlider->labelfont(FL_COURIER);
+  m_BrushSpacingSlider->labelsize(12);
+  m_BrushSpacingSlider->minimum(1);
+  m_BrushSpacingSlider->maximum(16);
+  m_BrushSpacingSlider->step(1);
+  m_BrushSpacingSlider->value(m_nSpacing);
+  m_BrushSpacingSlider->align(FL_ALIGN_RIGHT);
+  m_BrushSpacingSlider->callback(cb_spacingUpdate);
+  // 2. randomize checkbox
+  m_AutoPaintRandomize = new Fl_Check_Button(250, y, 20, 20, "Random");
+  m_AutoPaintRandomize->user_data((void*)(this));
+  m_AutoPaintRandomize->labelfont(FL_COURIER);
+  m_AutoPaintRandomize->value(m_nAutoPaintRandomize);
+  m_AutoPaintRandomize->align(FL_ALIGN_RIGHT);
+  m_AutoPaintRandomize->callback(cb_autoPaintRandomize);
+  // 3. button to paint
+  m_AutoPaint = new Fl_Button(340, y, 50, 25, "Paint");
   m_AutoPaint->user_data((void*)(this));
   m_AutoPaint->callback(cb_autoPaint);
   

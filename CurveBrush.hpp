@@ -10,6 +10,7 @@ using namespace GLHelper;
 
 class CurveBrush : public ImpBrush {
   Point last;
+  double radius;
 
 public:
   CurveBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
@@ -23,10 +24,10 @@ public:
     BrushMove(source, target);
   }
 
-  void BrushMove(const Point source, const Point target) {
+  void BrushMove(const Point source, const Point target, bool randomize=false) {
     ImpressionistDoc *pDoc = GetDocument();
 
-    const double radius = 2 * pDoc->getSize();
+    radius = 2 * pDoc->getSize();
     const int width = pDoc->getWidth();
     float r = pDoc->getRad();
 
@@ -44,6 +45,9 @@ public:
     if (isnan(r))
       return;
 
+    if (randomize && frand() >= 0.75)
+        RandomizeAttributes();
+
     gl_draw_shape(GL_POINTS, [&] {
       SetColor(source);
       for (double i = M_PI / 4; i <= 3 * M_PI / 4; i += 0.01) {
@@ -57,6 +61,12 @@ public:
     pDoc->force_update_canvas();
   }
   void BrushEnd(const Point source, const Point target) {}
+
+  void RandomizeAttributes() {
+      glPointSize(irand(20));
+      radius = irand(20);
+  }
+
   void select() {
     ImpressionistDoc *pDoc = GetDocument();
     pDoc->m_pUI->m_BrushWidthSlider->activate();

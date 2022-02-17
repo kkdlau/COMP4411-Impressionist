@@ -24,7 +24,7 @@ public:
         glPointSize(size);
         BrushMove(source, target);
     }
-    void BrushMove(const Point source, const Point target) {
+    void BrushMove(const Point source, const Point target, bool randomize=false) {
         ImpressionistDoc* pDoc = GetDocument();
         if (pDoc == NULL) {
             printf("PointBrush::BrushMove document is NULL\n");
@@ -34,6 +34,9 @@ public:
             printf("Go back in\n"); // TODO - Remove 
             return;
         }
+        if (randomize && frand() >= 0.75)
+            RandomizeAttributes();
+
         gl_draw_shape(GL_POINTS, [&] {
             FilterBrush::SetColor(source);
             gl_set_point(target);
@@ -54,7 +57,10 @@ public:
         pDoc->m_pUI->m_BrushBlurSlider->activate();
         pDoc->m_pUI->m_ColorBlending->activate();
     }
-
+    
+    void RandomizeAttributes() {
+        glPointSize(10);
+    }
     void filterMean(const Point source, std::vector<int>& color) {
         ImpressionistDoc* pDoc = GetDocument();
         if (filter_dim < 1) {

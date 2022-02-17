@@ -98,9 +98,9 @@ protected:
 public:
   // The implementation of your brush should realize these virtual functions
   virtual void BrushBegin(const Point source, const Point target) = 0;
-  virtual void BrushMove(const Point source, const Point target) = 0;
+  virtual void BrushMove(const Point source, const Point target, bool randomize=false) = 0;
   virtual void BrushEnd(const Point source, const Point target) = 0;
-
+  virtual void RandomizeAttributes() = 0;
   // according to the source image and the position, determine the draw color
   void SetColor(const Point source);
 

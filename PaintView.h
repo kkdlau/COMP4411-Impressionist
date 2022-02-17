@@ -19,6 +19,8 @@
 #include "ImpBrush.h"
 #include <stdlib.h>
 
+extern int irand(int max);
+extern float frand();
 class ImpressionistDoc;
 
 class PaintView : public Fl_Gl_Window {

@@ -3,6 +3,8 @@
 //
 // The code maintaining the painting view of the input images
 //
+#include <vector>
+#include <algorithm>
 
 #include "Paintview.h"
 #include "ImpBrush.h"
@@ -277,38 +279,52 @@ void PaintView::auto_paint() {
     #endif // !MESA
 
     if (!valid()) {
-
         glClearColor(0.7f, 0.7f, 0.7f, 1.0);
-
         // We're only using 2-D, so turn off depth
         glDisable(GL_DEPTH_TEST);
-
         ortho();
-
         // glClear(GL_COLOR_BUFFER_BIT);
     }
 
     ImpBrush& cur_brush = *m_pDoc->m_pCurrentBrush;
-    int spacing = (m_pDoc->getSize() / 2) > 5? m_pDoc->getSize() / 2 : 5;
+    int spacing = m_pDoc->getSpacing();
+    bool randomize = (m_pDoc->getAutoPaintRandomize() == 1);
+
+    // randomize x and y
+    std::vector<int> rows;
+    for (int i = 1; i < cur.width; i += spacing)
+        rows.push_back(i);
+    std::random_shuffle(rows.begin(), rows.end());
+    std::vector<int> cols;
+    for (int j = 1; j < cur.height; j += spacing)
+        cols.push_back(j);
+    std::random_shuffle(cols.begin(), cols.end());
+
     int x = 0, y = 0;
+    int counter = 0;
+    bool start = true;
     Point source(x, y);
     Point target(x, y);
-    for (x = 1; x < cur.width; x += spacing) {
-        for (y = 1; y < cur.height; y += spacing) {
-            source.x = x + m_nStartCol;
-            source.y = m_nEndRow - y;
-            target.x = x;
-            target.y = m_nWindowHeight - y;
+    for (std::vector<int>::iterator x = rows.begin(); x != rows.end(); ++x) {
+        for (std::vector<int>::iterator y = cols.begin(); y != cols.end(); ++y) {
+            source.x = *x + m_nStartCol;
+            source.y = m_nEndRow - *y;
+            target.x = *x;
+            target.y = m_nWindowHeight - *y;
 
             if (!cur.valid_point(target.y, target.x)) {
-                printf("out-of-boundary\t"); // TODO - remove
                 continue;
             }
-            if (x == 1 && y == 1)
+            if (start) {
                 cur_brush.BrushBegin(source, target);
+                start = false;
+            }
             else
-                cur_brush.BrushMove(source, target);
+                cur_brush.BrushMove(source, target, randomize);
             save_content(cur.raw_fmt());
+            counter++;
+            if (counter % 20 == 0)
+                std::random_shuffle(cols.begin(), cols.end());
         }
         
     }
@@ -320,5 +336,5 @@ void PaintView::auto_paint() {
     // To avoid flicker on some machines.
     glDrawBuffer(GL_BACK);
     #endif // !MESA
-    printf("Finished autopainting");
+    printf("Finished autopainting\n");
 }

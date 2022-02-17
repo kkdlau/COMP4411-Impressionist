@@ -9,6 +9,7 @@ using namespace GLHelper;
 
 class CircleBrush : public ImpBrush {
 public:
+    double radius; 
   CircleBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
@@ -22,9 +23,11 @@ public:
 
     BrushMove(source, target);
   }
-  void BrushMove(const Point source, const Point target) {
+  void BrushMove(const Point source, const Point target, bool randomize=false) {
     ImpressionistDoc *pDoc = GetDocument();
-    const double radius = pDoc->getSize() / 2.0;
+    radius = pDoc->getSize() / 2.0;
+    if (randomize && frand() >= 0.75)
+        RandomizeAttributes();
 
     gl_draw_shape(GL_POLYGON, [&] {
       SetColor(source);
@@ -39,6 +42,9 @@ public:
     pDoc->force_update_canvas();
   }
   void BrushEnd(const Point source, const Point target) {}
+  void RandomizeAttributes() {
+      radius = irand(20);
+  }
   void select() {
       ImpressionistDoc* pDoc = GetDocument();
       pDoc->m_pUI->m_BrushWidthSlider->deactivate();
