@@ -26,6 +26,11 @@
 
 class ImpressionistDoc;
 
+enum DrawingFlag {
+  NO_FLAG,
+  DISSOLVE = 0b1 << 1,
+};
+
 class OriginalView : public Fl_Gl_Window {
 public:
   OriginalView(int x, int y, int w, int h, const char *l);
@@ -37,6 +42,8 @@ public:
 
   void set_current_img(Image &img);
 
+  void dissolve(Image &img);
+
   void set_cursor(const Point &p);
 
   void hide_cusor();
@@ -44,6 +51,10 @@ public:
   ImpressionistDoc *m_pDoc;
   Image img;
   Image original_img;
+
+  Image dissolve_target;
+
+  uint32_t f;
 
 private:
   int m_nWindowWidth, m_nWindowHeight;

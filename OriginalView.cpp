@@ -17,6 +17,7 @@ OriginalView::OriginalView(int x, int y, int w, int h, const char *l)
                                                                     0} {
   m_nWindowWidth = w;
   m_nWindowHeight = h;
+  f = NO_FLAG;
 }
 
 void OriginalView::draw() {
@@ -64,6 +65,16 @@ void OriginalView::draw() {
     glPixelStorei(GL_UNPACK_ROW_LENGTH, m_pDoc->m_nWidth);
     glDrawBuffer(GL_BACK);
     glDrawPixels(drawWidth, drawHeight, GL_RGBA, GL_UNSIGNED_BYTE, bitstart);
+    if ((f & DrawingFlag::DISSOLVE) == DrawingFlag::DISSOLVE) {
+      f = f & ~DISSOLVE;
+      debugger("dissolve");
+      glRasterPos2i(0, m_nWindowHeight - drawHeight);
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, m_pDoc->m_nWidth);
+      glDrawBuffer(GL_BACK);
+      glDrawPixels(drawWidth, drawHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                   dissolve_target.paint_byte());
+    }
   }
 
   glFlush();
@@ -80,6 +91,14 @@ void OriginalView::set_current_img(Image &img) {
   original_img = img;
   // m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
   this->resizeWindow(original_img.width, original_img.height);
+  this->refresh();
+}
+
+void OriginalView::dissolve(Image &img) {
+  img.crop(original_img.width, original_img.height);
+  img.set_alpha(0.5);
+  dissolve_target = img;
+  f |= static_cast<int>(DrawingFlag::DISSOLVE);
   this->refresh();
 }
 

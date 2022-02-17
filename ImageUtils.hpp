@@ -40,6 +40,7 @@ static Image dissolve(Image &source, Image &target) {
       get<0>(color) = get<0>(avg_color);
       get<1>(color) = get<1>(avg_color);
       get<2>(color) = get<2>(avg_color);
+      get<3>(color) = get<3>(avg_color);
     }
   });
 

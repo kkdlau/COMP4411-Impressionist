@@ -240,8 +240,8 @@ void ImpressionistUI::cb_dissolve_iamge(Fl_Menu_ *o, void *v) {
 #endif
   Image src = Image::from(newfile);
   debugger("w:%d h:%d", src.width, src.height);
-  Image output = ImageUtils::dissolve(src, pDoc->m_pUI->m_origView->img);
-  pDoc->m_pUI->m_origView->set_current_img(output);
+  // Image output = ImageUtils::dissolve(src, pDoc->m_pUI->m_origView->img);
+  pDoc->m_pUI->m_origView->dissolve(src);
 }
 
 void ImpressionistUI::cb_swap_content(Fl_Menu_ *o, void *v) {
@@ -250,8 +250,8 @@ void ImpressionistUI::cb_swap_content(Fl_Menu_ *o, void *v) {
   pDoc->swap_content();
 }
 
-void ImpressionistUI::cb_color_blending(Fl_Menu_* o, void* v) {
-    whoami(o)->m_ColorDialog->show();
+void ImpressionistUI::cb_color_blending(Fl_Menu_ *o, void *v) {
+  whoami(o)->m_ColorDialog->show();
 }
 
 //------------------------------------------------------------
@@ -332,13 +332,13 @@ void ImpressionistUI::cb_toggleOriginalView(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
   pDoc->toggleOriginalView();
 }
-void ImpressionistUI::cb_colorBlendingUpdate(Fl_Widget* o, void* v) {
-    ((ImpressionistUI*)(o->user_data()))
-        ->setColorBlending(int(((Fl_Check_Button*)o)->value()));
+void ImpressionistUI::cb_colorBlendingUpdate(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))
+      ->setColorBlending(int(((Fl_Check_Button *)o)->value()));
 }
-void ImpressionistUI::cb_blurUpdate(Fl_Widget* o, void* v) {
-    ((ImpressionistUI*)(o->user_data()))
-        ->setBlurValue(int(((Fl_Slider*)o)->value()));
+void ImpressionistUI::cb_blurUpdate(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))
+      ->setBlurValue(int(((Fl_Slider *)o)->value()));
 }
 //---------------------------------- per instance functions
 //--------------------------------------
@@ -384,7 +384,7 @@ int ImpressionistUI::getSize() { return m_nSize; }
 int ImpressionistUI::getWidth() { return m_nWidth; }
 int ImpressionistUI::getAngle() { return m_nAngle; }
 float ImpressionistUI::getAlpha() { return m_fAlpha; }
-int ImpressionistUI::getColorBlending() { return m_fColorBlending;  }
+int ImpressionistUI::getColorBlending() { return m_fColorBlending; }
 int ImpressionistUI::getBlurValue() { return m_fBlur; }
 //-------------------------------------------------
 // Set the brush size
@@ -420,22 +420,21 @@ void ImpressionistUI::setAlpha(float a) {
     m_BrushAlphaSlider->value(m_fAlpha);
 }
 
-void ImpressionistUI::setColorBlending(int a) {
-    m_fColorBlending = a;
-}
+void ImpressionistUI::setColorBlending(int a) { m_fColorBlending = a; }
 
 void ImpressionistUI::setBlurValue(int a) {
-    m_fBlur = a;
+  m_fBlur = a;
 
-    if (a <= 10)
-        m_BrushBlurSlider->value(m_fBlur);
-    else
-        m_BrushBlurSlider->value(10);
+  if (a <= 10)
+    m_BrushBlurSlider->value(m_fBlur);
+  else
+    m_BrushBlurSlider->value(10);
 }
 
 vector<double> ImpressionistUI::getUserColor() {
-    vector<double> rgb = { m_ColorChooser->r(), m_ColorChooser->g(), m_ColorChooser->b() };
-    return rgb;
+  vector<double> rgb = {m_ColorChooser->r(), m_ColorChooser->g(),
+                        m_ColorChooser->b()};
+  return rgb;
 }
 
 // Main menu definition
@@ -451,7 +450,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Dissolve", FL_ALT + 'd',
      (Fl_Callback *)ImpressionistUI::cb_dissolve_iamge, 0},
     {"&Color Blending", FL_ALT + 'k',
-     (Fl_Callback*)ImpressionistUI::cb_color_blending, 0},
+     (Fl_Callback *)ImpressionistUI::cb_color_blending, 0},
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
     {"&Quit", FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit},
@@ -478,14 +477,14 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_SCATTERED_LINES},
     {"Scattered Circles", FL_ALT + 'd',
-    (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-    (void *)BRUSH_SCATTERED_CIRCLES},
-    {"Fans", FL_ALT + 'f', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
-    (void*)BRUSH_FANS},
-    {"Curves", FL_ALT + 'r', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
-    (void*)BRUSH_CURVES},
-    {"Blurring Filter", FL_ALT + 'u', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
-    (void*)BRUSH_FILTER},
+     (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_SCATTERED_CIRCLES},
+    {"Fans", FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_FANS},
+    {"Curves", FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_CURVES},
+    {"Blurring Filter", FL_ALT + 'u',
+     (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_FILTER},
     {0}};
 
 Fl_Menu_Item
@@ -608,8 +607,7 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushAlphaSlider->callback(cb_alphaUpdate);
 
   m_BrushBlurSlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Blurring");
-  m_BrushBlurSlider->user_data(
-      (void*)(this));
+  m_BrushBlurSlider->user_data((void *)(this));
   m_BrushBlurSlider->type(FL_HOR_NICE_SLIDER);
   m_BrushBlurSlider->labelfont(FL_COURIER);
   m_BrushBlurSlider->labelsize(12);
@@ -623,8 +621,7 @@ ImpressionistUI::ImpressionistUI() {
 
   // checkbox for color source (original picture or color blending)
   m_ColorBlending = new Fl_Check_Button(10, y += 30, 20, 20, "Color Blending");
-  m_ColorBlending->user_data(
-      (void*)(this));
+  m_ColorBlending->user_data((void *)(this));
   m_ColorBlending->labelfont(FL_COURIER);
   m_ColorBlending->value(0);
   m_ColorBlending->align(FL_ALIGN_RIGHT);
