@@ -126,10 +126,10 @@ int ImpressionistDoc::loadImage(char *iname) {
   m_nPaintHeight = height;
 
   // release old storage
-  if (m_ucBitmap)
-    delete[] m_ucBitmap;
-  if (m_ucPainting)
-    delete[] m_ucPainting;
+  // if (m_ucBitmap)
+   //  delete[] m_ucBitmap;
+  // if (m_ucPainting)
+    // delete[] m_ucPainting;
 
   m_ucBitmap = data;
   m_pUI->m_origView->original_img.set(data, width, height);
