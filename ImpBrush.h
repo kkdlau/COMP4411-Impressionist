@@ -10,8 +10,9 @@
 #include <cmath>
 #include <stdlib.h>
 #include <string>
-#include <vector>
 #include <typeinfo>
+#include <vector>
+
 
 extern float frand();
 
@@ -26,6 +27,7 @@ enum {
   BRUSH_FANS,
   BRUSH_CURVES,
   BRUSH_FILTER, // brush with blurring filter
+  BRUSH_GRADIENT,
   NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
@@ -36,11 +38,7 @@ enum StrokeDirection {
   NUM_STROKE_DIRECTION_METHODS
 };
 
-enum BrushFilter {
-    FILTER_NONE = 0,
-    FILTER_BLUR,
-    NUM_BRUSH_FILTER
-};
+enum BrushFilter { FILTER_NONE = 0, FILTER_BLUR, NUM_BRUSH_FILTER };
 class ImpressionistDoc; // Pre-declaring class
 
 class Point {
@@ -98,17 +96,19 @@ protected:
 public:
   // The implementation of your brush should realize these virtual functions
   virtual void BrushBegin(const Point source, const Point target) = 0;
-  virtual void BrushMove(const Point source, const Point target, bool randomize=false) = 0;
+  virtual void BrushMove(const Point source, const Point target,
+                         bool randomize = false) = 0;
   virtual void BrushEnd(const Point source, const Point target) = 0;
   virtual void RandomizeAttributes() = 0;
   // according to the source image and the position, determine the draw color
   void SetColor(const Point source);
 
-  void filter(const short filter[][3], const int divisor, const int dim, const Point source, std::vector<int>& color);
+  void filter(const short filter[][3], const int divisor, const int dim,
+              const Point source, std::vector<int> &color);
 
   // TODO: implement all UI enable / disable business logic in here.
   virtual void select() {}
-  //virtual void disselect() {}
+  // virtual void disselect() {}
 
   // get Doc to communicate with it
   ImpressionistDoc *GetDocument(void);

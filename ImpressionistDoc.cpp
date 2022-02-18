@@ -17,6 +17,7 @@
 #include "CurveBrush.hpp"
 #include "FanBrush.hpp"
 #include "FilterBrush.hpp"
+#include "GradientBrush.hpp"
 #include "Image.hpp"
 #include "LineBrush.hpp"
 #include "PointBrush.h"
@@ -61,6 +62,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::set_brush(BRUSH_FANS, new FanBrush(this, "Fans"));
   ImpBrush::set_brush(BRUSH_CURVES, new CurveBrush(this, "Curves"));
   ImpBrush::set_brush(BRUSH_FILTER, new FilterBrush(this, "Blurring"));
+  ImpBrush::set_brush(BRUSH_GRADIENT, new GradientBrush(this, "Gradient"));
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -106,7 +108,9 @@ vector<double> ImpressionistDoc::getUserColor() {
 }
 int ImpressionistDoc::getSpacing() { return m_pUI->getSpacing(); }
 
-int ImpressionistDoc::getAutoPaintRandomize() { return m_pUI->getAutoPaintRandomize(); }
+int ImpressionistDoc::getAutoPaintRandomize() {
+  return m_pUI->getAutoPaintRandomize();
+}
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is
@@ -130,9 +134,9 @@ int ImpressionistDoc::loadImage(char *iname) {
 
   // release old storage
   // if (m_ucBitmap)
-   //  delete[] m_ucBitmap;
+  //  delete[] m_ucBitmap;
   // if (m_ucPainting)
-    // delete[] m_ucPainting;
+  // delete[] m_ucPainting;
 
   m_ucBitmap = data;
   m_pUI->m_origView->original_img.set(data, width, height);
@@ -227,6 +231,6 @@ void ImpressionistDoc::undo_painting() {
   canvas.set_current_img(canvas.prev);
 }
 void ImpressionistDoc::auto_paint() {
-    PaintView& canvas = *m_pUI->m_paintView;
-    canvas.auto_paint();
+  PaintView &canvas = *m_pUI->m_paintView;
+  canvas.auto_paint();
 }
