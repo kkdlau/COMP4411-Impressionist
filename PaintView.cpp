@@ -6,14 +6,12 @@
 #include <algorithm>
 #include <vector>
 
-
 #include "ImpBrush.h"
 #include "Paintview.h"
 #include "gl_helper.h"
 #include "impressionist.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
-
 
 using namespace GLHelper;
 
@@ -42,7 +40,6 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
 
 void PaintView::abort_event(int &event, Point &p) {
   StrokeDirection d = pDoc->m_pUI->get_direction();
-  debugger(p.toString());
   if (d != SLIDER_RIGHT_MOUSE) {
     // abort right click event
     if (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP)
@@ -101,6 +98,9 @@ void PaintView::draw() {
 
   if (cur.bytes.size() && !isAnEvent) {
     restore_content(cur.raw_fmt());
+
+    // render overlay content
+    restore_content(overlay_image.raw_fmt());
   }
 
   if (cur.bytes.size() && isAnEvent) {
@@ -111,6 +111,9 @@ void PaintView::draw() {
     Point target(coord.x, m_nWindowHeight - coord.y);
 
     abort_event(eventToDo, target);
+    if (eventToDo) {
+      restore_content(cur.raw_fmt());
+    }
 
     // This is the event handler
     switch (eventToDo) {
@@ -122,13 +125,9 @@ void PaintView::draw() {
 
       break;
     case LEFT_MOUSE_DRAG: {
-      restore_content(cur.raw_fmt());
-      // Image overlay = org_view.original_img;
-      // overlay.set_alpha(0.99);
       cur_brush.BrushMove(source, target);
       org_view.set_cursor(target);
       save_content(cur.raw_fmt());
-      // restore_content(overlay.raw_fmt());
       break;
     }
     case LEFT_MOUSE_UP: {
@@ -163,6 +162,9 @@ void PaintView::draw() {
       break;
     }
     }
+
+    // render overlay content
+    restore_content(overlay_image.raw_fmt());
   }
 
   glFlush();
@@ -233,6 +235,9 @@ void PaintView::resizeWindow(int width, int height) {
 void PaintView::save_content(GLvoid *ptr) {
   glReadBuffer(GL_FRONT_AND_BACK);
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_PACK_ROW_LENGTH, cur.width);
 
@@ -243,7 +248,8 @@ void PaintView::save_content(GLvoid *ptr) {
 void PaintView::restore_content(GLvoid *ptr) {
   glDrawBuffer(GL_BACK);
 
-  // glClear(GL_COLOR_BUFFER_BIT);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   glRasterPos2i(0, m_nWindowHeight - cur.height);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -269,7 +275,8 @@ void PaintView::draw_line(GLubyte r, GLubyte g, GLubyte b, GLubyte a) {
 
 void PaintView::set_current_img(Image &img) {
   cur = img;
-  // m_pDoc->m_ucPainting = cur.raw_fmt();
+  overlay_image = pDoc->m_pUI->m_origView->original_img;
+  overlay_image.set_alpha(0.5);
   refresh();
 }
 
