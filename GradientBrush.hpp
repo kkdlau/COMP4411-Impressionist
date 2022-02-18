@@ -19,7 +19,13 @@ public:
     BrushMove(source, target);
   }
 
-  void BrushMove(const Point source, const Point target) {}
+  void BrushMove(const Point source, const Point target) {
+      if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
+          source.y >= pDoc->m_nPaintHeight) {
+          printf("Go back in\n"); // TODO - Remove
+          return;
+      }
+  }
 };
 
 #endif // __GRADIENT_BRUSH_H__

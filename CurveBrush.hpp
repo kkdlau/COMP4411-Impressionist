@@ -26,7 +26,11 @@ public:
 
   void BrushMove(const Point source, const Point target, bool randomize=false) {
     ImpressionistDoc *pDoc = GetDocument();
-
+    if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
+        source.y >= pDoc->m_nPaintHeight) {
+        printf("Go back in\n"); // TODO - Remove
+        return;
+    }
     radius = 2 * pDoc->getSize();
     const int width = pDoc->getWidth();
     float r = pDoc->getRad();

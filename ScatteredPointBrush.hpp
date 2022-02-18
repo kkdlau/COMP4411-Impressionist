@@ -41,6 +41,11 @@ public:
 
   void BrushMove(const Point source, const Point target) {
     ImpressionistDoc *pDoc = GetDocument();
+    if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
+        source.y >= pDoc->m_nPaintHeight) {
+        printf("Go back in\n"); // TODO - Remove
+        return;
+    }
     const int half = pDoc->getSize() / 2;
 
     for (int x = -half; x <= half; x += 1) {

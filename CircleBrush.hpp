@@ -25,6 +25,11 @@ public:
   }
   void BrushMove(const Point source, const Point target, bool randomize=false) {
     ImpressionistDoc *pDoc = GetDocument();
+    if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
+        source.y >= pDoc->m_nPaintHeight) {
+        printf("Go back in\n"); // TODO - Remove
+        return;
+    }
     radius = pDoc->getSize() / 2.0;
     if (randomize && frand() >= 0.75)
         RandomizeAttributes();
