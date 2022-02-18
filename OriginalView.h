@@ -42,9 +42,14 @@ public:
 
   void set_current_img(Image &img);
 
+  void save_to_image(Image &image);
+  void restore_from_image(Image &image);
+
   void dissolve(Image &img);
 
   void set_cursor(const Point &p);
+
+  void render_cursor();
 
   void hide_cusor();
 
@@ -54,9 +59,12 @@ public:
 
   Image dissolve_target;
 
+  Point cursor_pos;
+
   uint32_t f;
 
 private:
+  bool show_cursor;
   int m_nWindowWidth, m_nWindowHeight;
 };
 
