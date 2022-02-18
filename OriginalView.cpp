@@ -57,7 +57,7 @@ void OriginalView::draw() {
       startrow = 0;
 
     bitstart =
-        img.raw_fmt() + 3 * ((m_pDoc->m_nWidth * startrow) + scrollpos.x);
+        img.raw_fmt() + 4 * ((m_pDoc->m_nWidth * startrow) + scrollpos.x);
 
     // just copy image to GLwindow conceptually
     glRasterPos2i(0, m_nWindowHeight - drawHeight);
@@ -68,12 +68,8 @@ void OriginalView::draw() {
     if ((f & DrawingFlag::DISSOLVE) == DrawingFlag::DISSOLVE) {
       f = f & ~DISSOLVE;
       debugger("dissolve");
-      glRasterPos2i(0, m_nWindowHeight - drawHeight);
-      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-      glPixelStorei(GL_UNPACK_ROW_LENGTH, m_pDoc->m_nWidth);
-      glDrawBuffer(GL_BACK);
-      glDrawPixels(drawWidth, drawHeight, GL_RGBA, GL_UNSIGNED_BYTE,
-                   dissolve_target.paint_byte());
+      glDrawPixels(dissolve_target.width, dissolve_target.height, GL_RGBA,
+                   GL_UNSIGNED_BYTE, dissolve_target.paint_byte());
     }
   }
 
@@ -96,10 +92,13 @@ void OriginalView::set_current_img(Image &img) {
 
 void OriginalView::dissolve(Image &img) {
   img.crop(original_img.width, original_img.height);
-  img.set_alpha(0.5);
-  dissolve_target = img;
-  f |= static_cast<int>(DrawingFlag::DISSOLVE);
-  this->refresh();
+  // debugger("%d, %d", original_img.width, original_img.height);
+  // debugger("%d, %d", img.width, img.height);
+  // img.set_alpha(0.5);
+  set_current_img(img);
+  // dissolve_target = img;
+  // f |= static_cast<int>(DrawingFlag::DISSOLVE);
+  // this->refresh();
 }
 
 void OriginalView::set_cursor(const Point &p) {
@@ -109,7 +108,8 @@ void OriginalView::set_cursor(const Point &p) {
   Point top_left = p.shift_x(-3).shift_y(-3);
   Point bottom_right = p.shift_x(3).shift_y(3);
   new_img.for_range_pixel(top_left, bottom_right, [&](int y, int x) {
-    if (!new_img.valid_point(y, x)) return;
+    if (!new_img.valid_point(y, x))
+      return;
     new_img.set_pixel(y, x, {RED_COLOR});
   });
   this->img = new_img;

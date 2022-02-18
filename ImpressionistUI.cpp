@@ -244,6 +244,28 @@ void ImpressionistUI::cb_dissolve_iamge(Fl_Menu_ *o, void *v) {
   pDoc->m_pUI->m_origView->dissolve(src);
 }
 
+void ImpressionistUI::cb_mural_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+  OriginalView &view = *pDoc->m_pUI->m_origView;
+
+  if (!view.original_img.contain_content()) {
+    fl_alert("In order to use mural image function, you have to load an image "
+             "first.");
+    return;
+  }
+
+  char *newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+
+  Image src = Image::from(newfile);
+  if (src.width != view.original_img.width ||
+      src.height != view.original_img.height) {
+    fl_alert("Dimension is not the same, please try again.");
+    return;
+  }
+  view.set_current_img(src);
+}
+
 void ImpressionistUI::cb_swap_content(Fl_Menu_ *o, void *v) {
   ImpressionistDoc *pDoc = whoami(o)->getDocument();
 
@@ -255,21 +277,21 @@ void ImpressionistUI::cb_color_blending(Fl_Menu_ *o, void *v) {
 }
 
 // bring up the filter interface dialog
-void ImpressionistUI::cb_arbitrary_filter(Fl_Menu_* o, void* v) {
-    whoami(o)->m_FilterInterface->show();
+void ImpressionistUI::cb_arbitrary_filter(Fl_Menu_ *o, void *v) {
+  whoami(o)->m_FilterInterface->show();
 }
-void ImpressionistUI::cb_autoPaint(Fl_Widget* o, void* v) {
-    ImpressionistDoc* pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
-    pDoc->auto_paint();
+void ImpressionistUI::cb_autoPaint(Fl_Widget *o, void *v) {
+  ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
+  pDoc->auto_paint();
 }
 
-void ImpressionistUI::cb_spacingUpdate(Fl_Widget* o, void* v) {
-    ((ImpressionistUI*)(o->user_data()))
-        ->setSpacing(int(((Fl_Slider*)o)->value()));
+void ImpressionistUI::cb_spacingUpdate(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))
+      ->setSpacing(int(((Fl_Slider *)o)->value()));
 }
-void ImpressionistUI::cb_autoPaintRandomize(Fl_Widget* o, void* v) {
-    ((ImpressionistUI*)(o->user_data()))
-        ->setAutoPaintRandomize(int(((Fl_Slider*)o)->value()));
+void ImpressionistUI::cb_autoPaintRandomize(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))
+      ->setAutoPaintRandomize(int(((Fl_Slider *)o)->value()));
 }
 //------------------------------------------------------------
 // Causes the Impressionist program to exit
@@ -357,14 +379,14 @@ void ImpressionistUI::cb_blurUpdate(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
       ->setBlurValue(int(((Fl_Slider *)o)->value()));
 }
-void ImpressionistUI::cb_arbFilterApply(Fl_Widget* o, void* v) {
-    ((ImpressionistUI*)(o->user_data()))
-        ->setFilterValues(); // put the filter value string into somewhere accessible
-
+void ImpressionistUI::cb_arbFilterApply(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))
+      ->setFilterValues(); // put the filter value string into somewhere
+                           // accessible
 }
-void ImpressionistUI::cb_arbFilterNormalize(Fl_Widget* o, void* v) {
-    ((ImpressionistUI*)(o->user_data()))
-        ->setNormalize(int(((Fl_Check_Button*)o)->value()));
+void ImpressionistUI::cb_arbFilterNormalize(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))
+      ->setNormalize(int(((Fl_Check_Button *)o)->value()));
 }
 
 //---------------------------------- per instance functions
@@ -455,22 +477,22 @@ void ImpressionistUI::setBlurValue(int a) {
   m_fBlur = a;
 
   if (a <= 11)
-      if (a % 2)
-          m_BrushBlurSlider->value(m_fBlur);
-      else
-          m_BrushBlurSlider->value((int)m_fBlur + 1);
+    if (a % 2)
+      m_BrushBlurSlider->value(m_fBlur);
+    else
+      m_BrushBlurSlider->value((int)m_fBlur + 1);
   else
-      m_BrushBlurSlider->value(11);
+    m_BrushBlurSlider->value(11);
 }
 
 void ImpressionistUI::setSpacing(int a) {
-    m_nSpacing = a;
-    if (a <= 16)
-        m_BrushSpacingSlider->value(m_nSpacing);
+  m_nSpacing = a;
+  if (a <= 16)
+    m_BrushSpacingSlider->value(m_nSpacing);
 }
 
 void ImpressionistUI::setAutoPaintRandomize(int a) {
-    m_nAutoPaintRandomize = a;
+  m_nAutoPaintRandomize = a;
 }
 
 vector<double> ImpressionistUI::getUserColor() {
@@ -481,15 +503,13 @@ vector<double> ImpressionistUI::getUserColor() {
 
 int ImpressionistUI::getRowNum() { return af_rownum; }
 int ImpressionistUI::getColNum() { return af_colnum; }
-void ImpressionistUI::getFilterValues(char* a) { strcpy(a, af_values); }
+void ImpressionistUI::getFilterValues(char *a) { strcpy(a, af_values); }
 void ImpressionistUI::setRowNum(int a) { af_rownum = a; }
 void ImpressionistUI::setColNum(int a) { af_colnum = a; }
 void ImpressionistUI::setFilterValues() {
-    strcpy(af_values, m_FilterValues->value());
+  strcpy(af_values, m_FilterValues->value());
 }
-bool ImpressionistUI::getNormalize() {
-    return (af_normalize == 1);
-}
+bool ImpressionistUI::getNormalize() { return (af_normalize == 1); }
 void ImpressionistUI::setNormalize(int a) { af_normalize = a; }
 
 // Main menu definition
@@ -504,10 +524,12 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Swap", FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_swap_content, 0},
     {"&Dissolve", FL_ALT + 'd',
      (Fl_Callback *)ImpressionistUI::cb_dissolve_iamge, 0},
+    {"&New / Change Mural image", FL_ALT + 'N',
+     (Fl_Callback *)ImpressionistUI::cb_mural_image, 0},
     {"&Color Blending", FL_ALT + 'k',
      (Fl_Callback *)ImpressionistUI::cb_color_blending, 0},
     {"&Custom Filter", FL_ALT + 'f',
-    (Fl_Callback *)ImpressionistUI::cb_arbitrary_filter, 0},
+     (Fl_Callback *)ImpressionistUI::cb_arbitrary_filter, 0},
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
     {"&Quit", FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit},
@@ -685,9 +707,9 @@ ImpressionistUI::ImpressionistUI() {
   m_ColorBlending->callback(cb_colorBlendingUpdate);
 
   // autopainting section
-  // 1. spacing slider 
+  // 1. spacing slider
   m_BrushSpacingSlider = new Fl_Value_Slider(10, y += 30, 180, 20, "Spacing");
-  m_BrushSpacingSlider->user_data((void*)(this));
+  m_BrushSpacingSlider->user_data((void *)(this));
   m_BrushSpacingSlider->type(FL_HOR_NICE_SLIDER);
   m_BrushSpacingSlider->labelfont(FL_COURIER);
   m_BrushSpacingSlider->labelsize(12);
@@ -699,16 +721,16 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushSpacingSlider->callback(cb_spacingUpdate);
   // 2. randomize checkbox
   m_AutoPaintRandomize = new Fl_Check_Button(250, y, 20, 20, "Random");
-  m_AutoPaintRandomize->user_data((void*)(this));
+  m_AutoPaintRandomize->user_data((void *)(this));
   m_AutoPaintRandomize->labelfont(FL_COURIER);
   m_AutoPaintRandomize->value(m_nAutoPaintRandomize);
   m_AutoPaintRandomize->align(FL_ALIGN_RIGHT);
   m_AutoPaintRandomize->callback(cb_autoPaintRandomize);
   // 3. button to paint
   m_AutoPaint = new Fl_Button(340, y, 50, 25, "Paint");
-  m_AutoPaint->user_data((void*)(this));
+  m_AutoPaint->user_data((void *)(this));
   m_AutoPaint->callback(cb_autoPaint);
-  
+
   m_brushDialog->end();
 
   // color dialog definition
@@ -722,7 +744,9 @@ ImpressionistUI::ImpressionistUI() {
   m_FilterBuff = new Fl_Text_Buffer();
   m_FilterDisp = new Fl_Text_Display(25, fy, 450, 100, "Instructions");
   m_FilterDisp->buffer(m_FilterBuff);
-  m_FilterBuff->text("Enter the dimensions of the rectangular filter.\nThen, enter the filter values separated with commas \nand each row on a new line.");
+  m_FilterBuff->text(
+      "Enter the dimensions of the rectangular filter.\nThen, enter the filter "
+      "values separated with commas \nand each row on a new line.");
   m_FilterDisp->deactivate();
 
   m_FilterRowNum = new Fl_Int_Input(25, fy += 110, 30, 30, "# Rows");
@@ -731,7 +755,7 @@ ImpressionistUI::ImpressionistUI() {
   m_FilterColNum = new Fl_Int_Input(125, fy, 30, 30, "# Columns");
   m_FilterColNum->labelfont(FL_COURIER);
   m_FilterColNum->align(FL_ALIGN_RIGHT);
-  m_FilterColNum->user_data((void*)(this));
+  m_FilterColNum->user_data((void *)(this));
   m_FilterNormalize = new Fl_Check_Button(250, fy, 30, 30, "Normalize");
   m_FilterNormalize->callback(cb_arbFilterNormalize);
 

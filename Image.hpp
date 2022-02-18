@@ -130,7 +130,7 @@ public:
   }
 
   void crop(size_t sx, size_t sy) {
-    vector<GLubyte> buf = {};
+    vector<GLubyte> buf{};
     for_each_pixel([&](int y, int x) {
       if (y >= sy || x >= sx)
         return;
@@ -145,5 +145,7 @@ public:
     width = width > sx ? sx : width;
     height = height > sy ? sy : height;
   }
+
+  bool contain_content() const { return width != 0 && height != 0; }
 };
 #endif // __IMAGE_H_
