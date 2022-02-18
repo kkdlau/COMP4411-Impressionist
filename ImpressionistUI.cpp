@@ -293,6 +293,7 @@ void ImpressionistUI::cb_autoPaintRandomize(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
       ->setAutoPaintRandomize(int(((Fl_Slider *)o)->value()));
 }
+
 //------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
@@ -379,6 +380,10 @@ void ImpressionistUI::cb_blurUpdate(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
       ->setBlurValue(int(((Fl_Slider *)o)->value()));
 }
+void ImpressionistUI::cb_transparencyUpdate(Fl_Widget* o, void* v) {
+    ((ImpressionistUI*)(o->user_data()))
+        ->setTransparency(float(((Fl_Slider*)o)->value()));
+}
 void ImpressionistUI::cb_arbFilterApply(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
       ->setFilterValues(); // put the filter value string into somewhere
@@ -437,6 +442,7 @@ int ImpressionistUI::getColorBlending() { return m_fColorBlending; }
 int ImpressionistUI::getBlurValue() { return m_fBlur; }
 int ImpressionistUI::getSpacing() { return m_nSpacing; }
 int ImpressionistUI::getAutoPaintRandomize() { return m_nAutoPaintRandomize; }
+float ImpressionistUI::getTransparency() { return m_cTransparency; }
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -495,6 +501,11 @@ void ImpressionistUI::setAutoPaintRandomize(int a) {
   m_nAutoPaintRandomize = a;
 }
 
+void ImpressionistUI::setTransparency(float a) {
+    m_cTransparency = a;
+    if (a <= 1.0)
+        m_CanvasTransparencySlider->value(m_cTransparency);
+}
 vector<double> ImpressionistUI::getUserColor() {
   vector<double> rgb = {m_ColorChooser->r(), m_ColorChooser->g(),
                         m_ColorChooser->b()};
@@ -731,6 +742,17 @@ ImpressionistUI::ImpressionistUI() {
   m_AutoPaint->user_data((void *)(this));
   m_AutoPaint->callback(cb_autoPaint);
 
+  m_CanvasTransparencySlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Transparency");
+  m_CanvasTransparencySlider->user_data((void*)(this));
+  m_CanvasTransparencySlider->type(FL_HOR_NICE_SLIDER);
+  m_CanvasTransparencySlider->labelfont(FL_COURIER);
+  m_CanvasTransparencySlider->labelsize(12);
+  m_CanvasTransparencySlider->minimum(0.0);
+  m_CanvasTransparencySlider->maximum(1.0);
+  m_CanvasTransparencySlider->step(0.01);
+  m_CanvasTransparencySlider->value(m_cTransparency);
+  m_CanvasTransparencySlider->align(FL_ALIGN_RIGHT);
+  m_CanvasTransparencySlider->callback(cb_transparencyUpdate);
   m_brushDialog->end();
 
   // color dialog definition
@@ -763,6 +785,7 @@ ImpressionistUI::ImpressionistUI() {
 
   m_FilterApply = new Fl_Button(350, fy += 210, 100, 20, "Apply");
   m_FilterApply->callback(cb_arbFilterApply);
+  m_FilterInterface->end();
 }
 
 StrokeDirection ImpressionistUI::get_direction() { return m_direction; }

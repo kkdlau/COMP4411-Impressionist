@@ -55,6 +55,8 @@ public:
   Fl_Check_Button *m_AutoPaintRandomize;
   Fl_Button *m_AutoPaint;
 
+  Fl_Slider* m_CanvasTransparencySlider;
+
   // for color blending dialog
   Fl_Window *m_ColorDialog;
   Fl_Color_Chooser *m_ColorChooser;
@@ -120,6 +122,9 @@ public:
   bool getNormalize();
   void setNormalize(int a);
 
+  float getTransparency();
+  void setTransparency(float a);
+
 private:
   ImpressionistDoc
       *m_pDoc; // pointer to document to communicate with the document
@@ -139,6 +144,7 @@ private:
   int af_colnum = 0;
   int af_normalize = 1;
   char af_values[400]{'0'}; // MAX size of filter is 10x10 (?)
+  float m_cTransparency = 1.0; // set alpha as one (?)
 
   // Static class members
   static Fl_Menu_Item menuitems[];
@@ -176,6 +182,7 @@ private:
   static void cb_autoPaintRandomize(Fl_Widget *o, void *v);
   static void cb_arbFilterApply(Fl_Widget *o, void *v);
   static void cb_arbFilterNormalize(Fl_Widget *o, void *v);
+  static void cb_transparencyUpdate(Fl_Widget* o, void* v);
 };
 
 #endif
