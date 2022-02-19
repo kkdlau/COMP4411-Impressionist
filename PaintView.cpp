@@ -328,7 +328,7 @@ void PaintView::auto_paint() {
         start = false;
       } else
         cur_brush.BrushMove(source, target, randomize);
-      save_content(cur.raw_fmt());
+      //save_content(cur.raw_fmt());
       counter++;
       if (counter % 20 == 0)
         std::random_shuffle(cols.begin(), cols.end());
