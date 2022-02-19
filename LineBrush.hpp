@@ -63,6 +63,12 @@ public:
       Point p1 = target + Point::zero().shift_x(-half).rotate(r);
       Point p2 = target + Point::zero().shift_x(half).rotate(r);
 
+      if (true) {
+        debugger("clipping");
+        p1 = ImageUtils::check_if_hit_edge(target, p1, pDoc->edge_image);
+        p2 = ImageUtils::check_if_hit_edge(target, p2, pDoc->edge_image);
+      }
+
       gl_set_point(p1);
       gl_set_point(p2);
     });

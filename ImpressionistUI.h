@@ -50,6 +50,7 @@ public:
   Fl_Button *m_ClearCanvasButton;
   Fl_Check_Button *m_ColorBlending;
   Fl_Check_Button *m_another_gradient_checkbox;
+  Fl_Check_Button *m_edge_clipping_checkbox;
 
   Fl_Slider *m_BrushSpacingSlider;
   Fl_Check_Button *m_AutoPaintRandomize;
@@ -126,8 +127,10 @@ public:
   void setTransparency(float a);
 
   bool get_use_another_gradient();
-
   void set_use_another_gradient(bool v);
+
+  bool get_edge_clipping();
+  void set_edge_clipping(bool v);
 
 private:
   ImpressionistDoc
@@ -149,7 +152,8 @@ private:
   int af_normalize = 1;
   char af_values[400]{'0'};  // MAX size of filter is 10x10 (?)
   float m_cTransparency = 0; // set alpha as one (?)
-  volatile bool use_another_gradient;
+  bool use_another_gradient;
+  bool enable_edge_clipping;
 
   // Static class members
   static Fl_Menu_Item menuitems[];
@@ -183,6 +187,7 @@ private:
   static void cb_toggleOriginalView(Fl_Widget *o, void *v);
   static void cb_colorBlendingUpdate(Fl_Widget *o, void *v);
   static void cb_another_gradient(Fl_Widget *o, void *v);
+  static void cb_edge_clipping(Fl_Widget *o, void *v);
   static void cb_blurUpdate(Fl_Widget *o, void *v);
   static void cb_autoPaint(Fl_Widget *o, void *v);
   static void cb_spacingUpdate(Fl_Widget *o, void *v);

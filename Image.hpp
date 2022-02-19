@@ -158,5 +158,10 @@ public:
     this->bytes = {};
     this->width = this->height = 0;
   }
+
+  bool has_color(int y, int x) {
+    int i = convert_to_index(y, x);
+    return bytes[i] || bytes[i + 1] || bytes[i + 2];
+  }
 };
 #endif // __IMAGE_H_

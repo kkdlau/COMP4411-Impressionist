@@ -48,7 +48,7 @@
 - [x] _(1B1W)_ mural image (load another image without resetting)
 - [ ] (1B1W) alpha mapping brush (need more look up) (M)
 - [x] **(1B1W)** auto paint (M)
-- [ ] **(1B1W)** gradient according to another image (D)
+- [x] **(1B1W)** gradient according to another image (D)
 - [x] _(1B1W)_ edge clipping (need more look up) (D)
 - [ ] _(2B)_ filter kernel (M)
   - [ ] need arbitrary size

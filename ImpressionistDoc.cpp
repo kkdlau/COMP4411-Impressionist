@@ -142,9 +142,18 @@ int ImpressionistDoc::loadImage(char *iname) {
     m_pUI->m_another_gradient_checkbox->clear();
   }
 
+  if (edge_image.contain_content()) {
+    edge_image.clear();
+    m_pUI->set_use_another_gradient(false);
+    m_pUI->m_edge_clipping_checkbox->clear();
+  }
+
+  OriginalView &orig_view = *m_pUI->m_origView;
+  PaintView &paint_view = *m_pUI->m_paintView;
+
   m_ucBitmap = data;
-  m_pUI->m_origView->original_img.set(data, width, height);
-  m_pUI->m_origView->img.set(data, width, height);
+  orig_view.original_img.set(data, width, height);
+  orig_view.img.set(data, width, height);
 
   // allocate space for draw view
   m_ucPainting = new unsigned char[width * height * 3];
@@ -154,12 +163,12 @@ int ImpressionistDoc::loadImage(char *iname) {
                               m_pUI->m_mainWindow->y(), width * 2, height + 25);
 
   // display it on origView
-  m_pUI->m_origView->set_current_img(m_pUI->m_origView->original_img);
+  orig_view.set_current_img(orig_view.original_img);
 
-  m_pUI->m_paintView->prev.set(m_ucPainting, width, height);
-  m_pUI->m_paintView->cur.set(m_ucPainting, width, height);
+  paint_view.prev.set(m_ucPainting, width, height);
+  paint_view.cur.set(m_ucPainting, width, height);
 
-  m_pUI->m_paintView->set_current_img(m_pUI->m_paintView->cur);
+  paint_view.set_current_img(paint_view.cur);
 
   return 1;
 }
