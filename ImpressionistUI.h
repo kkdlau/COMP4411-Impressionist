@@ -111,16 +111,16 @@ public:
 
   // arbitrary filter
   int getRowNum();
-  void setRowNum(int a);
+  void setRowNum();
 
   int getColNum();
-  void setColNum(int a);
+  void setColNum();
 
-  void getFilterValues(char *a);
+  int getFilterValues(char *a);
   void setFilterValues();
 
   bool getNormalize();
-  void setNormalize(int a);
+  void setNormalize();
 
   float getTransparency();
   void setTransparency(float a);
@@ -146,8 +146,9 @@ private:
   // arbitrary filter
   int af_rownum = 0;
   int af_colnum = 0;
-  int af_normalize = 1;
+  int af_normalize = 0;
   char af_values[400]{'0'};  // MAX size of filter is 10x10 (?)
+  bool filter_changed = false;
   float m_cTransparency = 0; // set alpha as one (?)
   int use_another_gradient = 0;
 

@@ -426,7 +426,7 @@ void ImpressionistUI::cb_arbFilterApply(Fl_Widget *o, void *v) {
 }
 void ImpressionistUI::cb_arbFilterNormalize(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
-      ->setNormalize(int(((Fl_Check_Button *)o)->value()));
+      ->setNormalize();
 }
 
 //---------------------------------- per instance functions
@@ -552,14 +552,38 @@ vector<double> ImpressionistUI::getUserColor() {
 
 int ImpressionistUI::getRowNum() { return af_rownum; }
 int ImpressionistUI::getColNum() { return af_colnum; }
-void ImpressionistUI::getFilterValues(char *a) { strcpy(a, af_values); }
-void ImpressionistUI::setRowNum(int a) { af_rownum = a; }
-void ImpressionistUI::setColNum(int a) { af_colnum = a; }
+int ImpressionistUI::getFilterValues(char* a) {  // return 0 if no changes to filter values
+    if (!filter_changed) {
+        return 0;
+    }
+    strcpy(a, af_values); 
+    filter_changed = false;
+    return 1;
+}
+void ImpressionistUI::setRowNum() { 
+    char rownum_str[10]{ '0' };
+    strcpy(rownum_str, m_FilterRowNum->value());
+    af_rownum = atoi(rownum_str);
+}
+void ImpressionistUI::setColNum() { 
+    char colnum_str[10]{ '0' };
+    strcpy(colnum_str, m_FilterColNum->value());
+    af_colnum = atoi(colnum_str);
+}
 void ImpressionistUI::setFilterValues() {
   strcpy(af_values, m_FilterValues->value());
+  
+  filter_changed = true;
+  setRowNum();
+  setColNum();
+  printf("%s \n%d %d\n", af_values, af_rownum, af_colnum);
+  printf("Finish setFilterValues");
 }
 bool ImpressionistUI::getNormalize() { return (af_normalize == 1); }
-void ImpressionistUI::setNormalize(int a) { af_normalize = a; }
+void ImpressionistUI::setNormalize() { 
+    af_normalize = m_FilterNormalize->value();
+    printf("af_normalize is %d\n", af_normalize);
+}
 
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
@@ -615,6 +639,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_CURVES},
     {"Blurring Filter", FL_ALT + 'u',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_FILTER},
+    {"Custom Filter", FL_ALT + 's',
+    (Fl_Callback *) ImpressionistUI::cb_brushChoice, (void*)BRUSH_CUSTOM_FILTER},
     {0}};
 
 Fl_Menu_Item
@@ -824,16 +850,18 @@ ImpressionistUI::ImpressionistUI() {
   m_FilterRowNum = new Fl_Int_Input(25, fy += 110, 30, 30, "# Rows");
   m_FilterRowNum->labelfont(FL_COURIER);
   m_FilterRowNum->align(FL_ALIGN_RIGHT);
+  m_FilterRowNum->user_data((void*)(this));
   m_FilterColNum = new Fl_Int_Input(125, fy, 30, 30, "# Columns");
   m_FilterColNum->labelfont(FL_COURIER);
   m_FilterColNum->align(FL_ALIGN_RIGHT);
   m_FilterColNum->user_data((void *)(this));
   m_FilterNormalize = new Fl_Check_Button(250, fy, 30, 30, "Normalize");
+  m_FilterNormalize->user_data((void*)(this));
   m_FilterNormalize->callback(cb_arbFilterNormalize);
-
   m_FilterValues = new Fl_Multiline_Input(25, fy += 40, 450, 200);
-
-  m_FilterApply = new Fl_Button(350, fy += 210, 100, 20, "Apply");
+  m_FilterValues->user_data((void*)(this));
+  m_FilterApply = new Fl_Button(350, fy += 210, 100, 40, "Apply");
+  m_FilterApply->user_data((void*)(this));
   m_FilterApply->callback(cb_arbFilterApply);
   m_FilterInterface->end();
 }

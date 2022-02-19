@@ -81,7 +81,7 @@ public:
   }
 
   void RandomizeAttributes() {
-      glLineWidth(40);
+      glLineWidth(irand(40));
   }
 };
 

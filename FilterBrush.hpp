@@ -8,7 +8,7 @@
 #include <cmath>
 
 using namespace GLHelper;
-
+// This filter brush is for blurring only 
 class FilterBrush : public ImpBrush {
     int filter_dim = 0;
 public:
@@ -31,7 +31,7 @@ public:
             return;
         }
         if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 || source.y >= pDoc->m_nPaintHeight) {
-            printf("Go back in\n"); // TODO - Remove 
+            printf("Go back in\n");
             return;
         }
         if (randomize && frand() >= 0.75)
@@ -59,7 +59,7 @@ public:
     }
     
     void RandomizeAttributes() {
-        glPointSize(10);
+        glPointSize(irand(10));
     }
     void filterMean(const Point source, std::vector<int>& color) {
         ImpressionistDoc* pDoc = GetDocument();
@@ -76,7 +76,7 @@ public:
         for (int i = 0; i < filter_dim; i++) {
             for (int j = 0; j < filter_dim; j++) {
                 int x = source.x - i + offset;
-                int y = source.y - i + offset;
+                int y = source.y - j + offset;
                 if (x < 0) x = 0;
                 else if (x >= pDoc->m_nPaintWidth) x = pDoc->m_nPaintWidth - 1;
                 if (y < 0) y = 0;
