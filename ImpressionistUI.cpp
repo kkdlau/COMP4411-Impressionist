@@ -402,13 +402,14 @@ void ImpressionistUI::cb_another_gradient(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
   auto ui = *((ImpressionistUI *)(o->user_data()));
 
-  auto value = int(((Fl_Check_Button *)o)->value());
+  bool value = bool(((Fl_Check_Button *)o)->value());
 
   if (!pDoc->another_image.contain_content() && v) {
     ui.m_another_gradient_checkbox->clear();
     ui.set_use_another_gradient(false);
-  } else
+  } else {
     ui.set_use_another_gradient(value);
+  }
 }
 
 void ImpressionistUI::cb_blurUpdate(Fl_Widget *o, void *v) {
@@ -550,6 +551,16 @@ vector<double> ImpressionistUI::getUserColor() {
   return rgb;
 }
 
+bool ImpressionistUI::get_use_another_gradient() {
+  debugger("get: %d", this->use_another_gradient);
+  return this->use_another_gradient;
+}
+
+void ImpressionistUI::set_use_another_gradient(bool v) {
+  debugger("set: %d", v);
+  this->use_another_gradient = v;
+}
+
 int ImpressionistUI::getRowNum() { return af_rownum; }
 int ImpressionistUI::getColNum() { return af_colnum; }
 void ImpressionistUI::getFilterValues(char *a) { strcpy(a, af_values); }
@@ -635,6 +646,8 @@ Fl_Menu_Item
 // Add new widgets here
 //----------------------------------------------------
 ImpressionistUI::ImpressionistUI() {
+  use_another_gradient = false;
+
   // Create the main window
   m_mainWindow = new Fl_Window(600, 300, "Impressionist");
   m_mainWindow->user_data(

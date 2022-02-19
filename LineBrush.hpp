@@ -28,19 +28,23 @@ public:
 
     BrushMove(source, target);
   }
-  void BrushMove(const Point source, const Point target, bool randomize=false) {
+  void BrushMove(const Point source, const Point target,
+                 bool randomize = false) {
     ImpressionistDoc *pDoc = GetDocument();
     if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
         source.y >= pDoc->m_nPaintHeight) {
-        printf("Go back in\n"); // TODO - Remove
-        return;
+      printf("Go back in\n"); // TODO - Remove
+      return;
     }
     const int half = pDoc->m_pUI->getSize() / 2;
     float r = pDoc->getRad();
     switch (pDoc->m_pUI->get_direction()) {
     case GRADIENT_DIRECTION: {
-      auto result = ImageUtils::sobel(pDoc->m_pUI->m_origView->original_img,
-                                      target.y, target.x);
+      bool use_another_img = pDoc->m_pUI->m_another_gradient_checkbox->value();
+      Image &img = use_another_img ? pDoc->another_image
+                                   : pDoc->m_pUI->m_origView->original_img;
+
+      auto result = ImageUtils::sobel(img, target.y, target.x);
       r = get<2>(result);
     } break;
 
@@ -52,7 +56,7 @@ public:
     if (isnan(r))
       return;
     if (randomize && frand() >= 0.75)
-        RandomizeAttributes();
+      RandomizeAttributes();
 
     gl_draw_shape(GL_LINES, [&] {
       SetColor(source);
@@ -70,19 +74,17 @@ public:
   void BrushEnd(const Point source, const Point target) {}
 
   void select() {
-      ImpressionistDoc* pDoc = GetDocument();
-      pDoc->m_pUI->m_BrushWidthSlider->activate();
-      pDoc->m_pUI->m_BrushAngleSlider->activate();
-      pDoc->m_pUI->m_StrokeDirection->activate();
-      pDoc->m_pUI->m_BrushSizeSlider->activate();
-      pDoc->m_pUI->m_BrushAlphaSlider->activate();
-      pDoc->m_pUI->m_BrushBlurSlider->deactivate();
-      pDoc->m_pUI->m_ColorBlending->activate();
+    ImpressionistDoc *pDoc = GetDocument();
+    pDoc->m_pUI->m_BrushWidthSlider->activate();
+    pDoc->m_pUI->m_BrushAngleSlider->activate();
+    pDoc->m_pUI->m_StrokeDirection->activate();
+    pDoc->m_pUI->m_BrushSizeSlider->activate();
+    pDoc->m_pUI->m_BrushAlphaSlider->activate();
+    pDoc->m_pUI->m_BrushBlurSlider->deactivate();
+    pDoc->m_pUI->m_ColorBlending->activate();
   }
 
-  void RandomizeAttributes() {
-      glLineWidth(40);
-  }
+  void RandomizeAttributes() { glLineWidth(40); }
 };
 
 #endif // __LINE_BRUSH_H__

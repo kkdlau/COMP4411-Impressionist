@@ -125,9 +125,9 @@ public:
   float getTransparency();
   void setTransparency(float a);
 
-  bool get_use_another_gradient() { return use_another_gradient; }
+  bool get_use_another_gradient();
 
-  bool set_use_another_gradient(bool v) { use_another_gradient = v; }
+  void set_use_another_gradient(bool v);
 
 private:
   ImpressionistDoc
@@ -149,7 +149,7 @@ private:
   int af_normalize = 1;
   char af_values[400]{'0'};  // MAX size of filter is 10x10 (?)
   float m_cTransparency = 0; // set alpha as one (?)
-  int use_another_gradient = 0;
+  volatile bool use_another_gradient;
 
   // Static class members
   static Fl_Menu_Item menuitems[];
