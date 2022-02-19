@@ -1,6 +1,7 @@
 #if !defined(__IMAGE_UTILS__)
 #define __IMAGE_UTILS__
 #include "Image.hpp"
+#include <functional>
 #include <tuple>
 #include <vector>
 
@@ -116,6 +117,93 @@ static Point check_if_hit_edge(const Point &from, const Point &to,
 
   return prev;
 }
+
+static float
+luma_cal(tuple<GLubyte &, GLubyte &, GLubyte &, GLubyte &> &color) {
+  return 0.299 * get<0>(color) + 0.587 * get<1>(color) + 0.114 * get<2>(color);
+}
+
+/**
+ * @brief structural similarity index measure method.
+ * This function is designed for measuring the similarity between two images.
+ *
+ * @param src source image
+ * @param target target image
+ * @return float similarity ranging from 0 to 1.
+ */
+static float structural_similarity(Image &src, Image &target) {
+  target.resize(src.width, src.height);
+  float MSSIM = 0;
+
+  const int win_width_size = src.width / 2;
+  const int win_height_size = src.height / 2;
+  const int num_win_pixel = win_width_size * win_height_size;
+
+  const int num_window = 2;
+
+  const float c1 = 0.0049;
+  const float c2 = 0.0441;
+
+  static auto for_each_pixel_window = [&](int wy, int wx,
+                                          function<void(int, int)> handler) {
+    for (int y = 0; y < win_height_size; y++)
+      for (int x = 0; x < win_width_size; x++) {
+        const int x_coord = x + win_width_size * wx;
+        const int y_coord = y + win_height_size * wy;
+        handler(y_coord, x_coord);
+      }
+  };
+
+  for (int wy = 0; wy < num_window; wy++) {
+    for (int wx = 0; wx < num_window; wx++) {
+      float src_luma_avg = 0;
+      float tar_luma_avg = 0;
+      float src_var = 0;
+      float tar_var = 0;
+      float cvar = 0;
+
+      for_each_pixel_window(wy, wx, [&](int y, int x) {
+        auto src_color = src(y, x);
+        auto tar_color = target(y, x);
+
+        // TODO: optimize the algorithm by storing the result
+        src_luma_avg += luma_cal(src_color) / 255;
+        tar_luma_avg += luma_cal(tar_color) / 255;
+      });
+
+      src_luma_avg /= num_win_pixel;
+      tar_luma_avg /= num_win_pixel;
+
+      for_each_pixel_window(wy, wx, [&](int y, int x) {
+        auto src_color = src(y, x);
+        auto tar_color = target(y, x);
+
+        float src_luma = luma_cal(src_color) / 255;
+        float tar_luma = luma_cal(tar_color) / 255;
+
+        const float nom_src_var = src_luma - src_luma_avg;
+        const float nom_tar_var = tar_luma - tar_luma_avg;
+
+        src_var += nom_src_var * nom_src_var;
+        tar_var += nom_tar_var * nom_tar_var;
+        cvar += nom_src_var * nom_tar_var;
+      });
+
+      src_var /= num_win_pixel;
+      tar_var /= num_win_pixel;
+      cvar /= num_win_pixel;
+
+      MSSIM +=
+          ((2 * src_luma_avg * tar_luma_avg + c1) * (2 * cvar + c2)) /
+          ((src_luma_avg * src_luma_avg + tar_luma_avg * tar_luma_avg + c1) *
+           (src_var + tar_var + c2));
+    }
+
+    return MSSIM / num_window;
+  }
+}
+
+static Image mosaics(Image &img) { return {}; }
 } // namespace ImageUtils
 
 #endif // __IMAGE_UTILS__
