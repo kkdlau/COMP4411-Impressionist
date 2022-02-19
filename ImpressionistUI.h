@@ -24,7 +24,6 @@
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
 
-
 #include "ImpBrush.h"
 
 class ImpressionistUI {
@@ -55,7 +54,7 @@ public:
   Fl_Check_Button *m_AutoPaintRandomize;
   Fl_Button *m_AutoPaint;
 
-  Fl_Slider* m_CanvasTransparencySlider;
+  Fl_Slider *m_CanvasTransparencySlider;
 
   // for color blending dialog
   Fl_Window *m_ColorDialog;
@@ -143,8 +142,8 @@ private:
   int af_rownum = 0;
   int af_colnum = 0;
   int af_normalize = 1;
-  char af_values[400]{'0'}; // MAX size of filter is 10x10 (?)
-  float m_cTransparency = 1.0; // set alpha as one (?)
+  char af_values[400]{'0'};  // MAX size of filter is 10x10 (?)
+  float m_cTransparency = 0; // set alpha as one (?)
 
   // Static class members
   static Fl_Menu_Item menuitems[];
@@ -165,6 +164,7 @@ private:
   static void cb_swap_content(Fl_Menu_ *o, void *v);
   static void cb_dissolve_iamge(Fl_Menu_ *o, void *v);
   static void cb_mural_image(Fl_Menu_ *o, void *v);
+  static void cb_load_another_image(Fl_Menu_ *o, void *v);
   static void cb_color_blending(Fl_Menu_ *o, void *v);
   static void cb_arbitrary_filter(Fl_Menu_ *o, void *v);
   static void cb_brushChoice(Fl_Widget *o, void *v);
@@ -176,13 +176,14 @@ private:
   static void cb_alphaUpdate(Fl_Widget *o, void *v);
   static void cb_toggleOriginalView(Fl_Widget *o, void *v);
   static void cb_colorBlendingUpdate(Fl_Widget *o, void *v);
+  static void cb_another_gradient(Fl_Widget *o, void *v);
   static void cb_blurUpdate(Fl_Widget *o, void *v);
   static void cb_autoPaint(Fl_Widget *o, void *v);
   static void cb_spacingUpdate(Fl_Widget *o, void *v);
   static void cb_autoPaintRandomize(Fl_Widget *o, void *v);
   static void cb_arbFilterApply(Fl_Widget *o, void *v);
   static void cb_arbFilterNormalize(Fl_Widget *o, void *v);
-  static void cb_transparencyUpdate(Fl_Widget* o, void* v);
+  static void cb_transparencyUpdate(Fl_Widget *o, void *v);
 };
 
 #endif

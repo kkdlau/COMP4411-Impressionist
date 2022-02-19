@@ -72,10 +72,7 @@ ImpressionistDoc::ImpressionistDoc() {
 //---------------------------------------------------------
 // Set the current UI
 //---------------------------------------------------------
-void ImpressionistDoc::setUI(ImpressionistUI *ui) {
-  m_pUI = ui;
-  GLHelper::set_ui(m_pUI);
-}
+void ImpressionistDoc::setUI(ImpressionistUI *ui) { m_pUI = ui; }
 
 //---------------------------------------------------------
 // Returns the active picture/painting name
@@ -137,6 +134,10 @@ int ImpressionistDoc::loadImage(char *iname) {
   //  delete[] m_ucBitmap;
   // if (m_ucPainting)
   // delete[] m_ucPainting;
+
+  // clear the original image
+  if (another_image.contain_content())
+    another_image.clear();
 
   m_ucBitmap = data;
   m_pUI->m_origView->original_img.set(data, width, height);

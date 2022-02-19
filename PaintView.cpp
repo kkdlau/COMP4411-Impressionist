@@ -164,7 +164,7 @@ void PaintView::draw() {
     }
 
     // render overlay content
-    // restore_content(overlay_image.raw_fmt());
+    restore_content(overlay_image.raw_fmt());
   }
 
   glFlush();
@@ -246,7 +246,7 @@ void PaintView::save_content(GLvoid *ptr) {
 }
 
 void PaintView::restore_content(GLvoid *ptr) {
-  glDrawBuffer(GL_BACK);
+  glDrawBuffer(GL_FRONT_AND_BACK);
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -276,7 +276,7 @@ void PaintView::draw_line(GLubyte r, GLubyte g, GLubyte b, GLubyte a) {
 void PaintView::set_current_img(Image &img) {
   cur = img;
   overlay_image = pDoc->m_pUI->m_origView->original_img;
-  overlay_image.set_alpha(0.5);
+  overlay_image.set_alpha(pDoc->m_pUI->getTransparency());
   refresh();
 }
 

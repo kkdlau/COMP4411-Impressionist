@@ -2,7 +2,8 @@
 #define __GL_HELPER__
 
 #include "gl_inc.hpp"
-#include "impressionistDoc.h"
+
+#include "ImpBrush.h"
 #include <functional>
 
 using namespace std;
@@ -32,18 +33,14 @@ using namespace std;
  */
 
 #define RED_COLOR 255, 0, 0, 255
+
+class ImpressionistDoc;
 namespace GLHelper {
 extern bool invalid;
 
 extern ImpressionistDoc *pDoc;
-extern ImpressionistUI *pUI;
 
-static void inline set_ui(ImpressionistUI *ui) { pUI = ui; }
-
-static void inline set_doc(ImpressionistDoc *doc) {
-  pDoc = doc;
-  set_ui(pDoc->m_pUI);
-}
+static void inline set_doc(ImpressionistDoc *doc) { pDoc = doc; }
 
 static void gl_draw_shape(int drawing_mode, function<void()> drawing_funcs) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
