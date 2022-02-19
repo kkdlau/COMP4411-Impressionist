@@ -164,7 +164,7 @@ void PaintView::draw() {
     }
 
     // render overlay content
-    restore_content(overlay_image.raw_fmt());
+    // restore_content(overlay_image.raw_fmt());
   }
 
   glFlush();
