@@ -312,7 +312,7 @@ void ImpressionistUI::cb_spacingUpdate(Fl_Widget *o, void *v) {
 }
 void ImpressionistUI::cb_autoPaintRandomize(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
-      ->setAutoPaintRandomize(int(((Fl_Slider *)o)->value()));
+      ->setAutoPaintRandomize();
 }
 
 //------------------------------------------------------------
@@ -395,7 +395,7 @@ void ImpressionistUI::cb_toggleOriginalView(Fl_Widget *o, void *v) {
 }
 void ImpressionistUI::cb_colorBlendingUpdate(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
-      ->setColorBlending(int(((Fl_Check_Button *)o)->value()));
+      ->setColorBlending();
 }
 
 void ImpressionistUI::cb_another_gradient(Fl_Widget *o, void *v) {
@@ -539,7 +539,9 @@ void ImpressionistUI::setAlpha(float a) {
     m_BrushAlphaSlider->value(m_fAlpha);
 }
 
-void ImpressionistUI::setColorBlending(int a) { m_fColorBlending = a; }
+void ImpressionistUI::setColorBlending() { 
+    m_fColorBlending = m_ColorBlending->value();
+}
 
 void ImpressionistUI::setBlurValue(int a) {
   m_fBlur = a;
@@ -559,8 +561,8 @@ void ImpressionistUI::setSpacing(int a) {
     m_BrushSpacingSlider->value(m_nSpacing);
 }
 
-void ImpressionistUI::setAutoPaintRandomize(int a) {
-  m_nAutoPaintRandomize = a;
+void ImpressionistUI::setAutoPaintRandomize() {
+    m_nAutoPaintRandomize = m_AutoPaintRandomize->value();
 }
 
 void ImpressionistUI::setTransparency(float a) {
@@ -737,7 +739,7 @@ ImpressionistUI::ImpressionistUI() {
   m_mainWindow->end();
 
   // brush dialog definition
-  m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
+  m_brushDialog = new Fl_Window(400, 500, "Brush Dialog");
   // Add a brush type choice to the dialog
   m_BrushTypeChoice = new Fl_Choice(50, 10, 150, 25, "&Brush");
   m_BrushTypeChoice->user_data(

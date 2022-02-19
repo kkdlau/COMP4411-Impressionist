@@ -48,7 +48,7 @@ public:
   }
   void BrushEnd(const Point source, const Point target) {}
   void RandomizeAttributes() {
-      radius = irand(20);
+      radius = irand(size + 5);
   }
   void select() {
       ImpressionistDoc* pDoc = GetDocument();

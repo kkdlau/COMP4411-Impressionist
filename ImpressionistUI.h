@@ -94,7 +94,7 @@ public:
   void setAlpha(float a);
 
   int getColorBlending();
-  void setColorBlending(int a);
+  void setColorBlending();
 
   StrokeDirection get_direction();
   void set_direction(StrokeDirection d);
@@ -108,7 +108,7 @@ public:
   void setSpacing(int a);
 
   int getAutoPaintRandomize();
-  void setAutoPaintRandomize(int a);
+  void setAutoPaintRandomize();
 
   // arbitrary filter
   int getRowNum();
