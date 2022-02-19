@@ -281,6 +281,7 @@ void PaintView::set_current_img(Image &img) {
 }
 
 void PaintView::auto_paint() {
+    restore_content(cur.raw_fmt());
 #ifndef MESA
   // To avoid flicker on some machines.
   glDrawBuffer(GL_FRONT_AND_BACK);

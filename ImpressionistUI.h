@@ -127,7 +127,7 @@ public:
 
   bool get_use_another_gradient() { return use_another_gradient; }
 
-  bool set_use_another_gradient(bool v) { use_another_gradient = v; }
+  void set_use_another_gradient(bool v) { use_another_gradient = v; }
 
 private:
   ImpressionistDoc
