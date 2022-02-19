@@ -400,9 +400,15 @@ void ImpressionistUI::cb_colorBlendingUpdate(Fl_Widget *o, void *v) {
 
 void ImpressionistUI::cb_another_gradient(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
-  if (pDoc->another_image.contain_content())
-    ((ImpressionistUI *)(o->user_data()))
-        ->setColorBlending(int(((Fl_Check_Button *)o)->value()));
+  auto ui = *((ImpressionistUI *)(o->user_data()));
+
+  auto value = int(((Fl_Check_Button *)o)->value());
+
+  if (!pDoc->another_image.contain_content() && v) {
+    ui.m_another_gradient_checkbox->clear();
+    ui.set_use_another_gradient(false);
+  } else
+    ui.set_use_another_gradient(value);
 }
 
 void ImpressionistUI::cb_blurUpdate(Fl_Widget *o, void *v) {
@@ -752,13 +758,13 @@ ImpressionistUI::ImpressionistUI() {
   m_ColorBlending->callback(cb_colorBlendingUpdate);
 
   // checkbox for using gradient from another image
-  m_ColorBlending =
-      new Fl_Check_Button(50, y += 30, 20, 20, "Another Gradient");
-  m_ColorBlending->user_data((void *)(this));
-  m_ColorBlending->labelfont(FL_COURIER);
-  m_ColorBlending->value(0);
-  m_ColorBlending->align(FL_ALIGN_RIGHT);
-  m_ColorBlending->callback(cb_colorBlendingUpdate);
+  m_another_gradient_checkbox =
+      new Fl_Check_Button(220, y, 20, 20, "Another Gradient");
+  m_another_gradient_checkbox->user_data((void *)(this));
+  m_another_gradient_checkbox->labelfont(FL_COURIER);
+  m_another_gradient_checkbox->value(0);
+  m_another_gradient_checkbox->align(FL_ALIGN_RIGHT);
+  m_another_gradient_checkbox->callback(cb_another_gradient);
 
   // autopainting section
   // 1. spacing slider

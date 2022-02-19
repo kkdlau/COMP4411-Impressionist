@@ -136,8 +136,11 @@ int ImpressionistDoc::loadImage(char *iname) {
   // delete[] m_ucPainting;
 
   // clear the original image
-  if (another_image.contain_content())
+  if (another_image.contain_content()) {
     another_image.clear();
+    m_pUI->set_use_another_gradient(false);
+    m_pUI->m_another_gradient_checkbox->clear();
+  }
 
   m_ucBitmap = data;
   m_pUI->m_origView->original_img.set(data, width, height);

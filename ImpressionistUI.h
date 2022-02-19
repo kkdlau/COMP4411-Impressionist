@@ -49,6 +49,7 @@ public:
   Fl_Slider *m_BrushBlurSlider;
   Fl_Button *m_ClearCanvasButton;
   Fl_Check_Button *m_ColorBlending;
+  Fl_Check_Button *m_another_gradient_checkbox;
 
   Fl_Slider *m_BrushSpacingSlider;
   Fl_Check_Button *m_AutoPaintRandomize;
@@ -124,6 +125,10 @@ public:
   float getTransparency();
   void setTransparency(float a);
 
+  bool get_use_another_gradient() { return use_another_gradient; }
+
+  bool set_use_another_gradient(bool v) { use_another_gradient = v; }
+
 private:
   ImpressionistDoc
       *m_pDoc; // pointer to document to communicate with the document
@@ -144,6 +149,7 @@ private:
   int af_normalize = 1;
   char af_values[400]{'0'};  // MAX size of filter is 10x10 (?)
   float m_cTransparency = 0; // set alpha as one (?)
+  int use_another_gradient = 0;
 
   // Static class members
   static Fl_Menu_Item menuitems[];
