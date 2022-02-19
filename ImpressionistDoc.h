@@ -46,6 +46,9 @@ public:
   Point clip(const Point &p);
   int getSpacing();
   int getAutoPaintRandomize();
+  int getRowNum();
+  int getColNum();
+  bool getNormalize();
 
   // Attributes
 public:

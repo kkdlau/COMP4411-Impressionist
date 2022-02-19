@@ -24,6 +24,7 @@
 #include "ScatteredCircleBrush.hpp"
 #include "ScatteredLineBrush.hpp"
 #include "ScatteredPointBrush.hpp"
+#include "CustomFilterBrush.hpp"
 #include "gl_helper.h"
 
 #define DESTROY(p)                                                             \
@@ -63,6 +64,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::set_brush(BRUSH_CURVES, new CurveBrush(this, "Curves"));
   ImpBrush::set_brush(BRUSH_FILTER, new FilterBrush(this, "Blurring"));
   ImpBrush::set_brush(BRUSH_GRADIENT, new GradientBrush(this, "Gradient"));
+  ImpBrush::set_brush(BRUSH_CUSTOM_FILTER, new CustomFilterBrush(this, "Custom Filter"));
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -108,6 +110,12 @@ int ImpressionistDoc::getSpacing() { return m_pUI->getSpacing(); }
 int ImpressionistDoc::getAutoPaintRandomize() {
   return m_pUI->getAutoPaintRandomize();
 }
+
+int ImpressionistDoc::getRowNum() { return m_pUI->getRowNum(); }
+
+int ImpressionistDoc::getColNum() { return m_pUI->getColNum(); }
+
+bool ImpressionistDoc::getNormalize() { return m_pUI->getNormalize(); }
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is

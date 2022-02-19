@@ -43,7 +43,8 @@ const char *ImpBrush::BrushName(void) { return m_pBrushName; }
 void ImpBrush::SetColor(const Point source) {
   ImpressionistDoc *pDoc = GetDocument();
   GLubyte color[4];
-  auto pixel = pDoc->m_pUI->m_origView->original_img(source.y, source.x);
+  Point valid_source = pDoc->clip(source);
+  auto pixel = pDoc->m_pUI->m_origView->original_img(valid_source.y, valid_source.x);
   color[0] = get<0>(pixel);
   color[1] = get<1>(pixel);
   color[2] = get<2>(pixel);

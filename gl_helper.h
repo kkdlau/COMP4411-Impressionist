@@ -5,7 +5,7 @@
 
 #include "ImpBrush.h"
 #include <functional>
-
+#include "Impressionist.h"
 using namespace std;
 
 #ifdef PROJ_DEBUG

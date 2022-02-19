@@ -90,7 +90,7 @@ public:
     pDoc->m_pUI->m_ColorBlending->activate();
   }
 
-  void RandomizeAttributes() { glLineWidth(40); }
+  void RandomizeAttributes() { glLineWidth(irand(40)); }
 };
 
 #endif // __LINE_BRUSH_H__
