@@ -402,13 +402,40 @@ void ImpressionistUI::cb_another_gradient(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
   auto ui = *((ImpressionistUI *)(o->user_data()));
 
-  auto value = int(((Fl_Check_Button *)o)->value());
+  bool value = bool(((Fl_Check_Button *)o)->value());
 
   if (!pDoc->another_image.contain_content() && v) {
     ui.m_another_gradient_checkbox->clear();
     ui.set_use_another_gradient(false);
-  } else
+  } else {
     ui.set_use_another_gradient(value);
+  }
+}
+
+void ImpressionistUI::cb_edge_clipping(Fl_Widget *o, void *v) {
+  ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
+  auto ui = *((ImpressionistUI *)(o->user_data()));
+
+  bool value = bool(((Fl_Check_Button *)o)->value());
+
+  Image &original_image = pDoc->m_pUI->m_origView->original_img;
+
+  if (value) {
+    if (!pDoc->edge_image.contain_content() &&
+        original_image.contain_content()) {
+      // generate edge image
+      debugger("generate edge");
+      Image tmp = ImageUtils::generate_edge_image(original_image);
+      pDoc->edge_image = tmp;
+    } else if (!pDoc->edge_image.contain_content()) {
+      fl_alert("To enable edge clipping, you have to load an image first.");
+      ui.m_edge_clipping_checkbox->clear();
+      ui.set_edge_clipping(false);
+    }
+    ui.set_edge_clipping(true);
+  } else {
+    ui.set_edge_clipping(false);
+  }
 }
 
 void ImpressionistUI::cb_blurUpdate(Fl_Widget *o, void *v) {
@@ -550,6 +577,26 @@ vector<double> ImpressionistUI::getUserColor() {
   return rgb;
 }
 
+bool ImpressionistUI::get_use_another_gradient() {
+  debugger("get: %d", this->use_another_gradient);
+  return this->use_another_gradient;
+}
+
+void ImpressionistUI::set_use_another_gradient(bool v) {
+  debugger("set: %d", v);
+  this->use_another_gradient = v;
+}
+
+void ImpressionistUI::set_edge_clipping(bool v) {
+  debugger("set: %d", v);
+  this->enable_edge_clipping = v;
+}
+
+bool ImpressionistUI::get_edge_clipping() {
+  debugger("get: %d", this->enable_edge_clipping);
+  return this->enable_edge_clipping;
+}
+
 int ImpressionistUI::getRowNum() { return af_rownum; }
 int ImpressionistUI::getColNum() { return af_colnum; }
 int ImpressionistUI::getFilterValues(char* a) {  // return 0 if no changes to filter values
@@ -661,6 +708,8 @@ Fl_Menu_Item
 // Add new widgets here
 //----------------------------------------------------
 ImpressionistUI::ImpressionistUI() {
+  use_another_gradient = false;
+
   // Create the main window
   m_mainWindow = new Fl_Window(600, 300, "Impressionist");
   m_mainWindow->user_data(
@@ -791,6 +840,14 @@ ImpressionistUI::ImpressionistUI() {
   m_another_gradient_checkbox->value(0);
   m_another_gradient_checkbox->align(FL_ALIGN_RIGHT);
   m_another_gradient_checkbox->callback(cb_another_gradient);
+
+  m_edge_clipping_checkbox =
+      new Fl_Check_Button(220, y += 30, 20, 20, "Edge Clipping");
+  m_edge_clipping_checkbox->user_data((void *)(this));
+  m_edge_clipping_checkbox->labelfont(FL_COURIER);
+  m_edge_clipping_checkbox->value(0);
+  m_edge_clipping_checkbox->align(FL_ALIGN_RIGHT);
+  m_edge_clipping_checkbox->callback(cb_edge_clipping);
 
   // autopainting section
   // 1. spacing slider

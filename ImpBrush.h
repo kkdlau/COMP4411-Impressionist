@@ -13,7 +13,6 @@
 #include <typeinfo>
 #include <vector>
 
-
 extern float frand();
 
 // Each brush type has an associated constant.
@@ -59,6 +58,9 @@ public:
   friend Point operator-(const Point &p1, const Point &p2) {
     return Point(p1.x - p2.x, p1.y - p2.y);
   }
+
+  bool operator==(const Point &p) const { return x == p.x && y == p.y; }
+  bool operator!=(const Point &p) const { return x != p.x || y != p.y; }
 
   /**
    * @brief Point division operation.
