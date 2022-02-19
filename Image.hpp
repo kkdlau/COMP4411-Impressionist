@@ -47,6 +47,12 @@ public:
     return Image(data, width, height);
   }
 
+  void operator=(Image &img) {
+    this->bytes = img.bytes;
+    this->width = img.width;
+    this->height = img.height;
+  }
+
   void set(GLubyte *buf, int w, int h) {
     width = w, height = h;
     bytes = {};
@@ -147,5 +153,10 @@ public:
   }
 
   bool contain_content() const { return width != 0 && height != 0; }
+
+  void clear() {
+    this->bytes = {};
+    this->width = this->height = 0;
+  }
 };
 #endif // __IMAGE_H_

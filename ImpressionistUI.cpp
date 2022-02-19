@@ -250,8 +250,7 @@ void ImpressionistUI::cb_mural_image(Fl_Menu_ *o, void *v) {
   OriginalView &view = *pDoc->m_pUI->m_origView;
 
   if (!view.original_img.contain_content()) {
-    fl_alert("In order to use mural image function, you have to load an image "
-             "first.");
+    fl_alert("In order to use this function, you have to load an image first.");
     return;
   }
 
@@ -264,6 +263,28 @@ void ImpressionistUI::cb_mural_image(Fl_Menu_ *o, void *v) {
     return;
   }
   view.set_current_img(src);
+}
+
+void ImpressionistUI::cb_load_another_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc &pDoc = *whoami(o)->getDocument();
+
+  OriginalView &view = *pDoc.m_pUI->m_origView;
+
+  if (!view.original_img.contain_content()) {
+    fl_alert("In order to use this function, you have to load an image first.");
+    return;
+  }
+
+  char *newfile = fl_file_chooser("Open File?", "*.bmp", pDoc.getImageName());
+
+  Image src = Image::from(newfile);
+  if (src.width != view.original_img.width ||
+      src.height != view.original_img.height) {
+    fl_alert("Dimension is not the same, please try again.");
+    return;
+  }
+
+  pDoc.another_image = src;
 }
 
 void ImpressionistUI::cb_swap_content(Fl_Menu_ *o, void *v) {
@@ -376,13 +397,27 @@ void ImpressionistUI::cb_colorBlendingUpdate(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
       ->setColorBlending(int(((Fl_Check_Button *)o)->value()));
 }
+
+void ImpressionistUI::cb_another_gradient(Fl_Widget *o, void *v) {
+  ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
+  auto ui = *((ImpressionistUI *)(o->user_data()));
+
+  auto value = int(((Fl_Check_Button *)o)->value());
+
+  if (!pDoc->another_image.contain_content() && v) {
+    ui.m_another_gradient_checkbox->clear();
+    ui.set_use_another_gradient(false);
+  } else
+    ui.set_use_another_gradient(value);
+}
+
 void ImpressionistUI::cb_blurUpdate(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
       ->setBlurValue(int(((Fl_Slider *)o)->value()));
 }
-void ImpressionistUI::cb_transparencyUpdate(Fl_Widget* o, void* v) {
-    ((ImpressionistUI*)(o->user_data()))
-        ->setTransparency(float(((Fl_Slider*)o)->value()));
+void ImpressionistUI::cb_transparencyUpdate(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))
+      ->setTransparency(float(((Fl_Slider *)o)->value()));
 }
 void ImpressionistUI::cb_arbFilterApply(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
@@ -502,9 +537,12 @@ void ImpressionistUI::setAutoPaintRandomize(int a) {
 }
 
 void ImpressionistUI::setTransparency(float a) {
-    m_cTransparency = a;
-    if (a <= 1.0)
-        m_CanvasTransparencySlider->value(m_cTransparency);
+  m_cTransparency = a;
+  if (a <= 1.0)
+    m_CanvasTransparencySlider->value(m_cTransparency);
+
+  // m_paintView->overlay_image.set_alpha(m_cTransparency);
+  m_paintView->refresh();
 }
 vector<double> ImpressionistUI::getUserColor() {
   vector<double> rgb = {m_ColorChooser->r(), m_ColorChooser->g(),
@@ -537,6 +575,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
      (Fl_Callback *)ImpressionistUI::cb_dissolve_iamge, 0},
     {"&New / Change Mural image", FL_ALT + 'N',
      (Fl_Callback *)ImpressionistUI::cb_mural_image, 0},
+    {"&Another Image", FL_ALT + 'A',
+     (Fl_Callback *)ImpressionistUI::cb_load_another_image, 0},
     {"&Color Blending", FL_ALT + 'k',
      (Fl_Callback *)ImpressionistUI::cb_color_blending, 0},
     {"&Custom Filter", FL_ALT + 'f',
@@ -717,6 +757,15 @@ ImpressionistUI::ImpressionistUI() {
   m_ColorBlending->align(FL_ALIGN_RIGHT);
   m_ColorBlending->callback(cb_colorBlendingUpdate);
 
+  // checkbox for using gradient from another image
+  m_another_gradient_checkbox =
+      new Fl_Check_Button(220, y, 20, 20, "Another Gradient");
+  m_another_gradient_checkbox->user_data((void *)(this));
+  m_another_gradient_checkbox->labelfont(FL_COURIER);
+  m_another_gradient_checkbox->value(0);
+  m_another_gradient_checkbox->align(FL_ALIGN_RIGHT);
+  m_another_gradient_checkbox->callback(cb_another_gradient);
+
   // autopainting section
   // 1. spacing slider
   m_BrushSpacingSlider = new Fl_Value_Slider(10, y += 30, 180, 20, "Spacing");
@@ -742,8 +791,9 @@ ImpressionistUI::ImpressionistUI() {
   m_AutoPaint->user_data((void *)(this));
   m_AutoPaint->callback(cb_autoPaint);
 
-  m_CanvasTransparencySlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Transparency");
-  m_CanvasTransparencySlider->user_data((void*)(this));
+  m_CanvasTransparencySlider =
+      new Fl_Value_Slider(10, y += 30, 300, 20, "Transparency");
+  m_CanvasTransparencySlider->user_data((void *)(this));
   m_CanvasTransparencySlider->type(FL_HOR_NICE_SLIDER);
   m_CanvasTransparencySlider->labelfont(FL_COURIER);
   m_CanvasTransparencySlider->labelsize(12);

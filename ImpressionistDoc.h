@@ -7,9 +7,12 @@
 #ifndef ImpressionistDoc_h
 #define ImpressionistDoc_h
 
+#include "Image.hpp"
 #include "bitmap.h"
 #include "impressionist.h"
 #include <vector>
+
+
 using namespace std;
 
 class ImpressionistUI;
@@ -47,6 +50,7 @@ public:
 
   // Attributes
 public:
+  Image another_image;
   // Dimensions of original window.
   int m_nWidth, m_nHeight;
   // Dimensions of the paint window.
