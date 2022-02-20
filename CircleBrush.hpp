@@ -48,6 +48,7 @@ public:
   }
   void BrushEnd(const Point source, const Point target) {}
   void RandomizeAttributes() {
+      int size = pDoc->m_pUI->getSize();
       radius = irand(size + 5);
   }
   void select() {

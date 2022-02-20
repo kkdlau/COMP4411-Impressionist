@@ -17,6 +17,32 @@ static Image median_filter(Image &img) {
   return filtered;
 }
 
+static void filterCustom(Image &img, const Point source, std::vector<int>& color, 
+    const std::vector<float>& filter_vals, const int row_num, const int col_num, const int divisor = 1) {
+    
+    short row_offset = row_num / 2, col_offset = col_num / 2;
+    int r = 0, g = 0, b = 0;
+    short filter_index = 0;
+    for (int i = 0; i < row_num; ++i) {
+        for (int j = 0; j < col_num; ++j) {
+            float filter_val = filter_vals[filter_index++];
+            int x = source.x + i - row_offset;
+            int y = source.y + j - col_offset;
+            if (x < 0) x = 0;
+            else if (x >= img.width) x = img.width - 1;
+            if (y < 0) y = 0;
+            else if (y >= img.height) y = img.height - 1;
+            auto pixel = img(y, x);
+            r += (filter_val * get<0>(pixel));
+            g += (filter_val * get<1>(pixel));
+            b += (filter_val * get<2>(pixel));
+        }
+    }
+    color[0] = r / divisor;
+    color[1] = g / divisor;
+    color[2] = b / divisor;
+}
+
 static tuple<float, float, float> sobel(Image &img, int y, int x) {
   float gx = 0;
   float gy = 0;
