@@ -54,10 +54,11 @@ public:
 
     gl_draw_shape(GL_POINTS, [&] {
       SetColor(source);
+      
       for (double i = M_PI / 4; i <= 3 * M_PI / 4; i += 0.01) {
         double angle = i + r;
-        double dx = cos(angle) * radius;
-        double dy = sin(angle) * radius;
+        double dx = cos(angle) * radius - radius;
+        double dy = sin(angle) * radius - radius;
         gl_set_point(target.x + dx, target.y + dy);
       }
     });
