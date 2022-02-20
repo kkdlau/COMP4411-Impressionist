@@ -315,6 +315,14 @@ void ImpressionistUI::cb_autoPaintRandomize(Fl_Widget *o, void *v) {
       ->setAutoPaintRandomize();
 }
 
+void ImpressionistUI::cb_load_alpha_image(Fl_Menu_* o, void* v) {
+    ImpressionistDoc* pDoc = whoami(o)->getDocument();
+    char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+    if (newfile != NULL) {
+        pDoc->loadAlphaImage(newfile);
+    }
+}
+
 //------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
@@ -639,6 +647,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&File", 0, 0, 0, FL_SUBMENU},
     {"&Load Image...", FL_ALT + 'l',
      (Fl_Callback *)ImpressionistUI::cb_load_image},
+    {"&Load Alpha Image...", FL_ALT + 'x', 
+     (Fl_Callback *)ImpressionistUI::cb_load_alpha_image},
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
@@ -667,29 +677,31 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 
 // Brush choice menu definition
 Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
-    {"Points", FL_ALT + 'p', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_POINTS},
-    {"Lines", FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_LINES},
-    {"Circles", FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_CIRCLES},
+    {"Points", FL_ALT + 'p', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_POINTS},
+    {"Lines", FL_ALT + 'l', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_LINES},
+    {"Circles", FL_ALT + 'c', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_CIRCLES},
     {"Scattered Points", FL_ALT + 'q',
-     (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_SCATTERED_POINTS},
+     (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_SCATTERED_POINTS},
     {"Scattered Lines", FL_ALT + 'm',
-     (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_SCATTERED_LINES},
+     (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_SCATTERED_LINES},
     {"Scattered Circles", FL_ALT + 'd',
-     (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_SCATTERED_CIRCLES},
-    {"Fans", FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_FANS},
-    {"Curves", FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_CURVES},
+     (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_SCATTERED_CIRCLES},
+    {"Fans", FL_ALT + 'f', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_FANS},
+    {"Curves", FL_ALT + 'r', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_CURVES},
     {"Blurring Filter", FL_ALT + 'u',
-     (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_FILTER},
+     (Fl_Callback*)ImpressionistUI::cb_brushChoice, (void*)BRUSH_FILTER},
     {"Custom Filter", FL_ALT + 's',
-    (Fl_Callback *) ImpressionistUI::cb_brushChoice, (void*)BRUSH_CUSTOM_FILTER},
+    (Fl_Callback*)ImpressionistUI::cb_brushChoice, (void*)BRUSH_CUSTOM_FILTER},
+    {"Alpha-mapped", FL_ALT + 'a',
+    (Fl_Callback*)ImpressionistUI::cb_brushChoice, (void*)BRUSH_ALPHA},
     {0}};
 
 Fl_Menu_Item

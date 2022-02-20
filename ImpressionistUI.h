@@ -178,6 +178,7 @@ private:
   static void cb_load_another_image(Fl_Menu_ *o, void *v);
   static void cb_color_blending(Fl_Menu_ *o, void *v);
   static void cb_arbitrary_filter(Fl_Menu_ *o, void *v);
+  static void cb_load_alpha_image(Fl_Menu_* o, void* v);
   static void cb_brushChoice(Fl_Widget *o, void *v);
   static void cb_strokeDirectionChoice(Fl_Widget *o, void *v);
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);

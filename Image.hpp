@@ -67,6 +67,18 @@ public:
     }
   }
 
+  void set_alpha_image(GLubyte* buf, int w, int h) {
+      width = w, height = h;
+      bytes = {};
+      const int length = w * h;
+      short count = 0;
+      for (int i = 0; i < length; i++) {
+          GLubyte grayscale = 0.3 * buf[count++] + 0.6 * buf[count++] + 0.1 * buf[count++];
+          bytes.push_back(grayscale);
+      }
+      printf("size is %d x %d and length of bytes is %d\n", width, height, bytes.size());
+  }
+
   bool valid_point(int y, int x) const {
     if (x < 0)
       return false;
@@ -97,6 +109,11 @@ public:
                                                                      int x) {
     int i = convert_to_index(y, x);
     return {bytes[i], bytes[i + 1], bytes[i + 2], bytes[i + 3]};
+  }
+
+  const GLubyte get_alpha(int y, int x) {
+      int i = y * width + x;
+      return bytes[i];
   }
 
   int convert_to_index(int y, int x) { return NUM_CHANNEL * (y * width + x); }
