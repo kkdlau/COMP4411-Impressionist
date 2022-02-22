@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_C_EXTENSIONS ON)
 
 find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
 find_package(FLTK REQUIRED)
 
 add_executable(proj1)

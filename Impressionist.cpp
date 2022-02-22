@@ -28,7 +28,6 @@ int main(int argc, char **argv) {
   // Set the impDoc which is used as the bridge between UI and brushes
   impUI->setDocument(impDoc);
   impDoc->setUI(impUI);
-
   Fl::visual(FL_DOUBLE | FL_INDEX);
 
   impUI->show();
