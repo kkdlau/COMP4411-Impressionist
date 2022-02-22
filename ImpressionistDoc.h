@@ -25,6 +25,7 @@ public:
   int loadImage(char *iname); // called by the UI to load image
   int saveImage(char *iname); // called by the UI to save image
 
+  int loadAlphaImage(char* iname);
   // TODO: implement load video and save video feature
   int loadVideo(char *iname);
   int saveVideo(char *iname);
@@ -54,6 +55,8 @@ public:
 public:
   Image another_image;
   Image edge_image;
+  Image alpha_image;
+
   // Dimensions of original window.
   int m_nWidth, m_nHeight;
   // Dimensions of the paint window.

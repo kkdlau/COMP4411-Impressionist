@@ -36,6 +36,7 @@
   - [x] random polygon
   - [x] curve brush
   - [ ] random scattered polygon
+  - [ ] grayscale brush
 - [x] **(1W)** clipped brushes (D)
 - [x] **(1W)** cursor on original image (D)
 - [x] (1W) swap content and original (D)

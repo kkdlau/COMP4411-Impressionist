@@ -100,37 +100,12 @@ public:
             //printf("Putting in missing row %d\n", row);
         }
     }
-
-    void filterCustom(const Point source, std::vector<int>& color) {
-        ImpressionistDoc* pDoc = GetDocument();
-        short row_offset = row_num / 2, col_offset = col_num / 2;
-        int r = 0, g = 0, b = 0;
-        short filter_index = 0;
-        for (int i = 0; i < row_num; ++i) {
-            for (int j = 0; j < col_num; ++j) {
-                float filter_val = filter_vals[filter_index++];
-                int x = source.x + i - row_offset;
-                int y = source.y + j - col_offset;
-                if (x < 0) x = 0;
-                else if (x >= pDoc->m_nPaintWidth) x = pDoc->m_nPaintWidth - 1;
-                if (y < 0) y = 0;
-                else if (y >= pDoc->m_nPaintHeight) y = pDoc->m_nPaintHeight - 1;
-                auto pixel = pDoc->m_pUI->m_origView->original_img(y, x);
-                r += (filter_val * get<0>(pixel));
-                g += (filter_val * get<1>(pixel));
-                b += (filter_val * get<2>(pixel));
-            }
-        }
-        color[0] = r / divisor;
-        color[1] = g / divisor;
-        color[2] = b / divisor;
-    }
-    
     void SetColor(const Point source) {
         ImpressionistDoc* pDoc = GetDocument();
         GLubyte color[4];
         std::vector<int> int_color{ 0, 0, 0 };
-        filterCustom(source, int_color); 
+        ImageUtils::filterCustom(pDoc->m_pUI->m_origView->original_img, source, int_color,
+            filter_vals, row_num, col_num, divisor); 
         color[0] = int_color[0];
         color[1] = int_color[1];
         color[2] = int_color[2];

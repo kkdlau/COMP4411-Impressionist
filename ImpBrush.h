@@ -28,6 +28,7 @@ enum {
   BRUSH_FILTER, // brush with blurring filter
   BRUSH_GRADIENT,
   BRUSH_CUSTOM_FILTER,
+  BRUSH_ALPHA,
   NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 

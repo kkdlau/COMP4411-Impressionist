@@ -25,6 +25,7 @@
 #include "ScatteredLineBrush.hpp"
 #include "ScatteredPointBrush.hpp"
 #include "CustomFilterBrush.hpp"
+#include "AlphaMappedBrush.hpp"
 #include "gl_helper.h"
 
 #define DESTROY(p)                                                             \
@@ -65,6 +66,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::set_brush(BRUSH_FILTER, new FilterBrush(this, "Blurring"));
   ImpBrush::set_brush(BRUSH_GRADIENT, new GradientBrush(this, "Gradient"));
   ImpBrush::set_brush(BRUSH_CUSTOM_FILTER, new CustomFilterBrush(this, "Custom Filter"));
+  ImpBrush::set_brush(BRUSH_ALPHA, new AlphaMappedBrush(this, "Alpha-mapped"));
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -156,6 +158,9 @@ int ImpressionistDoc::loadImage(char *iname) {
     m_pUI->m_edge_clipping_checkbox->clear();
   }
 
+  if (alpha_image.contain_content()) {
+      alpha_image.clear();
+  }
   OriginalView &orig_view = *m_pUI->m_origView;
   PaintView &paint_view = *m_pUI->m_paintView;
 
@@ -194,6 +199,23 @@ int ImpressionistDoc::saveImage(char *iname) {
   return 1;
 }
 
+int ImpressionistDoc::loadAlphaImage(char* iname) {
+    unsigned char* data;
+    int width, height;
+
+    if ((data = readBMP(iname, width, height)) == NULL) {
+        fl_alert("Can't load bitmap file");
+        return 0;
+    }
+    if (width != m_nWidth || height != m_nHeight) {
+        fl_alert("Different dimensions... failed :(");
+        return 0;
+    }
+    if (alpha_image.contain_content())
+        alpha_image.clear();
+    alpha_image.set(data, width, height);
+    return 1;
+}
 int ImpressionistDoc::loadVideo(char *iname) { return -1; }
 
 int ImpressionistDoc::saveVideo(char *iname) { return -1; }

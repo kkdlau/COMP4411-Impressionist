@@ -314,6 +314,14 @@ void ImpressionistUI::cb_autoPaintRandomize(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))->setAutoPaintRandomize();
 }
 
+void ImpressionistUI::cb_load_alpha_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+  char *newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+  if (newfile != NULL) {
+    pDoc->loadAlphaImage(newfile);
+  }
+}
+
 //------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
@@ -637,6 +645,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&File", 0, 0, 0, FL_SUBMENU},
     {"&Load Image...", FL_ALT + 'l',
      (Fl_Callback *)ImpressionistUI::cb_load_image},
+    {"&Load Alpha Image...", FL_ALT + 'x',
+     (Fl_Callback *)ImpressionistUI::cb_load_alpha_image},
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
@@ -689,6 +699,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
     {"Custom Filter", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_CUSTOM_FILTER},
+    {"Alpha-mapped", FL_ALT + 'a',
+     (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHA},
     {0}};
 
 Fl_Menu_Item
