@@ -39,7 +39,7 @@ public:
   Image() : Image{nullptr, 0, 0} {}
   Image(GLubyte *buf, int w, int h) { set(buf, w, h); }
 
-  static Image from(char *path) {
+  static Image from(const char *path) {
     unsigned char *data;
     int width, height;
 
@@ -67,16 +67,18 @@ public:
     }
   }
 
-  void set_alpha_image(GLubyte* buf, int w, int h) {
-      width = w, height = h;
-      bytes = {};
-      const int length = w * h;
-      short count = 0;
-      for (int i = 0; i < length; i++) {
-          GLubyte grayscale = 0.3 * buf[count++] + 0.6 * buf[count++] + 0.1 * buf[count++];
-          bytes.push_back(grayscale);
-      }
-      printf("size is %d x %d and length of bytes is %d\n", width, height, bytes.size());
+  void set_alpha_image(GLubyte *buf, int w, int h) {
+    width = w, height = h;
+    bytes = {};
+    const int length = w * h;
+    short count = 0;
+    for (int i = 0; i < length; i++) {
+      GLubyte grayscale =
+          0.3 * buf[count++] + 0.6 * buf[count++] + 0.1 * buf[count++];
+      bytes.push_back(grayscale);
+    }
+    printf("size is %d x %d and length of bytes is %d\n", width, height,
+           bytes.size());
   }
 
   bool valid_point(int y, int x) const {
@@ -112,8 +114,8 @@ public:
   }
 
   const GLubyte get_alpha(int y, int x) {
-      int i = y * width + x;
-      return bytes[i];
+    int i = y * width + x;
+    return bytes[i];
   }
 
   int convert_to_index(int y, int x) { return NUM_CHANNEL * (y * width + x); }

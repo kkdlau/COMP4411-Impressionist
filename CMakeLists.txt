@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(PROJ1)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_C_EXTENSIONS ON)
 
 find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
 find_package(FLTK REQUIRED)
 
 add_executable(proj1)

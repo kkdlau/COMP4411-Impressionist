@@ -1,9 +1,11 @@
 #if !defined(__IMAGE_UTILS__)
 #define __IMAGE_UTILS__
 #include "Image.hpp"
+#include <filesystem>
 #include <functional>
 #include <tuple>
 #include <vector>
+namespace fs = std::filesystem;
 
 using namespace std;
 
@@ -17,30 +19,37 @@ static Image median_filter(Image &img) {
   return filtered;
 }
 
-static void filterCustom(Image &img, const Point source, std::vector<int>& color, 
-    const std::vector<float>& filter_vals, const int row_num, const int col_num, const int divisor = 1) {
-    
-    short row_offset = row_num / 2, col_offset = col_num / 2;
-    int r = 0, g = 0, b = 0;
-    short filter_index = 0;
-    for (int i = 0; i < row_num; ++i) {
-        for (int j = 0; j < col_num; ++j) {
-            float filter_val = filter_vals[filter_index++];
-            int x = source.x + i - row_offset;
-            int y = source.y + j - col_offset;
-            if (x < 0) x = 0;
-            else if (x >= img.width) x = img.width - 1;
-            if (y < 0) y = 0;
-            else if (y >= img.height) y = img.height - 1;
-            auto pixel = img(y, x);
-            r += (filter_val * get<0>(pixel));
-            g += (filter_val * get<1>(pixel));
-            b += (filter_val * get<2>(pixel));
-        }
+static void filterCustom(Image &img, const Point source,
+                         std::vector<int> &color,
+                         const std::vector<float> &filter_vals,
+                         const int row_num, const int col_num,
+                         const int divisor = 1) {
+
+  short row_offset = row_num / 2, col_offset = col_num / 2;
+  int r = 0, g = 0, b = 0;
+  short filter_index = 0;
+  for (int i = 0; i < row_num; ++i) {
+    for (int j = 0; j < col_num; ++j) {
+      float filter_val = filter_vals[filter_index++];
+      int x = source.x + i - row_offset;
+      int y = source.y + j - col_offset;
+      if (x < 0)
+        x = 0;
+      else if (x >= img.width)
+        x = img.width - 1;
+      if (y < 0)
+        y = 0;
+      else if (y >= img.height)
+        y = img.height - 1;
+      auto pixel = img(y, x);
+      r += (filter_val * get<0>(pixel));
+      g += (filter_val * get<1>(pixel));
+      b += (filter_val * get<2>(pixel));
     }
-    color[0] = r / divisor;
-    color[1] = g / divisor;
-    color[2] = b / divisor;
+  }
+  color[0] = r / divisor;
+  color[1] = g / divisor;
+  color[2] = b / divisor;
 }
 
 static tuple<float, float, float> sobel(Image &img, int y, int x) {
@@ -229,7 +238,20 @@ static float structural_similarity(Image &src, Image &target) {
   }
 }
 
-static Image mosaics(Image &img) { return {}; }
+static Image mosaics(Image &img) {
+  // load images dataset
+  static vector<Image> dataset{};
+  static bool init = false;
+  if (!init) {
+    std::string path =
+        "/Users/dannylau/Program/COMP4411-Impressionist/squared_images";
+    for (const auto &entry : fs::directory_iterator(path)) {
+      auto path = entry.path();
+      dataset.push_back(Image::from(path.u8string().c_str()));
+    }
+  }
+  return {};
+}
 } // namespace ImageUtils
 
 #endif // __IMAGE_UTILS__

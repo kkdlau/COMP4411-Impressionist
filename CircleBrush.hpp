@@ -9,7 +9,7 @@ using namespace GLHelper;
 
 class CircleBrush : public ImpBrush {
 public:
-    double radius; 
+  double radius;
   CircleBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
@@ -23,16 +23,17 @@ public:
 
     BrushMove(source, target);
   }
-  void BrushMove(const Point source, const Point target, bool randomize=false) {
+  void BrushMove(const Point source, const Point target,
+                 bool randomize = false) {
     ImpressionistDoc *pDoc = GetDocument();
     if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
         source.y >= pDoc->m_nPaintHeight) {
-        printf("Go back in\n"); // TODO - Remove
-        return;
+      printf("Go back in\n"); // TODO - Remove
+      return;
     }
     radius = pDoc->getSize() / 2.0;
     if (randomize && frand() >= 0.75)
-        RandomizeAttributes();
+      RandomizeAttributes();
 
     gl_draw_shape(GL_POLYGON, [&] {
       SetColor(source);
@@ -48,18 +49,18 @@ public:
   }
   void BrushEnd(const Point source, const Point target) {}
   void RandomizeAttributes() {
-      int size = pDoc->m_pUI->getSize();
-      radius = irand(size + 5);
+    int size = pDoc->m_pUI->getSize();
+    radius = irand(size + 5);
   }
   void select() {
-      ImpressionistDoc* pDoc = GetDocument();
-      pDoc->m_pUI->m_BrushWidthSlider->deactivate();
-      pDoc->m_pUI->m_BrushAngleSlider->deactivate();
-      pDoc->m_pUI->m_StrokeDirection->deactivate();
-      pDoc->m_pUI->m_BrushSizeSlider->activate();
-      pDoc->m_pUI->m_BrushAlphaSlider->activate();
-      pDoc->m_pUI->m_BrushBlurSlider->deactivate();
-      pDoc->m_pUI->m_ColorBlending->activate();
+    ImpressionistDoc *pDoc = GetDocument();
+    pDoc->m_pUI->m_BrushWidthSlider->deactivate();
+    pDoc->m_pUI->m_BrushAngleSlider->deactivate();
+    pDoc->m_pUI->m_StrokeDirection->deactivate();
+    pDoc->m_pUI->m_BrushSizeSlider->activate();
+    pDoc->m_pUI->m_BrushAlphaSlider->activate();
+    pDoc->m_pUI->m_BrushBlurSlider->deactivate();
+    pDoc->m_pUI->m_ColorBlending->activate();
   }
 };
 

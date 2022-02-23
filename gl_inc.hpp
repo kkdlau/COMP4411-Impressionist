@@ -14,7 +14,8 @@
 //
 #include <GL/gl.h>
 #include <GL/glu.h>
-//#include <GL/glut.H>
 #endif
+
+#include <GLUT/glut.h>
 
 #endif // __GL__INC_H__
