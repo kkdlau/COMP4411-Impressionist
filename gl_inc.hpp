@@ -16,6 +16,6 @@
 #include <GL/glu.h>
 #endif
 
-#include <GLUT/glut.h>
+#include <FL/glut.h>
 
 #endif // __GL__INC_H__

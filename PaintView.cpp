@@ -5,6 +5,7 @@
 //
 #include <algorithm>
 #include <vector>
+#include <random>
 
 #include "ImpBrush.h"
 #include "Paintview.h"
@@ -39,6 +40,7 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
 }
 
 void PaintView::abort_event(int &event, Point &p) {
+    /*
   StrokeDirection d = pDoc->m_pUI->get_direction();
   if (d != SLIDER_RIGHT_MOUSE) {
     // abort right click event
@@ -48,7 +50,7 @@ void PaintView::abort_event(int &event, Point &p) {
       debugger("out-of-boundary");
       event = 0;
     }
-  }
+  } */
 }
 
 void PaintView::draw() {
@@ -301,13 +303,15 @@ void PaintView::auto_paint() {
 
   // randomize x and y
   std::vector<int> rows;
+  std::random_device rd;
+  std::mt19937 g(rd());
   for (int i = 1; i < cur.width; i += spacing)
     rows.push_back(i);
-  std::random_shuffle(rows.begin(), rows.end());
+  std::shuffle(rows.begin(), rows.end(), g);
   std::vector<int> cols;
   for (int j = 1; j < cur.height; j += spacing)
     cols.push_back(j);
-  std::random_shuffle(cols.begin(), cols.end());
+  std::shuffle(cols.begin(), cols.end(), g);
 
   int x = 0, y = 0;
   int counter = 0;
@@ -332,7 +336,7 @@ void PaintView::auto_paint() {
       // save_content(cur.raw_fmt());
       counter++;
       if (counter % 20 == 0)
-        std::random_shuffle(cols.begin(), cols.end());
+        std::shuffle(cols.begin(), cols.end(), g);
     }
   }
   cur_brush.BrushEnd(source, target);
