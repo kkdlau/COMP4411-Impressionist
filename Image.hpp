@@ -171,6 +171,22 @@ public:
     height = height > sy ? sy : height;
   }
 
+  void crop(const Point &from, const Point &to) {
+    vector<GLubyte> buf{};
+    for_range_pixel(from, to, [&](int y, int x) {
+      auto color = (*this)(y, x);
+      buf.push_back(get<0>(color));
+      buf.push_back(get<1>(color));
+      buf.push_back(get<2>(color));
+      buf.push_back(get<3>(color));
+    });
+    const Point diff = to - from;
+
+    bytes = buf;
+    width = diff.x + 1;
+    height = diff.y + 1;
+  }
+
   bool contain_content() const { return width != 0 && height != 0; }
 
   void clear() {
