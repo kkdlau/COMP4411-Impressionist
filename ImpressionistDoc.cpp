@@ -13,8 +13,10 @@
 #include "ImpBrush.h"
 
 // Include individual brush headers here.
+#include "AlphaMappedBrush.hpp"
 #include "CircleBrush.hpp"
 #include "CurveBrush.hpp"
+#include "CustomFilterBrush.hpp"
 #include "FanBrush.hpp"
 #include "FilterBrush.hpp"
 #include "GradientBrush.hpp"
@@ -24,10 +26,8 @@
 #include "ScatteredCircleBrush.hpp"
 #include "ScatteredLineBrush.hpp"
 #include "ScatteredPointBrush.hpp"
-#include "CustomFilterBrush.hpp"
-#include "AlphaMappedBrush.hpp"
-#include "gl_helper.h"
 #include "VideoUtils.hpp"
+#include "gl_helper.h"
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -66,7 +66,8 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::set_brush(BRUSH_CURVES, new CurveBrush(this, "Curves"));
   ImpBrush::set_brush(BRUSH_FILTER, new FilterBrush(this, "Blurring"));
   ImpBrush::set_brush(BRUSH_GRADIENT, new GradientBrush(this, "Gradient"));
-  ImpBrush::set_brush(BRUSH_CUSTOM_FILTER, new CustomFilterBrush(this, "Custom Filter"));
+  ImpBrush::set_brush(BRUSH_CUSTOM_FILTER,
+                      new CustomFilterBrush(this, "Custom Filter"));
   ImpBrush::set_brush(BRUSH_ALPHA, new AlphaMappedBrush(this, "Alpha-mapped"));
 
   // make one of the brushes current
@@ -160,7 +161,7 @@ int ImpressionistDoc::loadImage(char *iname) {
   }
 
   if (alpha_image.contain_content()) {
-      alpha_image.clear();
+    alpha_image.clear();
   }
   OriginalView &orig_view = *m_pUI->m_origView;
   PaintView &paint_view = *m_pUI->m_paintView;
@@ -193,29 +194,29 @@ int ImpressionistDoc::loadImage(char *iname) {
 // pressed.
 //----------------------------------------------------------------
 int ImpressionistDoc::saveImage(char *iname) {
-
-  writeBMP(iname, m_nPaintWidth, m_nPaintHeight,
-           m_pUI->m_paintView->cur.raw_fmt());
+  Image &cur = m_pUI->m_paintView->cur;
+  unsigned char *data = cur.exportable_fmt();
+  writeBMP(iname, cur.width, cur.height, data);
 
   return 1;
 }
 
-int ImpressionistDoc::loadAlphaImage(char* iname) {
-    unsigned char* data;
-    int width, height;
+int ImpressionistDoc::loadAlphaImage(char *iname) {
+  unsigned char *data;
+  int width, height;
 
-    if ((data = readBMP(iname, width, height)) == NULL) {
-        fl_alert("Can't load bitmap file");
-        return 0;
-    }
-    if (width != m_nWidth || height != m_nHeight) {
-        fl_alert("Different dimensions... failed :(");
-        return 0;
-    }
-    if (alpha_image.contain_content())
-        alpha_image.clear();
-    alpha_image.set(data, width, height);
-    return 1;
+  if ((data = readBMP(iname, width, height)) == NULL) {
+    fl_alert("Can't load bitmap file");
+    return 0;
+  }
+  if (width != m_nWidth || height != m_nHeight) {
+    fl_alert("Different dimensions... failed :(");
+    return 0;
+  }
+  if (alpha_image.contain_content())
+    alpha_image.clear();
+  alpha_image.set(data, width, height);
+  return 1;
 }
 int ImpressionistDoc::loadVideo(char *iname) { return -1; }
 
@@ -278,11 +279,11 @@ void ImpressionistDoc::auto_paint() {
   PaintView &canvas = *m_pUI->m_paintView;
   canvas.auto_paint_flag = true;
   canvas.refresh();
-  //canvas.auto_paint();
+  // canvas.auto_paint();
 }
 void ImpressionistDoc::multires_paint() {
-    PaintView& canvas = *m_pUI->m_paintView;
-    canvas.multires_paint_flag = true;
-    canvas.refresh();
-    //canvas.multires_paint();
+  PaintView &canvas = *m_pUI->m_paintView;
+  canvas.multires_paint_flag = true;
+  canvas.refresh();
+  // canvas.multires_paint();
 }
