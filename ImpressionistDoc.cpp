@@ -27,6 +27,7 @@
 #include "CustomFilterBrush.hpp"
 #include "AlphaMappedBrush.hpp"
 #include "gl_helper.h"
+#include "VideoUtils.hpp"
 
 #define DESTROY(p)                                                             \
   {                                                                            \
