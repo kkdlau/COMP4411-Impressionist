@@ -16,6 +16,7 @@
 #include <GL/glu.h>
 #endif
 #include "Image.hpp"
+#include "ImageUtils.hpp"
 #include "ImpBrush.h"
 #include <stdlib.h>
 
@@ -63,6 +64,8 @@ public:
   void auto_paint(int s = 0, short res = 0); // s: spacing, res: resolution
 
   void multires_paint();
+
+  void paint_layer(Image& reference, int radius);
 
   ImpressionistDoc *m_pDoc;
 

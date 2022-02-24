@@ -13,7 +13,7 @@ public:
   GradientBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : LineBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target) {
+  void BrushBegin(const Point source, const Point target, int rad) {
     glPointSize(1);
 
     BrushMove(source, target);

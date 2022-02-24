@@ -13,20 +13,10 @@ public:
   CircleBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target, short resolution) {
+  void BrushBegin(const Point source, const Point target, int rad) {
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
-    int size = 0;
-    switch (resolution) {
-    case 1:
-        size = 20;
-        break;
-    case 2:
-        size = 10;
-        break;
-    default:
-        size = pDoc->m_pUI->getSize();
-    }
+    float size = (rad > 0) ? rad : pDoc->getSize();
 
     glPointSize((float)size);
 

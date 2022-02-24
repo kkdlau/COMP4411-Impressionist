@@ -322,7 +322,7 @@ void PaintView::auto_paint(int s, short res) {
         continue;
       }
       if (start) {
-        cur_brush.BrushBegin(source, target, res);
+        cur_brush.BrushBegin(source, target);
         start = false;
       } else
         cur_brush.BrushMove(source, target, randomize);
@@ -334,36 +334,70 @@ void PaintView::auto_paint(int s, short res) {
   }
   cur_brush.BrushEnd(source, target);
   printf("Finished autopainting\n");
-  //printf("%d %d %d %d %d\n", cur.width, cur.height, m_nStartCol, m_nEndRow, m_nWindowHeight);
+  printf("%d %d %d %d %d\n", cur.width, cur.height, m_nStartCol, m_nEndRow, m_nWindowHeight);
 }
 
 void PaintView::multires_paint() {
-    auto_paint(5, 1); // spacing and resolution for coarse brush
-    // check each point, if color not the same, then BrushBegin there with fine resolution
-    ImpBrush& cur_brush = *m_pDoc->m_pCurrentBrush;
-    int x = 0, y = 0;
-    Point source(x, y);
-    Point target(x, y);
+    int brush_radii[3]{ 8, 4, 2 };
+    for (int ind = 0; ind < 3; ind++) {
+        // create reference image
+        Image refImage = cur;
+        ImageUtils::applyBlurFilter(m_pDoc->m_pUI->m_origView->original_img, refImage, brush_radii[ind] + 1);
+        paint_layer(refImage, brush_radii[ind]);
+    }
+}
+
+void PaintView::paint_layer(Image& reference, int radius) {
+    std::vector<Point> strokes;
+    // from Impressionist Painterly implementation
+    const int grid = radius; 
+    int threshold = 100; 
+    // calculate pointwise difference image 
+    std::vector<float> diff;
     for (int i = 1; i < cur.width; i++) {
         for (int j = 1; j < cur.height; j++) {
-            if (!cur.valid_point(target.y, target.x)) {
-                continue;
+            // calculate l2 distance btw reference and cur 
+            Point source(i, j);
+            auto pixel1 = reference(source.y, source.x);
+            auto pixel2 = cur(source.y, source.x);
+            diff.push_back(dist(pixel1, pixel2));
+        }
+    }
+    // find points to set strokes 
+    for (int i = 0; i < cur.width; i += grid) {
+        for (int j = 0; j < cur.height; j += grid) {
+            // sum the error in the region
+            float area_error = 0;
+            int max_k = 0, max_m = 0; // to get the arg max Point 
+            float max_diff = 0;
+            for (int k = -grid / 2; k <= grid / 2; ++k) {
+                for (int m = -grid / 2; m <= grid / 2; ++m) {
+                    if (i + k < 0 || i + k >= cur.width) continue;
+                    else if (j + m < 0 || j + m >= cur.height) continue;
+                    int x = i + k, y = j + m;
+                    float cur_diff = diff[x * cur.width + y];
+                    if (cur_diff > max_diff) {
+                        max_diff = cur_diff;
+                        max_k = k; max_m = m;
+                    }
+                    area_error += cur_diff;
+                }
             }
-            source.x = i + m_nStartCol;
-            source.y = m_nEndRow - j;
-            target.x = i;
-            target.y = m_nWindowHeight - j;
-            auto pixel = pDoc->m_pUI->m_origView->original_img(source.y, source.x);
-            auto pixel2 = cur(target.y, target.x);
-            if ((get<0>(pixel) != get<0>(pixel2)) || (get<1>(pixel) != get<1>(pixel2)) || (get<2>(pixel) != get<2>(pixel))) {
-                //printf("Found diff pixel");
-                cur_brush.BrushBegin(source, target, 2);
-                cur_brush.BrushEnd(source, target);
-                j += 20;
+            if (area_error > threshold) {
+                Point source(i + max_k, j + max_m);
+                strokes.push_back(source);
             }
         }
     }
-    //cur_brush.BrushEnd(source, target);
-    printf("Finished multiresolution painting\n");
-    //printf("%d %d %d %d %d\n", cur.width, cur.height, m_nStartCol, m_nEndRow, m_nWindowHeight);
+    
+    // randomize strokes 
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(strokes.begin(), strokes.end(), g);
+
+    ImpBrush& cur_brush = *m_pDoc->m_pCurrentBrush;
+    std::for_each(strokes.begin(), strokes.end(), [&](Point& p) {
+        cur_brush.BrushBegin(p, p, radius);
+        cur_brush.BrushEnd(p, p);
+        });
 }

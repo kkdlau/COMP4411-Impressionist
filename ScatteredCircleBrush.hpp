@@ -16,7 +16,7 @@ public:
   ScatteredCircleBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : CircleBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target, short resolution) {
+  void BrushBegin(const Point source, const Point target, int rad) {
     glPointSize(1);
 
     BrushMove(source, target);

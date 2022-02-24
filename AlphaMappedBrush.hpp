@@ -14,7 +14,7 @@ class AlphaMappedBrush : public ImpBrush {
 public:
     AlphaMappedBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
-    void BrushBegin(const Point source, const Point target, short resolution) {
+    void BrushBegin(const Point source, const Point target, int rad) {
         // check if alpha image loaded
         ImpressionistDoc* pDoc = GetDocument();
 

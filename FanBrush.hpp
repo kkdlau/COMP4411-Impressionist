@@ -14,19 +14,10 @@ public:
     FanBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
 
-    void BrushBegin(const Point source, const Point target, short resolution) {
+    void BrushBegin(const Point source, const Point target, int rad) {
         ImpressionistDoc* pDoc = GetDocument();
         last = target;
-        switch (resolution) {
-        case 1:
-            radius = 20;
-            break;
-        case 2:
-            radius = 4;
-            break;
-        default:
-            radius = pDoc->getSize();
-        }
+        radius = (rad > 0) ? rad : pDoc->getSize();
         BrushMove(source, target);
     }
 

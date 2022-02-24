@@ -16,7 +16,7 @@ public:
   CurveBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target, short resolution) {
+  void BrushBegin(const Point source, const Point target, int rad) {
     ImpressionistDoc *pDoc = GetDocument();
     last = target;
     const int width = pDoc->getWidth();

@@ -18,23 +18,12 @@ extern float frand();
 PointBrush::PointBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {}
 
-void PointBrush::BrushBegin(const Point source, const Point target, short resolution) {
+void PointBrush::BrushBegin(const Point source, const Point target, int rad) {
   ImpressionistDoc *pDoc = GetDocument();
 
   ImpressionistUI *dlg = pDoc->m_pUI;
 
-  int size = 0;
-
-  switch (resolution) {
-  case 1:
-      size = 20;
-      break;
-  case 2:
-      size = 10;
-      break;
-  default:
-      size = pDoc->getSize();
-  }
+  int size = (rad > 0)? rad : pDoc->getSize();
 
   glPointSize(size);
 
