@@ -287,6 +287,17 @@ void ImpressionistUI::cb_load_another_image(Fl_Menu_ *o, void *v) {
   pDoc.another_image = src;
 }
 
+void ImpressionistUI::cb_load_video(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc &pDoc = *whoami(o)->getDocument();
+
+  OriginalView &view = *pDoc.m_pUI->m_origView;
+
+  char *video_path =
+      fl_file_chooser("Open File?", "*.avi", pDoc.getImageName());
+
+  pDoc.loadVideo(video_path);
+}
+
 void ImpressionistUI::cb_swap_content(Fl_Menu_ *o, void *v) {
   ImpressionistDoc *pDoc = whoami(o)->getDocument();
 
@@ -305,9 +316,9 @@ void ImpressionistUI::cb_autoPaint(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
   pDoc->auto_paint();
 }
-void ImpressionistUI::cb_multiresPaint(Fl_Widget* o, void* v) {
-    ImpressionistDoc* pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
-    pDoc->multires_paint();
+void ImpressionistUI::cb_multiresPaint(Fl_Widget *o, void *v) {
+  ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
+  pDoc->multires_paint();
 }
 void ImpressionistUI::cb_spacingUpdate(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
@@ -650,6 +661,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
      (Fl_Callback *)ImpressionistUI::cb_load_image},
     {"&Load Alpha Image...", FL_ALT + 'x',
      (Fl_Callback *)ImpressionistUI::cb_load_alpha_image},
+    {"&Load Video...", FL_ALT + 'l',
+     (Fl_Callback *)ImpressionistUI::cb_load_video},
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
@@ -892,8 +905,9 @@ ImpressionistUI::ImpressionistUI() {
   m_AutoPaint->user_data((void *)(this));
   m_AutoPaint->callback(cb_autoPaint);
 
-  m_MultiResPaint = new Fl_Button(240, y += 30, 150, 25, "Multi-Resolution Paint");
-  m_MultiResPaint->user_data((void*)(this));
+  m_MultiResPaint =
+      new Fl_Button(240, y += 30, 150, 25, "Multi-Resolution Paint");
+  m_MultiResPaint->user_data((void *)(this));
   m_MultiResPaint->callback(cb_multiresPaint);
 
   m_CanvasTransparencySlider =

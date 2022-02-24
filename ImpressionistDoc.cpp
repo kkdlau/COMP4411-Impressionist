@@ -163,6 +163,9 @@ int ImpressionistDoc::loadImage(char *iname) {
   if (alpha_image.contain_content()) {
     alpha_image.clear();
   }
+
+  app_mode = IMAGE;
+
   OriginalView &orig_view = *m_pUI->m_origView;
   PaintView &paint_view = *m_pUI->m_paintView;
 
@@ -218,7 +221,58 @@ int ImpressionistDoc::loadAlphaImage(char *iname) {
   alpha_image.set(data, width, height);
   return 1;
 }
-int ImpressionistDoc::loadVideo(char *iname) { return -1; }
+
+int ImpressionistDoc::loadVideo(char *iname) {
+  // implemen the logic
+  VideoUtils::open_video(iname);
+  Image first_frame = VideoUtils::get_frame(0);
+
+  app_mode = VIDEO;
+
+  int width = first_frame.width;
+  int height = first_frame.height;
+
+  m_nWidth = width;
+  m_nPaintWidth = width;
+  m_nHeight = height;
+  m_nPaintHeight = height;
+
+  // clear the original image
+  if (another_image.contain_content()) {
+    another_image.clear();
+    m_pUI->set_use_another_gradient(false);
+    m_pUI->m_another_gradient_checkbox->clear();
+  }
+
+  if (edge_image.contain_content()) {
+    edge_image.clear();
+    m_pUI->set_use_another_gradient(false);
+    m_pUI->m_edge_clipping_checkbox->clear();
+  }
+
+  if (alpha_image.contain_content()) {
+    alpha_image.clear();
+  }
+  OriginalView &orig_view = *m_pUI->m_origView;
+  PaintView &paint_view = *m_pUI->m_paintView;
+
+  // resize the window
+  m_pUI->m_mainWindow->resize(m_pUI->m_mainWindow->x(),
+                              m_pUI->m_mainWindow->y(), width * 2, height + 25);
+
+  // generate a black image
+  m_ucPainting = new unsigned char[width * height * 3];
+  memset(m_ucPainting, 0, width * height * 3);
+
+  // set the previous painting and current painting to the black image
+  paint_view.prev.set(m_ucPainting, width, height);
+  paint_view.cur.set(m_ucPainting, width, height);
+
+  paint_view.set_current_img(paint_view.cur);
+  orig_view.set_current_img(first_frame);
+
+  return 0;
+}
 
 int ImpressionistDoc::saveVideo(char *iname) { return -1; }
 
