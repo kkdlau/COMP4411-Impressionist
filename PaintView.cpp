@@ -117,7 +117,7 @@ void PaintView::draw() {
     isAnEvent = 0;
 
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
-    Point target(coord.x, m_nWindowHeight - coord.y);
+    Point target(coord.x, m_nEndRow - coord.y);
 
     abort_event(eventToDo, target);
     if (eventToDo) {
@@ -357,15 +357,15 @@ void PaintView::paint_layer(Image& reference, int radius) {
     for (int i = 1; i < cur.width; i++) {
         for (int j = 1; j < cur.height; j++) {
             // calculate l2 distance btw reference and cur 
-            Point source(i, j);
+            Point source(i + m_nStartCol, m_nEndRow - j);
             auto pixel1 = reference(source.y, source.x);
             auto pixel2 = cur(source.y, source.x);
             diff.push_back(dist(pixel1, pixel2));
         }
     }
     // find points to set strokes 
-    for (int i = 0; i < cur.width; i += grid / 2) {
-        for (int j = 0; j < cur.height; j += grid / 2) {
+    for (int i = 1; i < cur.width; i += grid / 2) {
+        for (int j = 1; j < cur.height; j += grid / 2) {
             // sum the error in the region
             float area_error = 0;
             int max_k = 0, max_m = 0; // to get the arg max Point 
@@ -384,7 +384,7 @@ void PaintView::paint_layer(Image& reference, int radius) {
                 }
             }
             if (area_error > threshold) {
-                Point source(i + max_k, j + max_m);
+                Point source(i + max_k + m_nStartCol, m_nEndRow - j - max_m);
                 strokes.push_back(source);
             }
         }
@@ -396,8 +396,11 @@ void PaintView::paint_layer(Image& reference, int radius) {
     std::shuffle(strokes.begin(), strokes.end(), g);
 
     ImpBrush& cur_brush = *m_pDoc->m_pCurrentBrush;
-    std::for_each(strokes.begin(), strokes.end(), [&](Point& p) {
-        cur_brush.BrushBegin(p, p, radius);
-        cur_brush.BrushEnd(p, p);
+    std::for_each(strokes.begin(), strokes.end(), [&](Point& source) {
+        int i = source.x - m_nStartCol;
+        int j = m_nEndRow - source.y;
+        Point target(i, m_nWindowHeight - j);
+        cur_brush.BrushBegin(source, target, radius);
+        cur_brush.BrushEnd(source, target);
         });
 }
