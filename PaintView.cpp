@@ -364,8 +364,8 @@ void PaintView::paint_layer(Image& reference, int radius) {
         }
     }
     // find points to set strokes 
-    for (int i = 0; i < cur.width; i += grid) {
-        for (int j = 0; j < cur.height; j += grid) {
+    for (int i = 0; i < cur.width; i += grid / 2) {
+        for (int j = 0; j < cur.height; j += grid / 2) {
             // sum the error in the region
             float area_error = 0;
             int max_k = 0, max_m = 0; // to get the arg max Point 
