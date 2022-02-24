@@ -14,13 +14,23 @@ class FilterBrush : public ImpBrush {
 public:
     FilterBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
-    void BrushBegin(const Point source, const Point target) {
+    void BrushBegin(const Point source, const Point target, short resolution) {
         ImpressionistDoc* pDoc = GetDocument();
         ImpressionistUI* dlg = pDoc->m_pUI;
         // get the blurring value 
         filter_dim = dlg->getBlurValue();
         filter_dim = (filter_dim % 2) ? filter_dim : filter_dim + 1;
-        const float size = pDoc->getSize();
+        int size = 0;
+        switch (resolution) {
+        case 1:
+            size = 20;
+            break;
+        case 2:
+            size = 4;
+            break;
+        default:
+            size = pDoc->m_pUI->getSize();
+        }
         glPointSize(size);
         BrushMove(source, target);
     }
@@ -56,6 +66,7 @@ public:
         pDoc->m_pUI->m_BrushAlphaSlider->activate();
         pDoc->m_pUI->m_BrushBlurSlider->activate();
         pDoc->m_pUI->m_ColorBlending->activate();
+        pDoc->m_pUI->m_MultiResPaint->activate();
     }
     
     void RandomizeAttributes() {

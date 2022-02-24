@@ -14,9 +14,19 @@ public:
     FanBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
 
-    void BrushBegin(const Point source, const Point target) {
+    void BrushBegin(const Point source, const Point target, short resolution) {
         ImpressionistDoc* pDoc = GetDocument();
         last = target;
+        switch (resolution) {
+        case 1:
+            radius = 20;
+            break;
+        case 2:
+            radius = 4;
+            break;
+        default:
+            radius = pDoc->getSize();
+        }
         BrushMove(source, target);
     }
 
@@ -27,7 +37,6 @@ public:
             printf("Go back in\n"); // TODO - Remove
             return;
         }
-        radius = pDoc->getSize();
         float r = pDoc->getRad();
         switch (pDoc->m_pUI->get_direction()) {
         case GRADIENT_DIRECTION: {
@@ -73,6 +82,7 @@ public:
         pDoc->m_pUI->m_BrushAlphaSlider->activate();
         pDoc->m_pUI->m_BrushBlurSlider->deactivate();
         pDoc->m_pUI->m_ColorBlending->activate();
+        pDoc->m_pUI->m_MultiResPaint->activate();
     }
 };
 

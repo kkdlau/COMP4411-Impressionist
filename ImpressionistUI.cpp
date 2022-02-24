@@ -305,7 +305,10 @@ void ImpressionistUI::cb_autoPaint(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
   pDoc->auto_paint();
 }
-
+void ImpressionistUI::cb_multiresPaint(Fl_Widget* o, void* v) {
+    ImpressionistDoc* pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
+    pDoc->multires_paint();
+}
 void ImpressionistUI::cb_spacingUpdate(Fl_Widget *o, void *v) {
   ((ImpressionistUI *)(o->user_data()))
       ->setSpacing(int(((Fl_Slider *)o)->value()));
@@ -888,6 +891,10 @@ ImpressionistUI::ImpressionistUI() {
   m_AutoPaint = new Fl_Button(340, y, 50, 25, "Paint");
   m_AutoPaint->user_data((void *)(this));
   m_AutoPaint->callback(cb_autoPaint);
+
+  m_MultiResPaint = new Fl_Button(240, y += 30, 150, 25, "Multi-Resolution Paint");
+  m_MultiResPaint->user_data((void*)(this));
+  m_MultiResPaint->callback(cb_multiresPaint);
 
   m_CanvasTransparencySlider =
       new Fl_Value_Slider(10, y += 30, 300, 20, "Transparency");

@@ -19,7 +19,7 @@ class CustomFilterBrush : public ImpBrush {
 public:
     CustomFilterBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
-    void BrushBegin(const Point source, const Point target) {
+    void BrushBegin(const Point source, const Point target, short resolution) {
         ImpressionistDoc* pDoc = GetDocument();
         if (pDoc->m_pUI->getFilterValues(filter_val_str) > 0) {
             row_num = pDoc->getRowNum();
@@ -33,8 +33,17 @@ public:
         }
         divisor = (pDoc->getNormalize() && sum > 0) ? sum : 1;
         printf("The divisor is %d\n", divisor);
-
-        const int size = pDoc->getSize();
+        int size = 0;
+        switch (resolution) {
+        case 1:
+            size = 20;
+            break;
+        case 2:
+            size = 4;
+            break;
+        default:
+            size = pDoc->getSize();
+        }
         glPointSize(size);
         BrushMove(source, target);
     }
@@ -137,6 +146,7 @@ public:
         pDoc->m_pUI->m_BrushAlphaSlider->activate();
         pDoc->m_pUI->m_BrushBlurSlider->deactivate();
         pDoc->m_pUI->m_ColorBlending->activate();
+        pDoc->m_pUI->m_MultiResPaint->activate();
     }
 
     void RandomizeAttributes() {

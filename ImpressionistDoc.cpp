@@ -275,5 +275,13 @@ void ImpressionistDoc::undo_painting() {
 }
 void ImpressionistDoc::auto_paint() {
   PaintView &canvas = *m_pUI->m_paintView;
-  canvas.auto_paint();
+  canvas.auto_paint_flag = true;
+  canvas.redraw();
+  //canvas.auto_paint();
+}
+void ImpressionistDoc::multires_paint() {
+    PaintView& canvas = *m_pUI->m_paintView;
+    canvas.multires_paint_flag = true;
+    canvas.redraw();
+    //canvas.multires_paint();
 }

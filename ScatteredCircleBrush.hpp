@@ -16,7 +16,7 @@ public:
   ScatteredCircleBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : CircleBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target) {
+  void BrushBegin(const Point source, const Point target, short resolution) {
     glPointSize(1);
 
     BrushMove(source, target);
@@ -49,6 +49,18 @@ public:
       Point t = target + Point::rand(-half, half);
       CircleBrush::BrushMove(t, t);
     }
+  }
+
+  void select() {
+      ImpressionistDoc* pDoc = GetDocument();
+      pDoc->m_pUI->m_BrushWidthSlider->deactivate();
+      pDoc->m_pUI->m_BrushAngleSlider->deactivate();
+      pDoc->m_pUI->m_StrokeDirection->deactivate();
+      pDoc->m_pUI->m_BrushSizeSlider->activate();
+      pDoc->m_pUI->m_BrushAlphaSlider->activate();
+      pDoc->m_pUI->m_BrushBlurSlider->deactivate();
+      pDoc->m_pUI->m_ColorBlending->activate();
+      pDoc->m_pUI->m_MultiResPaint->deactivate();
   }
 };
 

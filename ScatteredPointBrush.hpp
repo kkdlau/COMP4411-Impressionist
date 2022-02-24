@@ -32,8 +32,8 @@ class ScatteredPointBrush : public PointBrush {
 public:
   ScatteredPointBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : PointBrush(pDoc, name) {}
-
-  void BrushBegin(const Point source, const Point target) {
+  
+  void BrushBegin(const Point source, const Point target, short resolution) {
     glPointSize(1);
 
     BrushMove(source, target);
@@ -55,6 +55,18 @@ public:
         PointBrush::BrushMove(source, rand + target);
       }
     }
+  }
+
+  void select() {
+      ImpressionistDoc* pDoc = GetDocument();
+      pDoc->m_pUI->m_BrushWidthSlider->deactivate();
+      pDoc->m_pUI->m_BrushAngleSlider->deactivate();
+      pDoc->m_pUI->m_StrokeDirection->deactivate();
+      pDoc->m_pUI->m_BrushSizeSlider->activate();
+      pDoc->m_pUI->m_BrushAlphaSlider->activate();
+      pDoc->m_pUI->m_BrushBlurSlider->deactivate();
+      pDoc->m_pUI->m_ColorBlending->activate();
+      pDoc->m_pUI->m_MultiResPaint->deactivate();
   }
 };
 

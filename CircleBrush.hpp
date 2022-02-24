@@ -9,15 +9,24 @@ using namespace GLHelper;
 
 class CircleBrush : public ImpBrush {
 public:
-  double radius;
+  double radius = 0;
   CircleBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target) {
+  void BrushBegin(const Point source, const Point target, short resolution) {
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
-
-    int size = pDoc->m_pUI->getSize();
+    int size = 0;
+    switch (resolution) {
+    case 1:
+        size = 20;
+        break;
+    case 2:
+        size = 10;
+        break;
+    default:
+        size = pDoc->m_pUI->getSize();
+    }
 
     glPointSize((float)size);
 
@@ -61,6 +70,7 @@ public:
     pDoc->m_pUI->m_BrushAlphaSlider->activate();
     pDoc->m_pUI->m_BrushBlurSlider->deactivate();
     pDoc->m_pUI->m_ColorBlending->activate();
+    pDoc->m_pUI->m_MultiResPaint->activate();
   }
 };
 

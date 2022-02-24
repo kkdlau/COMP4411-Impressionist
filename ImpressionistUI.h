@@ -23,7 +23,7 @@
 #include <FL/Fl_Value_Slider.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
-
+#include <vfw.h>
 #include "ImpBrush.h"
 
 class ImpressionistUI {
@@ -55,6 +55,7 @@ public:
   Fl_Slider *m_BrushSpacingSlider;
   Fl_Check_Button *m_AutoPaintRandomize;
   Fl_Button *m_AutoPaint;
+  Fl_Button* m_MultiResPaint;
 
   Fl_Slider *m_CanvasTransparencySlider;
 
@@ -192,6 +193,7 @@ private:
   static void cb_edge_clipping(Fl_Widget *o, void *v);
   static void cb_blurUpdate(Fl_Widget *o, void *v);
   static void cb_autoPaint(Fl_Widget *o, void *v);
+  static void cb_multiresPaint(Fl_Widget* o, void* v);
   static void cb_spacingUpdate(Fl_Widget *o, void *v);
   static void cb_autoPaintRandomize(Fl_Widget *o, void *v);
   static void cb_arbFilterApply(Fl_Widget *o, void *v);

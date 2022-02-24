@@ -99,10 +99,17 @@ void PaintView::draw() {
   ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
 
   if (cur.bytes.size() && !isAnEvent) {
-    restore_content(cur.raw_fmt());
-
-    // render overlay content
-    restore_content(overlay_image.raw_fmt());
+    restore_content(cur.raw_fmt()); // painting
+    if (auto_paint_flag) {
+        auto_paint_flag = false;
+        auto_paint();
+    }
+    else if (multires_paint_flag) {
+        multires_paint_flag = false;
+        multires_paint(); 
+    }
+    save_content(cur.raw_fmt());
+    restore_content(overlay_image.raw_fmt()); // user loaded
   }
 
   if (cur.bytes.size() && isAnEvent) {
@@ -116,7 +123,7 @@ void PaintView::draw() {
     if (eventToDo) {
       restore_content(cur.raw_fmt());
     }
-
+    // 
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
@@ -282,23 +289,9 @@ void PaintView::set_current_img(Image &img) {
   refresh();
 }
 
-void PaintView::auto_paint() {
-    restore_content(cur.raw_fmt());
-#ifndef MESA
-  // To avoid flicker on some machines.
-  glDrawBuffer(GL_FRONT_AND_BACK);
-#endif // !MESA
-
-  if (!valid()) {
-    glClearColor(0.7f, 0.7f, 0.7f, 1.0);
-    // We're only using 2-D, so turn off depth
-    glDisable(GL_DEPTH_TEST);
-    ortho();
-    // glClear(GL_COLOR_BUFFER_BIT);
-  }
-
+void PaintView::auto_paint(int s, short res) {
   ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
-  int spacing = m_pDoc->getSpacing();
+  int spacing = (s > 0)? s : m_pDoc->getSpacing();
   bool randomize = (m_pDoc->getAutoPaintRandomize() == 1);
 
   // randomize x and y
@@ -329,7 +322,7 @@ void PaintView::auto_paint() {
         continue;
       }
       if (start) {
-        cur_brush.BrushBegin(source, target);
+        cur_brush.BrushBegin(source, target, res);
         start = false;
       } else
         cur_brush.BrushMove(source, target, randomize);
@@ -340,12 +333,37 @@ void PaintView::auto_paint() {
     }
   }
   cur_brush.BrushEnd(source, target);
-  save_content(cur.raw_fmt());
-  restore_content(cur.raw_fmt());
-  glFlush();
-#ifndef MESA
-  // To avoid flicker on some machines.
-  glDrawBuffer(GL_BACK);
-#endif // !MESA
   printf("Finished autopainting\n");
+  //printf("%d %d %d %d %d\n", cur.width, cur.height, m_nStartCol, m_nEndRow, m_nWindowHeight);
+}
+
+void PaintView::multires_paint() {
+    auto_paint(5, 1); // spacing and resolution for coarse brush
+    // check each point, if color not the same, then BrushBegin there with fine resolution
+    ImpBrush& cur_brush = *m_pDoc->m_pCurrentBrush;
+    int x = 0, y = 0;
+    Point source(x, y);
+    Point target(x, y);
+    for (int i = 1; i < cur.width; i++) {
+        for (int j = 1; j < cur.height; j++) {
+            if (!cur.valid_point(target.y, target.x)) {
+                continue;
+            }
+            source.x = i + m_nStartCol;
+            source.y = m_nEndRow - j;
+            target.x = i;
+            target.y = m_nWindowHeight - j;
+            auto pixel = pDoc->m_pUI->m_origView->original_img(source.y, source.x);
+            auto pixel2 = cur(target.y, target.x);
+            if ((get<0>(pixel) != get<0>(pixel2)) || (get<1>(pixel) != get<1>(pixel2)) || (get<2>(pixel) != get<2>(pixel))) {
+                //printf("Found diff pixel");
+                cur_brush.BrushBegin(source, target, 2);
+                cur_brush.BrushEnd(source, target);
+                j += 20;
+            }
+        }
+    }
+    //cur_brush.BrushEnd(source, target);
+    printf("Finished multiresolution painting\n");
+    //printf("%d %d %d %d %d\n", cur.width, cur.height, m_nStartCol, m_nEndRow, m_nWindowHeight);
 }
