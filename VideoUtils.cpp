@@ -1,12 +1,13 @@
 #include "VideoUtils.hpp"
-
+#include <Vfw.h>
+#pragma comment(lib, "Vfw32.lib")
 using namespace VideoUtils;
 
-PAVIFILE VideoUtils::pfile;
-PAVISTREAM VideoUtils::stream;
-AVIFILEINFOA VideoUtils::info;
-long VideoUtils::current_frame = 0;
-long VideoUtils::max_frames = 0;
+PAVIFILE pfile;
+PAVISTREAM stream;
+AVIFILEINFOA info;
+long current_frame = 0;
+long max_frames = 0;
 
 void VideoUtils::get_video_info() {
 	AVIFileInfo(pfile, &info, sizeof(AVIFILEINFO));
