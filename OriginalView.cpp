@@ -138,10 +138,10 @@ void OriginalView::set_current_img(Image &img) {
   // keep reading images from the video
   ImpressionistDoc &doc = *pDoc;
   if (doc.app_mode == ApplicationMode::VIDEO) {
-    add_timeout(1, [&](void *data) {
-      Image next_frame = VideoUtils::next_frame();
-      set_current_img(next_frame);
-    });
+    // Fl::add_timeout(1, [&](void *data) {
+    //   Image next_frame = VideoUtils::next_frame();
+    //   set_current_img(next_frame);
+    // });
   }
 }
 
