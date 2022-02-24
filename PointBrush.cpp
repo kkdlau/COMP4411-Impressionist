@@ -18,12 +18,12 @@ extern float frand();
 PointBrush::PointBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {}
 
-void PointBrush::BrushBegin(const Point source, const Point target) {
+void PointBrush::BrushBegin(const Point source, const Point target, int rad) {
   ImpressionistDoc *pDoc = GetDocument();
 
   ImpressionistUI *dlg = pDoc->m_pUI;
 
-  const float size = pDoc->getSize();
+  int size = (rad > 0)? rad : pDoc->getSize();
 
   glPointSize(size);
 
@@ -72,4 +72,5 @@ void PointBrush::select() {
   pDoc->m_pUI->m_BrushAlphaSlider->activate();
   pDoc->m_pUI->m_BrushBlurSlider->deactivate();
   pDoc->m_pUI->m_ColorBlending->activate();
+  pDoc->m_pUI->m_MultiResPaint->activate();
 }

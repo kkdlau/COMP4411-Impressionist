@@ -52,6 +52,51 @@ static void filterCustom(Image &img, const Point source,
   color[2] = b / divisor;
 }
 
+static void filterMean(Image &img, const Point source, std::vector<int>& color, const int filter_dim) {
+    if (filter_dim < 1) {
+        auto pixel = img(source.y, source.x);
+        color[0] = get<0>(pixel);
+        color[1] = get<1>(pixel);
+        color[2] = get<2>(pixel);
+        return;
+    }
+    short offset = (filter_dim - 1) / 2;
+
+    int r = 0, g = 0, b = 0;
+    for (int i = 0; i < filter_dim; i++) {
+        for (int j = 0; j < filter_dim; j++) {
+            int x = source.x - i + offset;
+            int y = source.y - j + offset;
+            if (x < 0) x = 0;
+            else if (x >= img.width) x = img.width - 1;
+            if (y < 0) y = 0;
+            else if (y >= img.height) y = img.height - 1;
+            auto pixel = img(y, x);
+            r += get<0>(pixel);
+            g += get<1>(pixel);
+            b += get<2>(pixel);
+        }
+    }
+    int total_pixels = filter_dim * filter_dim;
+    color[0] = r / total_pixels;
+    color[1] = g / total_pixels;
+    color[2] = b / total_pixels;
+}
+
+static void applyBlurFilter(Image& original, Image& result, const int filter_dim) {
+    for (int i = 1; i < result.width; ++i) {
+        for (int j = 1; j < result.height; ++j) {
+            //Point source(i, original.height - j);
+            Point source(i, j);
+            std::vector<int> color{ 0, 0, 0 };
+
+            filterMean(original, source, color, filter_dim);
+            RGBA final_color = make_tuple(color[0], color[1], color[2], 255);
+            result.set_pixel(source, final_color);
+        }
+    }
+}
+
 static tuple<float, float, float> sobel(Image &img, int y, int x) {
   float gx = 0;
   float gy = 0;

@@ -7,6 +7,7 @@
 #include <cmath>
 #include <functional>
 #include <tuple>
+#include <cmath>
 #include <vector>
 
 using namespace std;
@@ -26,6 +27,13 @@ static RGBA operator/(RGBA c1, double d) {
 static RGBA operator*(RGBA c1, double d) {
   return {(int)(get<0>(c1) * d), (int)(get<1>(c1) * d), int(get<2>(c1) * d),
           int(get<3>(c1) * d)};
+}
+
+static float dist(RGBA c1, RGBA c2) {
+    float r = pow((get<0>(c1) - get<0>(c2)), 2);
+    float g = pow((get<1>(c1) - get<1>(c2)), 2);
+    float b = pow((get<2>(c1) - get<2>(c2)), 2);
+    return sqrt(r + g + b);
 }
 
 class Image {

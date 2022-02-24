@@ -71,6 +71,7 @@
       <ObjectFileName>c:\temp\</ObjectFileName>
       <ProgramDataBaseFileName>c:\temp\</ProgramDataBaseFileName>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -149,6 +150,7 @@
     <ClCompile Include="OriginalView.cpp" />
     <ClCompile Include="PaintView.cpp" />
     <ClCompile Include="PointBrush.cpp" />
+    <ClCompile Include="VideoUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h" />
@@ -166,6 +168,7 @@
     <ClInclude Include="ScatteredCircleBrush.hpp" />
     <ClInclude Include="ScatteredLineBrush.hpp" />
     <ClInclude Include="ScatteredPointBrush.hpp" />
+    <ClInclude Include="VideoUtils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

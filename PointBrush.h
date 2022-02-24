@@ -13,7 +13,7 @@ class PointBrush : public ImpBrush {
 public:
   PointBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL);
 
-  void BrushBegin(const Point source, const Point target);
+  void BrushBegin(const Point source, const Point target, int rad);
   void BrushMove(const Point source, const Point target, bool randomize=false);
   void BrushEnd(const Point source, const Point target);
   void RandomizeAttributes();

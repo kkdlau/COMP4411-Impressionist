@@ -5,6 +5,7 @@
 //
 #include <algorithm>
 #include <vector>
+#include <random>
 
 #include "ImpBrush.h"
 #include "Paintview.h"
@@ -39,6 +40,7 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
 }
 
 void PaintView::abort_event(int &event, Point &p) {
+    /*
   StrokeDirection d = pDoc->m_pUI->get_direction();
   if (d != SLIDER_RIGHT_MOUSE) {
     // abort right click event
@@ -48,7 +50,7 @@ void PaintView::abort_event(int &event, Point &p) {
       debugger("out-of-boundary");
       event = 0;
     }
-  }
+  } */
 }
 
 void PaintView::draw() {
@@ -97,10 +99,17 @@ void PaintView::draw() {
   ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
 
   if (cur.bytes.size() && !isAnEvent) {
-    restore_content(cur.raw_fmt());
-
-    // render overlay content
-    restore_content(overlay_image.raw_fmt());
+    restore_content(cur.raw_fmt()); // painting
+    if (auto_paint_flag) {
+        auto_paint_flag = false;
+        auto_paint();
+    }
+    else if (multires_paint_flag) {
+        multires_paint_flag = false;
+        multires_paint(); 
+    }
+    save_content(cur.raw_fmt());
+    restore_content(overlay_image.raw_fmt()); // user loaded
   }
 
   if (cur.bytes.size() && isAnEvent) {
@@ -108,13 +117,13 @@ void PaintView::draw() {
     isAnEvent = 0;
 
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
-    Point target(coord.x, m_nWindowHeight - coord.y);
+    Point target(coord.x, m_nEndRow - coord.y);
 
     abort_event(eventToDo, target);
     if (eventToDo) {
       restore_content(cur.raw_fmt());
     }
-
+    // 
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
@@ -280,34 +289,22 @@ void PaintView::set_current_img(Image &img) {
   refresh();
 }
 
-void PaintView::auto_paint() {
-    restore_content(cur.raw_fmt());
-#ifndef MESA
-  // To avoid flicker on some machines.
-  glDrawBuffer(GL_FRONT_AND_BACK);
-#endif // !MESA
-
-  if (!valid()) {
-    glClearColor(0.7f, 0.7f, 0.7f, 1.0);
-    // We're only using 2-D, so turn off depth
-    glDisable(GL_DEPTH_TEST);
-    ortho();
-    // glClear(GL_COLOR_BUFFER_BIT);
-  }
-
+void PaintView::auto_paint(int s, short res) {
   ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
-  int spacing = m_pDoc->getSpacing();
+  int spacing = (s > 0)? s : m_pDoc->getSpacing();
   bool randomize = (m_pDoc->getAutoPaintRandomize() == 1);
 
   // randomize x and y
   std::vector<int> rows;
+  std::random_device rd;
+  std::mt19937 g(rd());
   for (int i = 1; i < cur.width; i += spacing)
     rows.push_back(i);
-  std::random_shuffle(rows.begin(), rows.end());
+  std::shuffle(rows.begin(), rows.end(), g);
   std::vector<int> cols;
   for (int j = 1; j < cur.height; j += spacing)
     cols.push_back(j);
-  std::random_shuffle(cols.begin(), cols.end());
+  std::shuffle(cols.begin(), cols.end(), g);
 
   int x = 0, y = 0;
   int counter = 0;
@@ -332,16 +329,78 @@ void PaintView::auto_paint() {
       // save_content(cur.raw_fmt());
       counter++;
       if (counter % 20 == 0)
-        std::random_shuffle(cols.begin(), cols.end());
+        std::shuffle(cols.begin(), cols.end(), g);
     }
   }
   cur_brush.BrushEnd(source, target);
-  save_content(cur.raw_fmt());
-  restore_content(cur.raw_fmt());
-  glFlush();
-#ifndef MESA
-  // To avoid flicker on some machines.
-  glDrawBuffer(GL_BACK);
-#endif // !MESA
   printf("Finished autopainting\n");
+  printf("%d %d %d %d %d\n", cur.width, cur.height, m_nStartCol, m_nEndRow, m_nWindowHeight);
+}
+
+void PaintView::multires_paint() {
+    int brush_radii[3]{ 8, 4, 2 };
+    for (int ind = 0; ind < 3; ind++) {
+        // create reference image
+        Image refImage = cur;
+        ImageUtils::applyBlurFilter(m_pDoc->m_pUI->m_origView->original_img, refImage, brush_radii[ind] + 1);
+        paint_layer(refImage, brush_radii[ind]);
+    }
+}
+
+void PaintView::paint_layer(Image& reference, int radius) {
+    std::vector<Point> strokes;
+    // from Impressionist Painterly implementation
+    const int grid = radius; 
+    int threshold = 100; 
+    // calculate pointwise difference image 
+    std::vector<float> diff;
+    for (int i = 1; i < cur.width; i++) {
+        for (int j = 1; j < cur.height; j++) {
+            // calculate l2 distance btw reference and cur 
+            Point source(i + m_nStartCol, m_nEndRow - j);
+            auto pixel1 = reference(source.y, source.x);
+            auto pixel2 = cur(source.y, source.x);
+            diff.push_back(dist(pixel1, pixel2));
+        }
+    }
+    // find points to set strokes 
+    for (int i = 1; i < cur.width; i += grid / 2) {
+        for (int j = 1; j < cur.height; j += grid / 2) {
+            // sum the error in the region
+            float area_error = 0;
+            int max_k = 0, max_m = 0; // to get the arg max Point 
+            float max_diff = 0;
+            for (int k = -grid / 2; k <= grid / 2; ++k) {
+                for (int m = -grid / 2; m <= grid / 2; ++m) {
+                    if (i + k < 0 || i + k >= cur.width) continue;
+                    else if (j + m < 0 || j + m >= cur.height) continue;
+                    int x = i + k, y = j + m;
+                    float cur_diff = diff[x * cur.width + y];
+                    if (cur_diff > max_diff) {
+                        max_diff = cur_diff;
+                        max_k = k; max_m = m;
+                    }
+                    area_error += cur_diff;
+                }
+            }
+            if (area_error > threshold) {
+                Point source(i + max_k + m_nStartCol, m_nEndRow - j - max_m);
+                strokes.push_back(source);
+            }
+        }
+    }
+    
+    // randomize strokes 
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(strokes.begin(), strokes.end(), g);
+
+    ImpBrush& cur_brush = *m_pDoc->m_pCurrentBrush;
+    std::for_each(strokes.begin(), strokes.end(), [&](Point& source) {
+        int i = source.x - m_nStartCol;
+        int j = m_nEndRow - source.y;
+        Point target(i, m_nWindowHeight - j);
+        cur_brush.BrushBegin(source, target, radius);
+        cur_brush.BrushEnd(source, target);
+        });
 }

@@ -16,7 +16,7 @@ public:
   LineBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target) {
+  void BrushBegin(const Point source, const Point target, int rad) {
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
 
@@ -91,6 +91,7 @@ public:
     pDoc->m_pUI->m_BrushAlphaSlider->activate();
     pDoc->m_pUI->m_BrushBlurSlider->deactivate();
     pDoc->m_pUI->m_ColorBlending->activate();
+    pDoc->m_pUI->m_MultiResPaint->deactivate();
   }
 
   void RandomizeAttributes() { glLineWidth(irand(40)); }

@@ -99,7 +99,8 @@ protected:
 
 public:
   // The implementation of your brush should realize these virtual functions
-  virtual void BrushBegin(const Point source, const Point target) = 0;
+  virtual void BrushBegin(const Point source, const Point target, int rad = 0) = 0;
+  // resolution = 0 for 'follow user setting', 1 for 'coarse brush', 2 for 'fine brush'
   virtual void BrushMove(const Point source, const Point target,
                          bool randomize = false) = 0;
   virtual void BrushEnd(const Point source, const Point target) = 0;
