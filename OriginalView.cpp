@@ -5,10 +5,11 @@
 //
 
 #include "originalview.h"
+#include "VideoUtils.hpp"
+#include "gl_helper.h"
 #include "impressionist.h"
 #include "impressionistDoc.h"
-
-#include "gl_helper.h"
+#include <Fl/Fl.H>
 
 #ifndef WIN32
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -134,6 +135,14 @@ void OriginalView::set_current_img(Image &img) {
   // m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
   this->resizeWindow(original_img.width, original_img.height);
   this->refresh();
+  // keep reading images from the video
+  ImpressionistDoc &doc = *pDoc;
+  if (doc.app_mode == ApplicationMode::VIDEO) {
+    add_timeout(1, [&](void *data) {
+      Image next_frame = VideoUtils::next_frame();
+      set_current_img(next_frame);
+    });
+  }
 }
 
 void OriginalView::dissolve(Image &img) {

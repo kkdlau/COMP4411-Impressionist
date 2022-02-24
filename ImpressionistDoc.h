@@ -16,6 +16,8 @@ using namespace std;
 
 class ImpressionistUI;
 
+enum ApplicationMode { IMAGE, VIDEO };
+
 class ImpressionistDoc {
 public:
   ImpressionistDoc();
@@ -25,7 +27,7 @@ public:
   int loadImage(char *iname); // called by the UI to load image
   int saveImage(char *iname); // called by the UI to save image
 
-  int loadAlphaImage(char* iname);
+  int loadAlphaImage(char *iname);
   // TODO: implement load video and save video feature
   int loadVideo(char *iname);
   int saveVideo(char *iname);
@@ -53,6 +55,7 @@ public:
 
   // Attributes
 public:
+  ApplicationMode app_mode = IMAGE;
   Image another_image;
   Image edge_image;
   Image alpha_image;

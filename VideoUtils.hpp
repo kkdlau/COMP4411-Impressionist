@@ -2,14 +2,16 @@
 
 #define __VIDEO__
 
-
+#include "Image.hpp"
 namespace VideoUtils {
-	void get_video_info();
+void get_video_info();
 
-	long num_frames();
+long num_frames();
 
-	void open_video(const char* video_path);
+void open_video(const char *video_path);
 
-	auto get_frame(int frame_index);
-};
+Image get_frame(int frame_index);
+
+Image next_frame();
+};     // namespace VideoUtils
 #endif // !__VIDEO__
