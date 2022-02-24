@@ -1,4 +1,5 @@
 #include "VideoUtils.hpp"
+#include <windows.h>
 #include <Vfw.h>
 #pragma comment(lib, "Vfw32.lib")
 using namespace VideoUtils;
