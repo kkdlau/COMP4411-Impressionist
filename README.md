@@ -63,8 +63,13 @@
 ## ToDo before submission:
 - [ ] some marks are slightly outside of border and cannot be cleared with 'Clear Canvas'  
 - [ ] scattered points does not scatter mouse is dragged  
+    - scatter was working correctly at commit e695d2a1bd0ad7de9ae150ecd9c0466c90b6589f
+    - NOTE: color source was not correct here, i.e. took one color for whole splotch which is wrong
+    - NOTE: circle implementation is wrong here, ignore
 - [ ] same problem for scattered circles
 - [ ] same problem for scattered lines
+    - scatter was working correctly at commit e695d2a1bd0ad7de9ae150ecd9c0466c90b6589f
+    - NOTE: not sure about getting color source
 - [ ] alpha-mapped brush can get bitmap that is NOT same dimension as original image    
 - [ ] multi resolution should pass the RGBA value to set   
 - [ ] warp brush  
