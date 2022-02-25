@@ -109,6 +109,7 @@ void PaintView::draw() {
         multires_paint(); 
     }
     save_content(cur.raw_fmt());
+    restore_content(cur.raw_fmt());
     restore_content(overlay_image.raw_fmt()); // user loaded
   }
 
@@ -117,7 +118,7 @@ void PaintView::draw() {
     isAnEvent = 0;
 
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
-    Point target(coord.x, m_nEndRow - coord.y);
+    Point target(coord.x, m_nWindowHeight - coord.y);
 
     abort_event(eventToDo, target);
     if (eventToDo) {
@@ -158,7 +159,9 @@ void PaintView::draw() {
       break;
     }
     case RIGHT_MOUSE_UP: {
-      m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
+        printf("Angle set is %f\n", rad_to_deg(target / line_start));
+        printf("any diffference? %f\n", rad_to_deg(line_end / line_start));
+       m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
       restore_content(cur.raw_fmt());
       break;
     }
@@ -318,9 +321,6 @@ void PaintView::auto_paint(int s, short res) {
       target.x = *x;
       target.y = m_nWindowHeight - *y;
 
-      if (!cur.valid_point(target.y, target.x)) {
-        continue;
-      }
       if (start) {
         cur_brush.BrushBegin(source, target);
         start = false;

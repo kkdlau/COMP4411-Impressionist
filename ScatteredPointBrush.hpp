@@ -43,7 +43,6 @@ public:
     ImpressionistDoc *pDoc = GetDocument();
     if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
         source.y >= pDoc->m_nPaintHeight) {
-        printf("Go back in\n"); // TODO - Remove
         return;
     }
     const int half = pDoc->getSize() / 2;
@@ -52,9 +51,17 @@ public:
       for (int y = -half; y <= half; y += 1) {
         if (frand() <= 0.7) continue;
         Point rand = {x, y};
-        PointBrush::BrushMove(source, rand + target);
+        //PointBrush::BrushMove(rand + source, rand + target);
+        Point nsource = source + rand;
+        Point ntarget = target + rand;
+        pDoc->clip(nsource); pDoc->clip(ntarget);
+        gl_draw_shape(GL_POINTS, [&] {
+            SetColor(nsource);
+            gl_set_point(ntarget);
+            });
       }
     }
+    pDoc->force_update_canvas();
   }
 
   void select() {

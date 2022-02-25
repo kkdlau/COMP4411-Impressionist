@@ -55,7 +55,7 @@
 - [x] _(2B)_ find edges (D)
 - [ ] _(2B)_ multiresolution automatic painting technique http://mrl.nyu.edu/projects/npr/painterly/ (M)
 - [ ] _(2B)_ stretch and pull image http://mostfungames.com/warp-george-bush.htm
-- [x] _(2B)_ curved brush that follows image gradient http://mrl.nyu.edu/projects/npr/painterly/ (M)
+- [ ] _(2B)_ curved brush that follows image gradient http://mrl.nyu.edu/projects/npr/painterly/
 - [ ] <u>(4B)</u> thumbnailhttp://www.cs.princeton.edu/~af/cool/webgothic.html (D)
 - [ ] <u>(4B)</u> video (M, D)
 - [ ] <u>(8B)</u> Bayesian matting (M, D)
