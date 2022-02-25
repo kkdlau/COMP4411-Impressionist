@@ -59,3 +59,14 @@
 - [ ] <u>(4B)</u> thumbnailhttp://www.cs.princeton.edu/~af/cool/webgothic.html (D)
 - [ ] <u>(4B)</u> video (M, D)
 - [ ] <u>(8B)</u> Bayesian matting (M, D)
+
+## ToDo before submission:
+- [ ] some marks are slightly outside of border and cannot be cleared with 'Clear Canvas'  
+- [ ] scattered points does not scatter mouse is dragged  
+- [ ] alpha-mapped brush can get bitmap that is NOT same dimension as original image    
+- [ ] multi resolution should pass the RGBA value to set   
+- [ ] warp brush  
+- [ ] curved brush that follows image gradient  
+- [ ] compile with virtual machine  
+- [ ] README.md for TA with any special configuration - C++17 (?)  
+- [ ] Bell and whistle checklist   
