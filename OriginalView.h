@@ -53,6 +53,7 @@ public:
 
   void hide_cusor();
 
+
   ImpressionistDoc *m_pDoc;
   Image img;
   Image original_img;

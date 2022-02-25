@@ -7,7 +7,6 @@
 #include <cmath>
 #include <functional>
 #include <tuple>
-#include <cmath>
 #include <vector>
 
 using namespace std;
@@ -30,10 +29,10 @@ static RGBA operator*(RGBA c1, double d) {
 }
 
 static float dist(RGBA c1, RGBA c2) {
-    float r = pow((get<0>(c1) - get<0>(c2)), 2);
-    float g = pow((get<1>(c1) - get<1>(c2)), 2);
-    float b = pow((get<2>(c1) - get<2>(c2)), 2);
-    return sqrt(r + g + b);
+  float r = pow((get<0>(c1) - get<0>(c2)), 2);
+  float g = pow((get<1>(c1) - get<1>(c2)), 2);
+  float b = pow((get<2>(c1) - get<2>(c2)), 2);
+  return sqrt(r + g + b);
 }
 
 class Image {
@@ -41,6 +40,7 @@ class Image {
 
 public:
   vector<GLubyte> bytes;
+  vector<GLubyte> exportable;
 
   int width;
   int height;
@@ -217,6 +217,20 @@ public:
 
     float hcur = 1.0f;
     float vcur = 1.0f;
+  }
+
+  unsigned char *exportable_fmt() {
+    exportable = {};
+    int c = 0;
+    for (GLubyte ch : bytes) {
+      if (++c == 4) {
+        c = 0;
+        continue;
+      }
+      exportable.push_back(ch);
+    }
+
+    return exportable.data();
   }
 
   // void ImageManipulator::reduce(Image *source, Image *result, int

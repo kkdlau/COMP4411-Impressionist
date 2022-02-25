@@ -15,9 +15,44 @@
 
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include "Image.hpp"
+#include "VideoUtils.hpp"
+#include <chrono>
+#include <thread>
+#include <functional>
 
-ImpressionistUI *impUI;
-ImpressionistDoc *impDoc;
+ImpressionistUI* impUI;
+ImpressionistDoc* impDoc;
+
+void timer_start(std::function<void(void)> func, unsigned int interval)
+{
+	std::thread([func, interval]()
+		{
+			while (true)
+			{
+				auto x = std::chrono::steady_clock::now() + std::chrono::milliseconds(interval);
+				func();
+				std::this_thread::sleep_until(x);
+			}
+		}).detach();
+}
+
+void task() {
+	if (impDoc->app_mode == VIDEO && impUI->m_paintView->finish_painting_flag) {
+		Image frame = VideoUtils::next_frame();
+		if (frame.contain_content()) {
+			impUI->m_origView->set_current_img(frame);
+			impUI->m_paintView->cur = frame;
+			impUI->m_paintView->auto_paint_flag = true;
+			printf("request draw\n");
+			fflush(stdout);
+			impUI->m_paintView->refresh();
+		}
+	} else if (!impUI->m_paintView->finish_painting_flag) {
+		printf("skip this loop\n");
+		fflush(stdout);
+	}
+}
 
 int main(int argc, char **argv) {
   impDoc = new ImpressionistDoc();
@@ -29,6 +64,9 @@ int main(int argc, char **argv) {
   impUI->setDocument(impDoc);
   impDoc->setUI(impUI);
   Fl::visual(FL_DOUBLE | FL_INDEX);
+
+
+  timer_start(task, 50);
 
   impUI->show();
 

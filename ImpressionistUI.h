@@ -7,6 +7,7 @@
 #ifndef ImpressionistUI_h
 #define ImpressionistUI_h
 
+#include "ImpBrush.h"
 #include "Impressionist.h"
 #include "OriginalView.h"
 #include "PaintView.h"
@@ -23,8 +24,6 @@
 #include <FL/Fl_Value_Slider.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
-#include <vfw.h>
-#include "ImpBrush.h"
 
 class ImpressionistUI {
 public:
@@ -55,7 +54,7 @@ public:
   Fl_Slider *m_BrushSpacingSlider;
   Fl_Check_Button *m_AutoPaintRandomize;
   Fl_Button *m_AutoPaint;
-  Fl_Button* m_MultiResPaint;
+  Fl_Button *m_MultiResPaint;
 
   Fl_Slider *m_CanvasTransparencySlider;
 
@@ -151,7 +150,7 @@ private:
   int af_rownum = 0;
   int af_colnum = 0;
   int af_normalize = 0;
-  char af_values[400]{'0'};  // MAX size of filter is 10x10 (?)
+  char af_values[400]{'0'}; // MAX size of filter is 10x10 (?)
   bool filter_changed = false;
   float m_cTransparency = 0; // set alpha as one (?)
   bool use_another_gradient;
@@ -179,7 +178,8 @@ private:
   static void cb_load_another_image(Fl_Menu_ *o, void *v);
   static void cb_color_blending(Fl_Menu_ *o, void *v);
   static void cb_arbitrary_filter(Fl_Menu_ *o, void *v);
-  static void cb_load_alpha_image(Fl_Menu_* o, void* v);
+  static void cb_load_video(Fl_Menu_ *o, void *v);
+  static void cb_load_alpha_image(Fl_Menu_ *o, void *v);
   static void cb_brushChoice(Fl_Widget *o, void *v);
   static void cb_strokeDirectionChoice(Fl_Widget *o, void *v);
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);
@@ -193,7 +193,7 @@ private:
   static void cb_edge_clipping(Fl_Widget *o, void *v);
   static void cb_blurUpdate(Fl_Widget *o, void *v);
   static void cb_autoPaint(Fl_Widget *o, void *v);
-  static void cb_multiresPaint(Fl_Widget* o, void* v);
+  static void cb_multiresPaint(Fl_Widget *o, void *v);
   static void cb_spacingUpdate(Fl_Widget *o, void *v);
   static void cb_autoPaintRandomize(Fl_Widget *o, void *v);
   static void cb_arbFilterApply(Fl_Widget *o, void *v);

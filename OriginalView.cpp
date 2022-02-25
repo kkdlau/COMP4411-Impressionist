@@ -5,10 +5,12 @@
 //
 
 #include "originalview.h"
+#include "VideoUtils.hpp"
+#include "gl_helper.h"
 #include "impressionist.h"
 #include "impressionistDoc.h"
-
-#include "gl_helper.h"
+#include <Fl/Fl.H>
+#include <thread>
 
 #ifndef WIN32
 #define min(a, b) (((a) < (b)) ? (a) : (b))

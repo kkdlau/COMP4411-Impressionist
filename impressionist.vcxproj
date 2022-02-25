@@ -114,6 +114,7 @@
       <PrecompiledHeaderOutputFile>C:\temp\impressionist.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>C:\temp\</ObjectFileName>
       <ProgramDataBaseFileName>C:\temp\</ProgramDataBaseFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>

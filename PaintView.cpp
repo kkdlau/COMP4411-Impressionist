@@ -54,6 +54,7 @@ void PaintView::abort_event(int &event, Point &p) {
 }
 
 void PaintView::draw() {
+    finish_painting_flag = false;
 #ifndef MESA
   // To avoid flicker on some machines.
   glDrawBuffer(GL_FRONT_AND_BACK);
@@ -109,8 +110,8 @@ void PaintView::draw() {
         multires_paint(); 
     }
     save_content(cur.raw_fmt());
-    restore_content(cur.raw_fmt());
-    restore_content(overlay_image.raw_fmt()); // user loaded
+    if (pDoc->app_mode == IMAGE)
+        restore_content(overlay_image.raw_fmt()); // user loaded
   }
 
   if (cur.bytes.size() && isAnEvent) {
@@ -120,12 +121,14 @@ void PaintView::draw() {
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
     Point target(coord.x, m_nWindowHeight - coord.y);
 
-    abort_event(eventToDo, target);
     if (eventToDo) {
       restore_content(cur.raw_fmt());
     }
     // 
     // This is the event handler
+
+    printf("\n\non draw e: %d\n\n", eventToDo);
+    fflush(stdout);
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
       prev = cur; // for backup
@@ -149,6 +152,8 @@ void PaintView::draw() {
     case RIGHT_MOUSE_DOWN: {
       line_start = source;
       line_end = source;
+      printf("\n\nmouse down\n\n");
+      fflush(stdout);
       break;
     }
     case RIGHT_MOUSE_DRAG: {
@@ -163,6 +168,8 @@ void PaintView::draw() {
         printf("any diffference? %f\n", rad_to_deg(line_end / line_start));
        m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
       restore_content(cur.raw_fmt());
+      printf("\n\nmouse up %d\n\n", (int)rad_to_deg(target / line_start));
+      fflush(stdout);
       break;
     }
 
@@ -185,9 +192,16 @@ void PaintView::draw() {
   // To avoid flicker on some machines.
   glDrawBuffer(GL_BACK);
 #endif // !MESA
+
+  finish_painting_flag = true;
 }
 
 int PaintView::handle(int event) {
+    printf("\n\n event: %d\n\n", event);
+    if (pDoc != NULL && pDoc->app_mode == VIDEO) {
+        // dont handle any mouse event during video mode
+        return 1;
+    }
   switch (event) {
   case FL_ENTER:
     redraw();
@@ -215,8 +229,14 @@ int PaintView::handle(int event) {
   case FL_RELEASE:
     coord.x = Fl::event_x();
     coord.y = Fl::event_y();
-    if (Fl::event_button() > 1)
-      eventToDo = RIGHT_MOUSE_UP;
+    printf("num mouse: %d", Fl::event_button());
+    fflush(stdout);
+    if (Fl::event_button() > 1) {
+        Point target(coord.x, m_nEndRow - coord.y);
+        m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
+        eventToDo = RIGHT_MOUSE_UP;
+        printf("fire right mouse up");
+    }
     else
       eventToDo = LEFT_MOUSE_UP;
     isAnEvent = 1;
@@ -238,7 +258,9 @@ int PaintView::handle(int event) {
   return 1;
 }
 
-void PaintView::refresh() { redraw(); }
+void PaintView::refresh() { 
+    finish_painting_flag = false;
+    redraw(); }
 
 void PaintView::resizeWindow(int width, int height) {
   resize(x(), y(), width, height);
