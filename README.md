@@ -61,7 +61,7 @@
 - [ ] <u>(8B)</u> Bayesian matting (M, D)
 
 ## ToDo before submission:
-- [ ] multi resolution should pass the RGBA value to set   
+- [ ] empty spaces in autopaint and multirespaint - check if shuffle is taking away values? or for_each?? because if repeat a few times, the holes are covered  
 - [ ] warp brush
 - [ ] curved brush that follows image gradient  
 - [ ] compile with virtual machine  

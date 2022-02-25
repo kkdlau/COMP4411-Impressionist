@@ -18,7 +18,7 @@ extern float frand();
 PointBrush::PointBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {}
 
-void PointBrush::BrushBegin(const Point source, const Point target, int rad) {
+void PointBrush::BrushBegin(const Point source, const Point target, int rad, GLubyte* color) {
   ImpressionistDoc *pDoc = GetDocument();
 
   ImpressionistUI *dlg = pDoc->m_pUI;
@@ -27,10 +27,10 @@ void PointBrush::BrushBegin(const Point source, const Point target, int rad) {
 
   glPointSize(size);
 
-  BrushMove(source, target);
+  BrushMove(source, target, color);
 }
 
-void PointBrush::BrushMove(const Point source, const Point target,
+void PointBrush::BrushMove(const Point source, const Point target, GLubyte* color,
                            bool randomize) {
   ImpressionistDoc *pDoc = GetDocument();
   ImpressionistUI *dlg = pDoc->m_pUI;
@@ -49,10 +49,12 @@ void PointBrush::BrushMove(const Point source, const Point target,
     RandomizeAttributes();
 
   gl_draw_shape(GL_POINTS, [&] {
-    debugger("%d, %d\n", target.x, target.y);
-    SetColor(source);
+    //debugger("%d, %d\n", target.x, target.y);
+      if (color) {
+          glColor4ubv(color);
+    }
+    else SetColor(source);
     gl_set_point(target);
-    // printf("Source (%d, %d)\n", source.x, source.y);
   });
 
   pDoc->force_update_canvas();

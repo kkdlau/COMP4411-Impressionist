@@ -14,7 +14,7 @@ class FilterBrush : public ImpBrush {
 public:
     FilterBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
-    void BrushBegin(const Point source, const Point target, int rad) {
+    void BrushBegin(const Point source, const Point target, int rad, GLubyte* color) {
         ImpressionistDoc* pDoc = GetDocument();
         ImpressionistUI* dlg = pDoc->m_pUI;
         // get the blurring value 
@@ -24,7 +24,7 @@ public:
         glPointSize(size);
         BrushMove(source, target);
     }
-    void BrushMove(const Point source, const Point target, bool randomize=false) {
+    void BrushMove(const Point source, const Point target, GLubyte* color = nullptr, bool randomize = false) {
         ImpressionistDoc* pDoc = GetDocument();
         if (pDoc == NULL) {
             printf("PointBrush::BrushMove document is NULL\n");
@@ -56,7 +56,7 @@ public:
         pDoc->m_pUI->m_BrushAlphaSlider->activate();
         pDoc->m_pUI->m_BrushBlurSlider->activate();
         pDoc->m_pUI->m_ColorBlending->activate();
-        pDoc->m_pUI->m_MultiResPaint->activate();
+        pDoc->m_pUI->m_MultiResPaint->deactivate();
     }
     
     void RandomizeAttributes() {

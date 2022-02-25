@@ -13,17 +13,16 @@ public:
   CircleBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target, int rad) {
+  void BrushBegin(const Point source, const Point target, int rad, GLubyte* color) {
     ImpressionistDoc *pDoc = GetDocument();
     ImpressionistUI *dlg = pDoc->m_pUI;
     float size = (rad > 0) ? rad : pDoc->getSize();
 
     glPointSize((float)size);
 
-    BrushMove(source, target);
+    BrushMove(source, target, color);
   }
-  void BrushMove(const Point source, const Point target,
-                 bool randomize = false) {
+  void BrushMove(const Point source, const Point target, GLubyte* color = nullptr, bool randomize = false) {
     ImpressionistDoc *pDoc = GetDocument();
     if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
         source.y >= pDoc->m_nPaintHeight) {
@@ -34,7 +33,10 @@ public:
       RandomizeAttributes();
 
     gl_draw_shape(GL_POLYGON, [&] {
-      SetColor(source);
+        if (color) {
+            glColor4ubv(color);
+        }
+        else SetColor(source);
       for (double i = 0; i <= 2 * M_PI; i += 0.1) {
         double dx = cos(i) * radius;
         double dy = sin(i) * radius;

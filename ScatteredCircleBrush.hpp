@@ -16,7 +16,7 @@ public:
   ScatteredCircleBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : CircleBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target, int rad) {
+  void BrushBegin(const Point source, const Point target, int rad, GLubyte* color) {
     glPointSize(1);
 
     BrushMove(source, target);
@@ -35,7 +35,7 @@ public:
     return true;
   }
 
-  void BrushMove(const Point source, const Point target, bool randomize=false) {
+  void BrushMove(const Point source, const Point target, GLubyte* color = nullptr, bool randomize = false) {
     ImpressionistDoc *pDoc = GetDocument();
     if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
         source.y >= pDoc->m_nPaintHeight) {

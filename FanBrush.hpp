@@ -15,15 +15,14 @@ public:
   FanBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target, int rad) {
+  void BrushBegin(const Point source, const Point target, int rad, GLubyte* color) {
     ImpressionistDoc *pDoc = GetDocument();
     last = target;
     radius = (rad > 0) ? rad : pDoc->getSize();
-    BrushMove(source, target);
+    BrushMove(source, target, color);
   }
 
-  void BrushMove(const Point source, const Point target,
-                 bool randomize = false) {
+  void BrushMove(const Point source, const Point target, GLubyte* color = nullptr, bool randomize = false) {
     ImpressionistDoc *pDoc = GetDocument();
     if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
         source.y >= pDoc->m_nPaintHeight) {
@@ -49,13 +48,16 @@ public:
       RandomizeAttributes();
 
     gl_draw_shape(GL_TRIANGLE_FAN, [&] {
-      SetColor(source);
+        if (color) {
+            glColor4ubv(color);
+        }
+        else SetColor(source);
       gl_set_point(target.x, target.y);
       for (double i = M_PI / 6; i <= 5 * M_PI / 6; i += 0.1) {
         double angle = i + r;
         double dx = cos(angle) * radius;
         double dy = sin(angle) * radius;
-        Point point = target + Point{dx, dy};
+        Point point = target + Point{(int)dx, (int)dy};
         point = pDoc->clip(point);
         gl_set_point(target.x + dx, target.y + dy);
       }

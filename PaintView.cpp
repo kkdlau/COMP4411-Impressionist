@@ -164,8 +164,6 @@ void PaintView::draw() {
       break;
     }
     case RIGHT_MOUSE_UP: {
-      printf("Angle set is %f\n", rad_to_deg(target / line_start));
-      printf("any diffference? %f\n", rad_to_deg(line_end / line_start));
       m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
       restore_content(cur.raw_fmt());
       printf("\n\nmouse up %d\n\n", (int)rad_to_deg(target / line_start));
@@ -197,7 +195,7 @@ void PaintView::draw() {
 }
 
 int PaintView::handle(int event) {
-  printf("\n\n event: %d\n\n", event);
+  //printf("\n\n event: %d\n\n", event);
   if (pDoc != NULL && pDoc->app_mode == VIDEO) {
     // dont handle any mouse event during video mode
     return 1;
@@ -317,6 +315,7 @@ void PaintView::set_current_img(Image &img) {
 void PaintView::auto_paint(int s, short res) {
   ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
   int spacing = (s > 0) ? s : m_pDoc->getSpacing();
+  printf("spacing is %d\n", spacing);
   bool randomize = (m_pDoc->getAutoPaintRandomize() == 1);
 
   // randomize x and y
@@ -347,7 +346,7 @@ void PaintView::auto_paint(int s, short res) {
         cur_brush.BrushBegin(source, target);
         start = false;
       } else
-        cur_brush.BrushMove(source, target, randomize);
+        cur_brush.BrushMove(source, target, nullptr, randomize);
       // save_content(cur.raw_fmt());
       counter++;
       if (counter % 20 == 0)
@@ -427,7 +426,11 @@ void PaintView::paint_layer(Image &reference, int radius) {
     int i = source.x - m_nStartCol;
     int j = m_nEndRow - source.y;
     Point target(i, m_nWindowHeight - j);
-    cur_brush.BrushBegin(source, target, radius);
+    // pass the color here GLubyte[4] array
+    target = pDoc->clip(target);
+    auto pixel = reference(target.y, target.x);
+    GLubyte color[4]{ get<0>(pixel), get<1>(pixel), get<2>(pixel), get<3>(pixel) };
+    cur_brush.BrushBegin(source, target, radius, color);
     cur_brush.BrushEnd(source, target);
   });
 }

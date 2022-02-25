@@ -19,7 +19,7 @@ class CustomFilterBrush : public ImpBrush {
 public:
     CustomFilterBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
-    void BrushBegin(const Point source, const Point target, int rad) {
+    void BrushBegin(const Point source, const Point target, int rad, GLubyte* color) {
         ImpressionistDoc* pDoc = GetDocument();
         if (pDoc->m_pUI->getFilterValues(filter_val_str) > 0) {
             row_num = pDoc->getRowNum();
@@ -37,7 +37,7 @@ public:
         glPointSize(size);
         BrushMove(source, target);
     }
-    void BrushMove(const Point source, const Point target, bool randomize = false) {
+    void BrushMove(const Point source, const Point target, GLubyte* color = nullptr, bool randomize = false) {
         if (!checkValidFilter()) {
             printf("Invalid filter...\n");
             return;
@@ -136,7 +136,7 @@ public:
         pDoc->m_pUI->m_BrushAlphaSlider->activate();
         pDoc->m_pUI->m_BrushBlurSlider->deactivate();
         pDoc->m_pUI->m_ColorBlending->activate();
-        pDoc->m_pUI->m_MultiResPaint->activate();
+        pDoc->m_pUI->m_MultiResPaint->deactivate();
     }
 
     void RandomizeAttributes() {
