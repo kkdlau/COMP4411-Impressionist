@@ -4,8 +4,8 @@
 #include "gl_inc.hpp"
 
 #include "ImpBrush.h"
-#include <functional>
 #include "Impressionist.h"
+#include <functional>
 using namespace std;
 
 #ifdef PROJ_DEBUG
@@ -14,7 +14,10 @@ using namespace std;
   printf("\n");                                                                \
   fflush(stdout);
 #else
-#define debugger(...)
+#define debugger(...)                                                          \
+  printf(__VA_ARGS__);                                                         \
+  printf("\n");                                                                \
+  fflush(stdout);
 #endif
 
 /**

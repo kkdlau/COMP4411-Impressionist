@@ -589,7 +589,7 @@ void ImpressionistUI::setTransparency(float a) {
   if (a <= 1.0)
     m_CanvasTransparencySlider->value(m_cTransparency);
 
-  // m_paintView->overlay_image.set_alpha(m_cTransparency);
+  m_paintView->overlay_image.set_alpha(m_cTransparency);
   m_paintView->refresh();
 }
 vector<double> ImpressionistUI::getUserColor() {

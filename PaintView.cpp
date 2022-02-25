@@ -4,8 +4,9 @@
 // The code maintaining the painting view of the input images
 //
 #include <algorithm>
-#include <vector>
 #include <random>
+#include <vector>
+
 
 #include "ImpBrush.h"
 #include "Paintview.h"
@@ -40,21 +41,21 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
 }
 
 void PaintView::abort_event(int &event, Point &p) {
-    /*
-  StrokeDirection d = pDoc->m_pUI->get_direction();
-  if (d != SLIDER_RIGHT_MOUSE) {
-    // abort right click event
-    if (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP)
-      event = 0;
-    if (!cur.valid_point(p.x, p.y)) {
-      debugger("out-of-boundary");
-      event = 0;
-    }
-  } */
+  /*
+StrokeDirection d = pDoc->m_pUI->get_direction();
+if (d != SLIDER_RIGHT_MOUSE) {
+  // abort right click event
+  if (event >= RIGHT_MOUSE_DOWN && event <= RIGHT_MOUSE_UP)
+    event = 0;
+  if (!cur.valid_point(p.x, p.y)) {
+    debugger("out-of-boundary");
+    event = 0;
+  }
+} */
 }
 
 void PaintView::draw() {
-    finish_painting_flag = false;
+  finish_painting_flag = false;
 #ifndef MESA
   // To avoid flicker on some machines.
   glDrawBuffer(GL_FRONT_AND_BACK);
@@ -102,16 +103,15 @@ void PaintView::draw() {
   if (cur.bytes.size() && !isAnEvent) {
     restore_content(cur.raw_fmt()); // painting
     if (auto_paint_flag) {
-        auto_paint_flag = false;
-        auto_paint();
-    }
-    else if (multires_paint_flag) {
-        multires_paint_flag = false;
-        multires_paint(); 
+      auto_paint_flag = false;
+      auto_paint();
+    } else if (multires_paint_flag) {
+      multires_paint_flag = false;
+      multires_paint();
     }
     save_content(cur.raw_fmt());
     if (pDoc->app_mode == IMAGE)
-        restore_content(overlay_image.raw_fmt()); // user loaded
+      restore_content(overlay_image.raw_fmt()); // user loaded
   }
 
   if (cur.bytes.size() && isAnEvent) {
@@ -124,7 +124,7 @@ void PaintView::draw() {
     if (eventToDo) {
       restore_content(cur.raw_fmt());
     }
-    // 
+    //
     // This is the event handler
 
     //printf("\n\non draw e: %d\n\n", eventToDo);
@@ -164,9 +164,9 @@ void PaintView::draw() {
       break;
     }
     case RIGHT_MOUSE_UP: {
-        printf("Angle set is %f\n", rad_to_deg(target / line_start));
-        printf("any diffference? %f\n", rad_to_deg(line_end / line_start));
-       m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
+      printf("Angle set is %f\n", rad_to_deg(target / line_start));
+      printf("any diffference? %f\n", rad_to_deg(line_end / line_start));
+      m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
       restore_content(cur.raw_fmt());
       printf("\n\nmouse up %d\n\n", (int)rad_to_deg(target / line_start));
       fflush(stdout);
@@ -183,7 +183,7 @@ void PaintView::draw() {
     }
 
     // render overlay content
-    // restore_content(overlay_image.raw_fmt());
+    restore_content(overlay_image.raw_fmt());
   }
 
   glFlush();
@@ -197,11 +197,11 @@ void PaintView::draw() {
 }
 
 int PaintView::handle(int event) {
-    //printf("\n\n event: %d\n\n", event);
-    if (pDoc != NULL && pDoc->app_mode == VIDEO) {
-        // dont handle any mouse event during video mode
-        return 1;
-    }
+  printf("\n\n event: %d\n\n", event);
+  if (pDoc != NULL && pDoc->app_mode == VIDEO) {
+    // dont handle any mouse event during video mode
+    return 1;
+  }
   switch (event) {
   case FL_ENTER:
     redraw();
@@ -232,12 +232,11 @@ int PaintView::handle(int event) {
     printf("num mouse: %d", Fl::event_button());
     fflush(stdout);
     if (Fl::event_button() > 1) {
-        Point target(coord.x, m_nEndRow - coord.y);
-        m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
-        eventToDo = RIGHT_MOUSE_UP;
-        printf("fire right mouse up");
-    }
-    else
+      Point target(coord.x, m_nEndRow - coord.y);
+      m_pDoc->m_pUI->setAngle((int)rad_to_deg(target / line_start));
+      eventToDo = RIGHT_MOUSE_UP;
+      printf("fire right mouse up");
+    } else
       eventToDo = LEFT_MOUSE_UP;
     isAnEvent = 1;
     redraw();
@@ -258,9 +257,10 @@ int PaintView::handle(int event) {
   return 1;
 }
 
-void PaintView::refresh() { 
-    finish_painting_flag = false;
-    redraw(); }
+void PaintView::refresh() {
+  finish_painting_flag = false;
+  redraw();
+}
 
 void PaintView::resizeWindow(int width, int height) {
   resize(x(), y(), width, height);
@@ -316,7 +316,7 @@ void PaintView::set_current_img(Image &img) {
 
 void PaintView::auto_paint(int s, short res) {
   ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
-  int spacing = (s > 0)? s : m_pDoc->getSpacing();
+  int spacing = (s > 0) ? s : m_pDoc->getSpacing();
   bool randomize = (m_pDoc->getAutoPaintRandomize() == 1);
 
   // randomize x and y
@@ -356,73 +356,78 @@ void PaintView::auto_paint(int s, short res) {
   }
   cur_brush.BrushEnd(source, target);
   printf("Finished autopainting\n");
-  printf("%d %d %d %d %d\n", cur.width, cur.height, m_nStartCol, m_nEndRow, m_nWindowHeight);
+  printf("%d %d %d %d %d\n", cur.width, cur.height, m_nStartCol, m_nEndRow,
+         m_nWindowHeight);
 }
 
 void PaintView::multires_paint() {
-    int brush_radii[3]{ 8, 4, 2 };
-    for (int ind = 0; ind < 3; ind++) {
-        // create reference image
-        Image refImage = cur;
-        ImageUtils::applyBlurFilter(m_pDoc->m_pUI->m_origView->original_img, refImage, brush_radii[ind] + 1);
-        paint_layer(refImage, brush_radii[ind]);
-    }
+  int brush_radii[3]{8, 4, 2};
+  for (int ind = 0; ind < 3; ind++) {
+    // create reference image
+    Image refImage = cur;
+    ImageUtils::applyBlurFilter(m_pDoc->m_pUI->m_origView->original_img,
+                                refImage, brush_radii[ind] + 1);
+    paint_layer(refImage, brush_radii[ind]);
+  }
 }
 
-void PaintView::paint_layer(Image& reference, int radius) {
-    std::vector<Point> strokes;
-    // from Impressionist Painterly implementation
-    const int grid = radius; 
-    int threshold = 100; 
-    // calculate pointwise difference image 
-    std::vector<float> diff;
-    for (int i = 1; i < cur.width; i++) {
-        for (int j = 1; j < cur.height; j++) {
-            // calculate l2 distance btw reference and cur 
-            Point source(i + m_nStartCol, m_nEndRow - j);
-            auto pixel1 = reference(source.y, source.x);
-            auto pixel2 = cur(source.y, source.x);
-            diff.push_back(dist(pixel1, pixel2));
-        }
+void PaintView::paint_layer(Image &reference, int radius) {
+  std::vector<Point> strokes;
+  // from Impressionist Painterly implementation
+  const int grid = radius;
+  int threshold = 100;
+  // calculate pointwise difference image
+  std::vector<float> diff;
+  for (int i = 1; i < cur.width; i++) {
+    for (int j = 1; j < cur.height; j++) {
+      // calculate l2 distance btw reference and cur
+      Point source(i + m_nStartCol, m_nEndRow - j);
+      auto pixel1 = reference(source.y, source.x);
+      auto pixel2 = cur(source.y, source.x);
+      diff.push_back(dist(pixel1, pixel2));
     }
-    // find points to set strokes 
-    for (int i = 1; i < cur.width; i += grid / 2) {
-        for (int j = 1; j < cur.height; j += grid / 2) {
-            // sum the error in the region
-            float area_error = 0;
-            int max_k = 0, max_m = 0; // to get the arg max Point 
-            float max_diff = 0;
-            for (int k = -grid / 2; k <= grid / 2; ++k) {
-                for (int m = -grid / 2; m <= grid / 2; ++m) {
-                    if (i + k < 0 || i + k >= cur.width) continue;
-                    else if (j + m < 0 || j + m >= cur.height) continue;
-                    int x = i + k, y = j + m;
-                    float cur_diff = diff[x * cur.width + y];
-                    if (cur_diff > max_diff) {
-                        max_diff = cur_diff;
-                        max_k = k; max_m = m;
-                    }
-                    area_error += cur_diff;
-                }
-            }
-            if (area_error > threshold) {
-                Point source(i + max_k + m_nStartCol, m_nEndRow - j - max_m);
-                strokes.push_back(source);
-            }
+  }
+  // find points to set strokes
+  for (int i = 1; i < cur.width; i += grid / 2) {
+    for (int j = 1; j < cur.height; j += grid / 2) {
+      // sum the error in the region
+      float area_error = 0;
+      int max_k = 0, max_m = 0; // to get the arg max Point
+      float max_diff = 0;
+      for (int k = -grid / 2; k <= grid / 2; ++k) {
+        for (int m = -grid / 2; m <= grid / 2; ++m) {
+          if (i + k < 0 || i + k >= cur.width)
+            continue;
+          else if (j + m < 0 || j + m >= cur.height)
+            continue;
+          int x = i + k, y = j + m;
+          float cur_diff = diff[x * cur.width + y];
+          if (cur_diff > max_diff) {
+            max_diff = cur_diff;
+            max_k = k;
+            max_m = m;
+          }
+          area_error += cur_diff;
         }
+      }
+      if (area_error > threshold) {
+        Point source(i + max_k + m_nStartCol, m_nEndRow - j - max_m);
+        strokes.push_back(source);
+      }
     }
-    
-    // randomize strokes 
-    std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(strokes.begin(), strokes.end(), g);
+  }
 
-    ImpBrush& cur_brush = *m_pDoc->m_pCurrentBrush;
-    std::for_each(strokes.begin(), strokes.end(), [&](Point& source) {
-        int i = source.x - m_nStartCol;
-        int j = m_nEndRow - source.y;
-        Point target(i, m_nWindowHeight - j);
-        cur_brush.BrushBegin(source, target, radius);
-        cur_brush.BrushEnd(source, target);
-        });
+  // randomize strokes
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(strokes.begin(), strokes.end(), g);
+
+  ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
+  std::for_each(strokes.begin(), strokes.end(), [&](Point &source) {
+    int i = source.x - m_nStartCol;
+    int j = m_nEndRow - source.y;
+    Point target(i, m_nWindowHeight - j);
+    cur_brush.BrushBegin(source, target, radius);
+    cur_brush.BrushEnd(source, target);
+  });
 }
