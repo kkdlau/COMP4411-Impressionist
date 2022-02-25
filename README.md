@@ -63,6 +63,8 @@
 ## ToDo before submission:
 - [ ] some marks are slightly outside of border and cannot be cleared with 'Clear Canvas'  
 - [ ] scattered points does not scatter mouse is dragged  
+- [ ] same problem for scattered circles
+- [ ] same problem for scattered lines
 - [ ] alpha-mapped brush can get bitmap that is NOT same dimension as original image    
 - [ ] multi resolution should pass the RGBA value to set   
 - [ ] warp brush  

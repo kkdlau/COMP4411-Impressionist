@@ -40,6 +40,7 @@ public:
   }
 
   void BrushMove(const Point source, const Point target) {
+      printf("BrushMove of ScatteredPointBrush\n");
     ImpressionistDoc *pDoc = GetDocument();
     if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
         source.y >= pDoc->m_nPaintHeight) {
@@ -49,18 +50,15 @@ public:
 
     for (int x = -half; x <= half; x += 1) {
       for (int y = -half; y <= half; y += 1) {
-        if (frand() <= 0.7) continue;
+          float r = frand();
+        //if (frand() <= 0.2) continue;
+          if (r <= 0.7) continue;
+          printf("Random draw\n");
         Point rand = {x, y};
-        //PointBrush::BrushMove(rand + source, rand + target);
-        Point nsource = source + rand;
-        Point ntarget = target + rand;
-        pDoc->clip(nsource); pDoc->clip(ntarget);
-        gl_draw_shape(GL_POINTS, [&] {
-            SetColor(nsource);
-            gl_set_point(ntarget);
-            });
+        PointBrush::BrushMove(rand + source, rand + target);
       }
     }
+
     pDoc->force_update_canvas();
   }
 
