@@ -3,22 +3,22 @@
 ## Basic Requirment
 
 - Implement 5 different brush types
-  - [x] single line
-  - [x] scattered lines
-    - scattered brushes should sample from each location they color individually, not just use a single color for each splotch.
-  - [x] (filled) circles
-  - [x] scattered (filled) circles - 3 random circles 
-- sliders to control various brush attributes
-  - [x] line thickness
-  - [x] brush angle
+  - [x] single line [C]
+  - [x] scattered lines [C]
+    - scattered brushes should sample from each location they color individually, not just use a single color for each splotch. [C]
+  - [x] (filled) circles [C]
+  - [x] scattered (filled) circles - 3 random circles [C] 
+- sliders to control various brush attributes [C]
+  - [x] line thickness [C]
+  - [x] brush angle [C
 - control the brush direction: The stroke direction should be controlled **four different ways**. You can use a radio box to allow the user to select which method to use.
-  - [x] slider value
-  - [x] right mouse button to drag out a direction line
-  - [x] using the direction of the cursor movement
-  - [x] using directions that are perpendicular to the gradient of the image
-- [x] Allow the user to change the opacity (alpha value) of the brush stroke
-- [x] An alpha value slider should be added to the controls window.
-- [x] Implement the UI logic when the user selects a brush. - move from impressionistUI to ImpBrush
+  - [x] slider value [C]
+  - [x] right mouse button to drag out a direction line [C]
+  - [x] using the direction of the cursor movement [C]
+  - [x] using directions that are perpendicular to the gradient of the image [C]
+- [x] Allow the user to change the opacity (alpha value) of the brush stroke [C]
+- [x] An alpha value slider should be added to the controls window. [C]
+- [x] Implement the UI logic when the user selects a brush. - move from impressionistUI to ImpBrush [C]
   - By overriding `select()` and `disselect()`. 
 ## Bonus
 
@@ -38,12 +38,12 @@
   - [ ] random scattered polygon
   - [ ] grayscale brush
 - [x] **(1W)** clipped brushes (D)
-- [x] **(1W)** cursor on original image (D)
-- [x] (1W) swap content and original (D)
+- [x] **(1W)** cursor on original image (D) [C]
+- [x] (1W) swap content and original (D) [C]
 - [x] (1B) change color of image (change channel) (M)
 - [x] **(1B)** blur brush (M)
-- [x] **(1B)** undo (D)
-- [x] (1B) Dissolve one image into another (D)
+- [x] **(1B)** undo (D) [C]
+- [x] (1B) Dissolve one image into another (D) [C]
   - [x] (1B1W) original image overlay (D)
     -[x] add a slider to control overlay alpha 
 - [x] _(1B1W)_ mural image (load another image without resetting)
@@ -72,7 +72,7 @@
     - NOTE: not sure about getting color source
 - [ ] alpha-mapped brush can get bitmap that is NOT same dimension as original image    
 - [ ] multi resolution should pass the RGBA value to set   
-- [ ] warp brush  
+- [ ] warp brush
 - [ ] curved brush that follows image gradient  
 - [ ] compile with virtual machine  
 - [ ] README.md for TA with any special configuration - C++17 (?)  

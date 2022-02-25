@@ -44,7 +44,7 @@ public:
                                    : pDoc->m_pUI->m_origView->original_img;
 
       auto result = ImageUtils::sobel(img, target.y, target.x);
-      r = get<2>(result);
+      r = get<2>(result) + 3.1415926 / 2;
     } break;
 
     case BRUSH_DIRECTION: {
