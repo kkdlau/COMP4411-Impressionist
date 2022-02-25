@@ -49,7 +49,7 @@ void task() {
 			impUI->m_paintView->refresh();
 		}
 	} else if (!impUI->m_paintView->finish_painting_flag) {
-		printf("skip this loop\n");
+		//printf("skip this loop\n");
 		fflush(stdout);
 	}
 }

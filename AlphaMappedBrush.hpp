@@ -15,7 +15,6 @@ public:
     AlphaMappedBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL)
         : ImpBrush(pDoc, name) {}
     void BrushBegin(const Point source, const Point target, int rad) {
-        // check if alpha image loaded
         ImpressionistDoc* pDoc = GetDocument();
 
         if (!pDoc->alpha_image.contain_content())
@@ -36,15 +35,49 @@ public:
             printf("Go back in\n");
             return;
         }
-
         gl_draw_shape(GL_POINTS, [&] {
+            // get the color for the entire brush
             GLubyte color[4];
-            for (int i = 0; i < pDoc->alpha_image.width; i++) {
-                for (int j = 0; j < pDoc->alpha_image.height; j++) {
-                    Point cur(i, j);
-                    AlphaMappedBrush::SetColor(cur, source, color);
+            Point valid_source = pDoc->clip(source);
+            auto pixel = pDoc->m_pUI->m_origView->original_img(valid_source.y, valid_source.x);
+            color[0] = get<0>(pixel);
+            color[1] = get<1>(pixel);
+            color[2] = get<2>(pixel);
+
+            int colorBlending = pDoc->getColorBlending();
+
+            if (colorBlending == 1) {
+                vector<double> rgb = pDoc->getUserColor();
+                color[0] *= rgb[0];
+                color[1] *= rgb[1];
+                color[2] *= rgb[2];
+            }
+
+            const int half_width = pDoc->alpha_image.width / 2;
+            const int half_height = pDoc->alpha_image.height / 2;
+            int alphaind_x = 1;
+            int alphaind_y = 1;
+
+            for (int i = -half_width; i < half_width; ++i) {
+                alphaind_y = 1;
+                for (int j = -half_height; j < half_height; ++j) {
+                    Point offset(i, j);
+                    Point cur = target + offset; // i want to draw on cur in the paintview 
+                    
+                    /*if (cur.x <= 0 || cur.x >= pDoc->m_nPaintWidth || cur.y <= 0 ||
+                        cur.y >= pDoc->m_nPaintHeight) {
+                        continue;
+                    }*/
+                    cur = pDoc->clip(cur);
+                    Point alpha_src(alphaind_x, alphaind_y);
+                    color[3] = getAlpha(alpha_src);
+                    alphaind_y++;
+                    if (alphaind_y >= pDoc->alpha_image.height) break;
+                    glColor4ubv(color);
                     gl_set_point(cur);
                 }
+                alphaind_x++;
+                if (alphaind_x >= pDoc->alpha_image.width) break;
             }
         });
 
@@ -76,6 +109,7 @@ public:
         color[3] = getAlpha(valid_cur);
         glColor4ubv(color);
     }
+
     GLubyte getAlpha(const Point source) {
         auto pixel = pDoc->alpha_image(source.y, source.x);
         GLubyte alpha = get<0>(pixel) * 0.3 + get<1>(pixel) * 0.6 + get<2>(pixel) * 0.1;

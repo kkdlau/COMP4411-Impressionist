@@ -212,13 +212,10 @@ int ImpressionistDoc::loadAlphaImage(char *iname) {
     fl_alert("Can't load bitmap file");
     return 0;
   }
-  if (width != m_nWidth || height != m_nHeight) {
-    fl_alert("Different dimensions... failed :(");
-    return 0;
-  }
   if (alpha_image.contain_content())
     alpha_image.clear();
   alpha_image.set(data, width, height);
+  printf("successfully loaded alpha image %d %d\n", alpha_image.width, alpha_image.height);
   return 1;
 }
 

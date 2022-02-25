@@ -127,7 +127,7 @@ void PaintView::draw() {
     // 
     // This is the event handler
 
-    printf("\n\non draw e: %d\n\n", eventToDo);
+    //printf("\n\non draw e: %d\n\n", eventToDo);
     fflush(stdout);
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
@@ -197,7 +197,7 @@ void PaintView::draw() {
 }
 
 int PaintView::handle(int event) {
-    printf("\n\n event: %d\n\n", event);
+    //printf("\n\n event: %d\n\n", event);
     if (pDoc != NULL && pDoc->app_mode == VIDEO) {
         // dont handle any mouse event during video mode
         return 1;

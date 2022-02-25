@@ -113,7 +113,7 @@ static tuple<float, float, float> sobel(Image &img, int y, int x) {
       }
     }
   }
-  return {gx, gy, atan2(gy, gx)};
+  return {gx, gy, atan2(gy, gx)}; //3rd is the gradient
 }
 
 static Image generate_edge_image(Image &img) {

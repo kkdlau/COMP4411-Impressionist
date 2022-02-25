@@ -61,7 +61,6 @@
 - [ ] <u>(8B)</u> Bayesian matting (M, D)
 
 ## ToDo before submission:
-- [ ] alpha-mapped brush can get bitmap that is NOT same dimension as original image    
 - [ ] multi resolution should pass the RGBA value to set   
 - [ ] warp brush  
 - [ ] curved brush that follows image gradient  
