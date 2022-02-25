@@ -27,36 +27,44 @@ void VideoUtils::open_video(const char *video_path) {
                                      OF_READ, NULL);
   get_video_info();
   max_frames = num_frames();
+  debugger("frame: %d", max_frames);
 }
 
 Image VideoUtils::get_frame(int frame_index) {
-  current_frame = frame_index;
-  BITMAPINFOHEADER bih;
-  ZeroMemory(&bih, sizeof(BITMAPINFOHEADER));
-  bih.biBitCount = 24;
-  bih.biClrImportant = 0;
-  bih.biClrUsed = 0;
-  bih.biCompression = BI_RGB;
-  bih.biPlanes = 1;
-  bih.biSize = 40;
-  bih.biXPelsPerMeter = 0;
-  bih.biYPelsPerMeter = 0;
-  bih.biSizeImage = (((bih.biWidth * 3) + 3) & 0xFFFC) * bih.biHeight;
+    current_frame = frame_index;
+    BITMAPINFOHEADER bih;
+    ZeroMemory(&bih, sizeof(BITMAPINFOHEADER));
+    bih.biBitCount = 24;
+    bih.biClrImportant = 0;
+    bih.biClrUsed = 0;
+    bih.biCompression = BI_RGB;
+    bih.biPlanes = 1;
+    bih.biSize = 40;
+    bih.biXPelsPerMeter = 0;
+    bih.biYPelsPerMeter = 0;
+    bih.biSizeImage = (((bih.biWidth * 3) + 3) & 0xFFFC) * bih.biHeight;
 
-  PGETFRAME pframe = AVIStreamGetFrameOpen(stream, NULL);
-  BYTE *pDIB = (BYTE *)AVIStreamGetFrame(pframe, current_frame);
-  RtlMoveMemory(&bih.biSize, pDIB, sizeof(BITMAPINFOHEADER));
-  BYTE *Bits = new BYTE[bih.biSizeImage];
-  RtlMoveMemory(Bits, pDIB + sizeof(BITMAPINFOHEADER), bih.biSizeImage);
-
-  //   return Bits;
-  Image tmp;
-  tmp.set(Bits, bih.biWidth, bih.biHeight);
-  return tmp;
+    PGETFRAME pframe = AVIStreamGetFrameOpen(stream, NULL);
+    BYTE* pDIB = (BYTE*)AVIStreamGetFrame(pframe, current_frame);
+    if (pDIB == NULL) {
+        debugger("reading failed");
+        Image tmp;
+        // return an empty image
+        return tmp;
+    }
+    // reading is fine
+    RtlMoveMemory(&bih.biSize, pDIB, sizeof(BITMAPINFOHEADER));
+    BYTE* Bits = new BYTE[bih.biSizeImage];
+    RtlMoveMemory(Bits, pDIB + sizeof(BITMAPINFOHEADER), bih.biSizeImage);
+    AVIStreamGetFrameClose(pframe); // rmb to close the frame decoder, otherwise it can cause decoder failure
+    Image tmp;
+    tmp.set(Bits, bih.biWidth, bih.biHeight);
+    return tmp;
 }
 
 Image VideoUtils::next_frame() {
-  current_frame = (current_frame + 1) % max_frames;
+  current_frame = (current_frame + 1) % (max_frames);
+  debugger("current: %d", current_frame);
   return get_frame(current_frame);
 }
 
