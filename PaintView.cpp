@@ -54,6 +54,7 @@ void PaintView::abort_event(int &event, Point &p) {
 }
 
 void PaintView::draw() {
+    finish_painting_flag = false;
 #ifndef MESA
   // To avoid flicker on some machines.
   glDrawBuffer(GL_FRONT_AND_BACK);
@@ -109,7 +110,8 @@ void PaintView::draw() {
         multires_paint(); 
     }
     save_content(cur.raw_fmt());
-    restore_content(overlay_image.raw_fmt()); // user loaded
+    if (pDoc->app_mode == IMAGE)
+        restore_content(overlay_image.raw_fmt()); // user loaded
   }
 
   if (cur.bytes.size() && isAnEvent) {
@@ -182,9 +184,15 @@ void PaintView::draw() {
   // To avoid flicker on some machines.
   glDrawBuffer(GL_BACK);
 #endif // !MESA
+
+  finish_painting_flag = true;
 }
 
 int PaintView::handle(int event) {
+    if (pDoc != NULL && pDoc->app_mode == VIDEO) {
+        // dont handle any mouse event during video mode
+        return 1;
+    }
   switch (event) {
   case FL_ENTER:
     redraw();

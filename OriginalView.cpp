@@ -10,6 +10,7 @@
 #include "impressionist.h"
 #include "impressionistDoc.h"
 #include <Fl/Fl.H>
+#include <thread>
 
 #ifndef WIN32
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -128,10 +129,6 @@ void OriginalView::resizeWindow(int width, int height) {
   resize(x(), y(), width, height);
 }
 
-void timer_funcs(void* data) {
-
-}
-
 void OriginalView::set_current_img(Image &img) {
   this->img = img;
   original_img = img;
@@ -139,20 +136,6 @@ void OriginalView::set_current_img(Image &img) {
   // m_pDoc->m_ucBitmap = this->original_img.raw_fmt();
   this->resizeWindow(original_img.width, original_img.height);
   this->refresh();
-
-  // keep reading images from the video
-  ImpressionistDoc &doc = *pDoc;
-  if (doc.app_mode == ApplicationMode::VIDEO) {
-     Fl::add_timeout(1.0 / 30.0, [](void* data) {
-         auto* view = (OriginalView*)data;
-         Image next_frame = VideoUtils::next_frame();
-         if (next_frame.contain_content()) {
-             view->set_current_img(next_frame);
-         } else {
-             view->set_current_img(view->original_img);
-         }
-     }, this);
-  }
 }
 
 void OriginalView::dissolve(Image &img) {
