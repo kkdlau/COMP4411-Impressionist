@@ -54,6 +54,8 @@ void PaintView::abort_event(int &event, Point &p) {
 }
 
 void PaintView::draw() {
+    printf("start draw");
+    fflush(stdout);
     finish_painting_flag = false;
 #ifndef MESA
   // To avoid flicker on some machines.
@@ -186,6 +188,8 @@ void PaintView::draw() {
 #endif // !MESA
 
   finish_painting_flag = true;
+  printf("finish draw");
+  fflush(stdout);
 }
 
 int PaintView::handle(int event) {
@@ -243,7 +247,9 @@ int PaintView::handle(int event) {
   return 1;
 }
 
-void PaintView::refresh() { redraw(); }
+void PaintView::refresh() { 
+    finish_painting_flag = false;
+    redraw(); }
 
 void PaintView::resizeWindow(int width, int height) {
   resize(x(), y(), width, height);
