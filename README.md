@@ -26,7 +26,12 @@ BW edge clipping					yes
 ~~8B Bayesian matting					no~~  
 
 # Notes:
-- Program uses C++17
+- Program uses C++17. And we have configured the solution file to C++17.
+  - However, if the graders use the sample solution file, there will be compiler errors
+  - So please use the solution attached with the submission.
+- We use some macro tricks that enable / disable debugging messages
+  - If you pass `-DPROJ_DEBUG` to the compiler, the debugging message will be enabled
+  - To make the program be more efficient, don't pass the flag
 
 # User Guide:  
 1. RGB scale: 
@@ -49,11 +54,20 @@ BW edge clipping					yes
  - Choose File > Another Image (ALT+SHIFT+A) to load another image  
 
 6. Mosaic:  
- - This features works with xxx image
- - Choose File > Mosaic (ALT+M) and load the dataset xxx 
+ - This features works with 5X5 images
+ - Choose File > Mosaic (ALT+M) and load the dataset folder `bonus/dataset` 
  - After using mosaic, click the window to refresh the application for other features
+ - I can tell that red and green doesn't match well
+   - I tried SSIM, Average Color Distance, L1 Distance and L2 Distance
+   - Still it doesn't work as what I expected, cryyyyyyyyy
 
 7. Video:   
  - The video pauses when there are no mouse movements
+ - A sample video located at `bonus/videos/cinepak.avi` is prepared for the graders
 
-8. If there are any bugs, please try restarting the program... Thanks!
+8. Rubber / Sketch and pull:
+ - Actually the brush doesn't work very well
+ - I decided to keep it as I put lots of effort.
+ - Can you give me partial credit for this, please QAQ?
+
+9.  If there are any bugs, please try restarting the program... Thanks!
