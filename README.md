@@ -73,4 +73,7 @@ BW edge clipping					yes
  - I decided to keep it as I put lots of effort.
  - Can you give me partial credit for this, please QAQ?
 
-9.  If there are any bugs, please try restarting the program... Thanks!
+9. Multi-Resolution Painting:
+ - The effect is best observed with Point brush, or Curved brush with width set to 3
+
+10.  If there are any bugs, please try restarting the program... Thanks!

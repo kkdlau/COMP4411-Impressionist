@@ -23,7 +23,7 @@ public:
     void BrushBegin(const Point source, const Point target, int rad, GLubyte* color) {
         ImpressionistDoc* pDoc = GetDocument();
         // width of brush
-        //brush_width = pDoc->getWidth();
+        brush_width = pDoc->getWidth();
         glPointSize(brush_width);
         glLineWidth(brush_width);
 
