@@ -54,8 +54,9 @@ BW edge clipping					yes
  - Choose File > Another Image (ALT+SHIFT+A) to load another image  
 
 6. Mosaic:  
- - This features works with 5X5 images
+ - This features creates tiles with 5X5 images
  - Choose File > Mosaic (ALT+M) and load the dataset folder `bonus/dataset` 
+ - Please be patient as the processing time is long
  - After using mosaic, click the window to refresh the application for other features
  - I can tell that red and green doesn't match well
    - I tried SSIM, Average Color Distance, L1 Distance and L2 Distance
