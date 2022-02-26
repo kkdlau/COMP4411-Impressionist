@@ -61,6 +61,7 @@ BW edge clipping					yes
  - I can tell that red and green doesn't match well
    - I tried SSIM, Average Color Distance, L1 Distance and L2 Distance
    - Still it doesn't work as what I expected, cryyyyyyyyy
+ - Since It takes so long to run, we add a showcase video called `showcase_mosaic.m4v` to demo this feature
 
 7. Video:   
  - The video pauses when there are no mouse movements
