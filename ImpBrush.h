@@ -7,12 +7,13 @@
 // The header file of virtual brush. All the other brushes inherit from it.
 //
 
+#include "Impressionist.h"
 #include <cmath>
 #include <stdlib.h>
 #include <string>
 #include <typeinfo>
 #include <vector>
-#include "Impressionist.h"
+
 
 extern float frand();
 
@@ -30,6 +31,7 @@ enum {
   BRUSH_GRADIENT,
   BRUSH_CUSTOM_FILTER,
   BRUSH_ALPHA,
+  BRUSH_PULL_AS_RUBBER,
   NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
@@ -100,9 +102,12 @@ protected:
 
 public:
   // The implementation of your brush should realize these virtual functions
-  virtual void BrushBegin(const Point source, const Point target, int rad = 0, GLubyte* color = nullptr) = 0;
-  // resolution = 0 for 'follow user setting', 1 for 'coarse brush', 2 for 'fine brush'
-  virtual void BrushMove(const Point source, const Point target, GLubyte* color = nullptr, bool randomize = false) = 0;
+  virtual void BrushBegin(const Point source, const Point target, int rad = 0,
+                          GLubyte *color = nullptr) = 0;
+  // resolution = 0 for 'follow user setting', 1 for 'coarse brush', 2 for 'fine
+  // brush'
+  virtual void BrushMove(const Point source, const Point target,
+                         GLubyte *color = nullptr, bool randomize = false) = 0;
   virtual void BrushEnd(const Point source, const Point target) = 0;
   virtual void RandomizeAttributes() = 0;
   // according to the source image and the position, determine the draw color

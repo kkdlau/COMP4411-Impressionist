@@ -23,6 +23,7 @@
 #include "Image.hpp"
 #include "LineBrush.hpp"
 #include "PointBrush.h"
+#include "PullBrush.hpp"
 #include "ScatteredCircleBrush.hpp"
 #include "ScatteredLineBrush.hpp"
 #include "ScatteredPointBrush.hpp"
@@ -69,6 +70,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::set_brush(BRUSH_CUSTOM_FILTER,
                       new CustomFilterBrush(this, "Custom Filter"));
   ImpBrush::set_brush(BRUSH_ALPHA, new AlphaMappedBrush(this, "Alpha-mapped"));
+  ImpBrush::set_brush(BRUSH_PULL_AS_RUBBER, new PullBrush(this, "Rubber"));
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -215,7 +217,8 @@ int ImpressionistDoc::loadAlphaImage(char *iname) {
   if (alpha_image.contain_content())
     alpha_image.clear();
   alpha_image.set(data, width, height);
-  printf("successfully loaded alpha image %d %d\n", alpha_image.width, alpha_image.height);
+  printf("successfully loaded alpha image %d %d\n", alpha_image.width,
+         alpha_image.height);
   return 1;
 }
 
@@ -337,4 +340,9 @@ void ImpressionistDoc::multires_paint() {
   canvas.multires_paint_flag = true;
   canvas.refresh();
   // canvas.multires_paint();
+}
+
+void ImpressionistDoc::generate_mosaic(const char *d) {
+  Image &original_img = m_pUI->m_origView->original_img;
+  ImageUtils::mosaics(original_img, d);
 }

@@ -52,49 +52,55 @@ static void filterCustom(Image &img, const Point source,
   color[2] = b / divisor;
 }
 
-static void filterMean(Image &img, const Point source, std::vector<int>& color, const int filter_dim) {
-    if (filter_dim < 1) {
-        auto pixel = img(source.y, source.x);
-        color[0] = get<0>(pixel);
-        color[1] = get<1>(pixel);
-        color[2] = get<2>(pixel);
-        return;
-    }
-    short offset = (filter_dim - 1) / 2;
+static void filterMean(Image &img, const Point source, std::vector<int> &color,
+                       const int filter_dim) {
+  if (filter_dim < 1) {
+    auto pixel = img(source.y, source.x);
+    color[0] = get<0>(pixel);
+    color[1] = get<1>(pixel);
+    color[2] = get<2>(pixel);
+    return;
+  }
+  short offset = (filter_dim - 1) / 2;
 
-    int r = 0, g = 0, b = 0;
-    for (int i = 0; i < filter_dim; i++) {
-        for (int j = 0; j < filter_dim; j++) {
-            int x = source.x - i + offset;
-            int y = source.y - j + offset;
-            if (x < 0) x = 0;
-            else if (x >= img.width) x = img.width - 1;
-            if (y < 0) y = 0;
-            else if (y >= img.height) y = img.height - 1;
-            auto pixel = img(y, x);
-            r += get<0>(pixel);
-            g += get<1>(pixel);
-            b += get<2>(pixel);
-        }
+  int r = 0, g = 0, b = 0;
+  for (int i = 0; i < filter_dim; i++) {
+    for (int j = 0; j < filter_dim; j++) {
+      int x = source.x - i + offset;
+      int y = source.y - j + offset;
+      if (x < 0)
+        x = 0;
+      else if (x >= img.width)
+        x = img.width - 1;
+      if (y < 0)
+        y = 0;
+      else if (y >= img.height)
+        y = img.height - 1;
+      auto pixel = img(y, x);
+      r += get<0>(pixel);
+      g += get<1>(pixel);
+      b += get<2>(pixel);
     }
-    int total_pixels = filter_dim * filter_dim;
-    color[0] = r / total_pixels;
-    color[1] = g / total_pixels;
-    color[2] = b / total_pixels;
+  }
+  int total_pixels = filter_dim * filter_dim;
+  color[0] = r / total_pixels;
+  color[1] = g / total_pixels;
+  color[2] = b / total_pixels;
 }
 
-static void applyBlurFilter(Image& original, Image& result, const int filter_dim) {
-    for (int i = 1; i < result.width; ++i) {
-        for (int j = 1; j < result.height; ++j) {
-            //Point source(i, original.height - j);
-            Point source(i, j);
-            std::vector<int> color{ 0, 0, 0 };
+static void applyBlurFilter(Image &original, Image &result,
+                            const int filter_dim) {
+  for (int i = 1; i < result.width; ++i) {
+    for (int j = 1; j < result.height; ++j) {
+      // Point source(i, original.height - j);
+      Point source(i, j);
+      std::vector<int> color{0, 0, 0};
 
-            filterMean(original, source, color, filter_dim);
-            RGBA final_color = make_tuple(color[0], color[1], color[2], 255);
-            result.set_pixel(source, final_color);
-        }
+      filterMean(original, source, color, filter_dim);
+      RGBA final_color = make_tuple(color[0], color[1], color[2], 255);
+      result.set_pixel(source, final_color);
     }
+  }
 }
 
 static tuple<float, float, float> sobel(Image &img, int y, int x) {
@@ -113,7 +119,7 @@ static tuple<float, float, float> sobel(Image &img, int y, int x) {
       }
     }
   }
-  return {gx, gy, atan2(gy, gx)}; //3rd is the gradient
+  return {gx, gy, atan2(gy, gx)}; // 3rd is the gradient
 }
 
 static Image generate_edge_image(Image &img) {
@@ -203,17 +209,21 @@ luma_cal(tuple<GLubyte &, GLubyte &, GLubyte &, GLubyte &> &color) {
   return 0.299 * get<0>(color) + 0.587 * get<1>(color) + 0.114 * get<2>(color);
 }
 
-/**
- * @brief structural similarity index measure method.
- * This function is designed for measuring the similarity between two images.
- *
- * @param src source image
- * @param target target image
- * @return float similarity ranging from 0 to 1.
- */
+static tuple<float, float, float>
+to_ybr(const tuple<GLubyte &, GLubyte &, GLubyte &, GLubyte &> &color) {
+  auto r = get<0>(color);
+  auto g = get<1>(color);
+  auto b = get<2>(color);
+
+  auto y = 16 + 65.738 * r / 256 + 129.057 * g / 256 + 25.064 * b / 256;
+  auto cb = 128 + 37.945 * r / 256 + 74.494 * g / 256 + 112.439 * b / 256;
+  auto cr = 128 + 112.439 * r / 256 + 94.154 * g / 256 + 18.285 * b / 256;
+
+  return {y, cb, cr};
+}
+
 static float structural_similarity(Image &src, Image &target) {
-  target.resize(src.width, src.height);
-  float MSSIM = 0;
+  float MSSIM[3] = {0}; // Y, Cr, Cb
 
   const int win_width_size = src.width / 2;
   const int win_height_size = src.height / 2;
@@ -236,65 +246,129 @@ static float structural_similarity(Image &src, Image &target) {
 
   for (int wy = 0; wy < num_window; wy++) {
     for (int wx = 0; wx < num_window; wx++) {
-      float src_luma_avg = 0;
-      float tar_luma_avg = 0;
-      float src_var = 0;
-      float tar_var = 0;
-      float cvar = 0;
+      float src_luma_avg[3] = {0};
+      float tar_luma_avg[3] = {0};
+      float src_var[3] = {0};
+      float tar_var[3] = {0};
+      float cvar[3] = {0};
 
       for_each_pixel_window(wy, wx, [&](int y, int x) {
-        auto src_color = src(y, x);
-        auto tar_color = target(y, x);
+        auto src_color = to_ybr(src(y, x));
+        auto tar_color = to_ybr(target(y, x));
 
         // TODO: optimize the algorithm by storing the result
-        src_luma_avg += luma_cal(src_color) / 255;
-        tar_luma_avg += luma_cal(tar_color) / 255;
+        src_luma_avg[0] += get<0>(src_color) / 235;
+        src_luma_avg[1] += get<1>(src_color) / 240;
+        src_luma_avg[2] += get<2>(src_color) / 240;
+
+        tar_luma_avg[0] += get<0>(tar_color) / 235;
+        tar_luma_avg[1] += get<1>(tar_color) / 240;
+        tar_luma_avg[2] += get<2>(tar_color) / 240;
       });
 
-      src_luma_avg /= num_win_pixel;
-      tar_luma_avg /= num_win_pixel;
+      src_luma_avg[0] /= num_win_pixel;
+      src_luma_avg[1] /= num_win_pixel;
+      src_luma_avg[2] /= num_win_pixel;
+
+      tar_luma_avg[0] /= num_win_pixel;
+      tar_luma_avg[1] /= num_win_pixel;
+      tar_luma_avg[2] /= num_win_pixel;
 
       for_each_pixel_window(wy, wx, [&](int y, int x) {
-        auto src_color = src(y, x);
-        auto tar_color = target(y, x);
+        auto src_color = to_ybr(src(y, x));
+        auto tar_color = to_ybr(target(y, x));
 
-        float src_luma = luma_cal(src_color) / 255;
-        float tar_luma = luma_cal(tar_color) / 255;
+        float src_luma[3];
+        float tar_luma[3];
 
-        const float nom_src_var = src_luma - src_luma_avg;
-        const float nom_tar_var = tar_luma - tar_luma_avg;
+        src_luma[0] = get<0>(src_color) / 235;
+        src_luma[1] = get<1>(src_color) / 240;
+        src_luma[2] = get<2>(src_color) / 240;
 
-        src_var += nom_src_var * nom_src_var;
-        tar_var += nom_tar_var * nom_tar_var;
-        cvar += nom_src_var * nom_tar_var;
+        tar_luma[0] = get<0>(tar_color) / 235;
+        tar_luma[1] = get<1>(tar_color) / 240;
+        tar_luma[2] = get<2>(tar_color) / 240;
+
+        for (int i = 0; i < 3; i++) {
+          float nom_src_var = src_luma[i] - src_luma_avg[i];
+          float nom_tar_var = tar_luma[i] - tar_luma_avg[i];
+          src_var[i] += nom_src_var * nom_src_var;
+          tar_var[i] += nom_tar_var * nom_tar_var;
+          cvar[i] += nom_src_var * nom_tar_var;
+        }
       });
 
-      src_var /= num_win_pixel;
-      tar_var /= num_win_pixel;
-      cvar /= num_win_pixel;
-
-      MSSIM +=
-          ((2 * src_luma_avg * tar_luma_avg + c1) * (2 * cvar + c2)) /
-          ((src_luma_avg * src_luma_avg + tar_luma_avg * tar_luma_avg + c1) *
-           (src_var + tar_var + c2));
+      for (int i = 0; i < 3; i++) {
+        src_var[i] /= num_win_pixel;
+        tar_var[i] /= num_win_pixel;
+        cvar[i] /= num_win_pixel;
+        MSSIM[i] += ((2 * src_luma_avg[i] * tar_luma_avg[i] + c1) *
+                     (2 * cvar[i] + c2)) /
+                    ((src_luma_avg[i] * src_luma_avg[i] +
+                      tar_luma_avg[i] * tar_luma_avg[i] + c1) *
+                     (src_var[i] + tar_var[i] + c2));
+      }
     }
 
-    return MSSIM / num_window;
+    return MSSIM[0] / num_window * 0.8 + MSSIM[1] / num_window * 0.1 +
+           MSSIM[2] / num_window * 0.1;
   }
 }
 
-static Image mosaics(Image &img) {
+static Image mosaics(Image &img, const char *directory) {
   // load images dataset
   static vector<Image> dataset{};
+  static vector<string> alias{};
   static bool init = false;
+
+  const int DWIDTH = 5;
+  const int DHEIGHT = DWIDTH;
+  int count = 0;
+
   if (!init) {
-    std::string path =
-        "/Users/dannylau/Program/COMP4411-Impressionist/squared_images";
+    std::string path{directory};
     for (const auto &entry : fs::directory_iterator(path)) {
-      auto path = entry.path();
-      dataset.push_back(Image::from(path.u8string().c_str()));
+      auto path = entry.path().u8string();
+      if (path.find("bmp") != std::string::npos) {
+        alias.push_back(string{path});
+        dataset.push_back(Image::from(path.c_str()));
+
+        count++;
+      }
     }
   }
+
+  debugger("loading done: %d", count);
+
+  vector<decltype(dataset.begin())> replacement{};
+
+  auto best_entry = dataset.begin();
+
+  for (int x = 0; x < img.width - DWIDTH; x += DWIDTH) {
+    for (int y = 0; y < img.height - DHEIGHT; y += DHEIGHT) {
+
+      Point start{x, y};
+      Point end = start.shift_x(DWIDTH).shift_y(DHEIGHT);
+      debugger("crop %d %d  to %d %d", start.x, start.y, end.x, end.y);
+
+      Image cropped = img.crop(start, end);
+
+      double best = 0;
+      int i = 0;
+      for (auto entry = dataset.begin(); entry != dataset.end(); entry++) {
+
+        float sim = structural_similarity(cropped, *entry);
+        // debugger("%s - similar: %.3f", alias[i++].c_str(), sim);
+
+        if (sim > best) {
+          best = sim;
+          best_entry = entry;
+        }
+      }
+      img.paint(*best_entry, start);
+    }
+  }
+
   return {};
 }
 } // namespace ImageUtils

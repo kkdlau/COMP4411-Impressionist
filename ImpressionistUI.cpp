@@ -204,6 +204,17 @@ void ImpressionistUI::cb_save_image(Fl_Menu_ *o, void *v) {
   }
 }
 
+void ImpressionistUI::mosaic(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+  char *dir = fl_dir_chooser("Open a bmp data set directory", "");
+  printf(dir);
+  fflush(stdout);
+  if (dir != NULL) {
+    pDoc->generate_mosaic(dir);
+  }
+}
+
 //-------------------------------------------------------------
 // Brings up the paint dialog
 // This is called by the UI when the brushes menu item
@@ -663,6 +674,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
      (Fl_Callback *)ImpressionistUI::cb_load_alpha_image},
     {"&Load Video...", FL_ALT + 'l',
      (Fl_Callback *)ImpressionistUI::cb_load_video},
+    {"&Mosaic", FL_ALT + 'm', (Fl_Callback *)ImpressionistUI::mosaic},
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
@@ -717,6 +729,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_CUSTOM_FILTER},
     {"Alpha-mapped", FL_ALT + 'a',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHA},
+    {"Rubber", FL_ALT + 'R', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_PULL_AS_RUBBER},
     {0}};
 
 Fl_Menu_Item
