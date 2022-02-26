@@ -5,7 +5,7 @@ HKUST login(s): kkdlau, ymt
 
 Delete yes/no when appropriate
 
-W per new brush	(fan, arc)			yes
+W per new brush	(fan, arc)			        yes
 W border clipping					yes
 W (red) marker						yes
 W swap							yes
