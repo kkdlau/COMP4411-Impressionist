@@ -55,17 +55,13 @@
 - [x] _(2B)_ find edges (D) [C]
 - [x] _(2B)_ multiresolution automatic painting technique http://mrl.nyu.edu/projects/npr/painterly/ (M) [C]
 - [ ] _(2B)_ stretch and pull image http://mostfungames.com/warp-george-bush.htm
-- [ ] _(2B)_ curved brush that follows image gradient http://mrl.nyu.edu/projects/npr/painterly/
+- [x] _(2B)_ curved brush that follows image gradient http://mrl.nyu.edu/projects/npr/painterly/
 - [ ] <u>(4B)</u> thumbnailhttp://www.cs.princeton.edu/~af/cool/webgothic.html (D)
 - [ ] <u>(4B)</u> video (M, D)
 - [ ] <u>(8B)</u> Bayesian matting (M, D)
 
 ## ToDo before submission:
-- [ ] marks with alpha value < 1 disappear when window resized
-- [ ] empty spaces in autopaint and multirespaint - check if shuffle is taking away values? or for_each?? 
-    because if repeat a few times, the holes are covered -> dirty fix is to call autopaint a few times ><
 - [ ] warp brush
-- [ ] curved brush that follows image gradient  
 - [ ] compile with virtual machine  
 - [ ] README.md for TA with any special configuration - C++17 (?)  
 - [ ] Bell and whistle checklist   
