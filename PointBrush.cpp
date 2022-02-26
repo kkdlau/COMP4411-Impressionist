@@ -64,7 +64,11 @@ void PointBrush::BrushEnd(const Point source, const Point target) {
   // do nothing so far
 }
 
-void PointBrush::RandomizeAttributes() { glPointSize(irand(40)); }
+void PointBrush::RandomizeAttributes() { 
+    ImpressionistDoc* pDoc = GetDocument();
+    int size = pDoc->getSize();
+    glPointSize(irand(size + 5)); 
+}
 
 void PointBrush::select() {
   ImpressionistDoc *pDoc = GetDocument();

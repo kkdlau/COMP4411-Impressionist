@@ -33,27 +33,27 @@
 - [ ] (1W each) more brushes (M)
   - [ ] pattern brush
   - [ ] pixelize brush
-  - [x] random polygon
-  - [x] curve brush
+  - [x] random polygon [C]
+  - [x] curve brush [C]
   - [ ] random scattered polygon
   - [ ] grayscale brush
 - [x] **(1W)** clipped brushes (D)
 - [x] **(1W)** cursor on original image (D) [C]
 - [x] (1W) swap content and original (D) [C]
-- [x] (1B) change color of image (change channel) (M)
-- [x] **(1B)** blur brush (M)
+- [x] (1B) change color of image (change channel) (M) [C]
+- [x] **(1B)** blur brush (M) [C]
 - [x] **(1B)** undo (D) [C]
 - [x] (1B) Dissolve one image into another (D) [C]
   - [x] (1B1W) original image overlay (D) [C]
     -[x] add a slider to control overlay alpha [C]
 - [x] _(1B1W)_ mural image (load another image without resetting) [C]
-- [x] (1B1W) alpha mapping brush (need more look up) (M)
+- [x] (1B1W) alpha mapping brush (need more look up) (M) [C]
 - [x] **(1B1W)** auto paint (M)
 - [x] **(1B1W)** gradient according to another image (D) [C]
 - [x] _(1B1W)_ edge clipping (need more look up) (D) [C]
-- [x] _(2B)_ filter kernel (M)
+- [x] _(2B)_ filter kernel (M) [C]
 - [x] _(2B)_ find edges (D) [C]
-- [ ] _(2B)_ multiresolution automatic painting technique http://mrl.nyu.edu/projects/npr/painterly/ (M)
+- [x] _(2B)_ multiresolution automatic painting technique http://mrl.nyu.edu/projects/npr/painterly/ (M) [C]
 - [ ] _(2B)_ stretch and pull image http://mostfungames.com/warp-george-bush.htm
 - [ ] _(2B)_ curved brush that follows image gradient http://mrl.nyu.edu/projects/npr/painterly/
 - [ ] <u>(4B)</u> thumbnailhttp://www.cs.princeton.edu/~af/cool/webgothic.html (D)
@@ -61,7 +61,9 @@
 - [ ] <u>(8B)</u> Bayesian matting (M, D)
 
 ## ToDo before submission:
-- [ ] empty spaces in autopaint and multirespaint - check if shuffle is taking away values? or for_each?? because if repeat a few times, the holes are covered  
+- [ ] marks with alpha value < 1 disappear when window resized
+- [ ] empty spaces in autopaint and multirespaint - check if shuffle is taking away values? or for_each?? 
+    because if repeat a few times, the holes are covered -> dirty fix is to call autopaint a few times ><
 - [ ] warp brush
 - [ ] curved brush that follows image gradient  
 - [ ] compile with virtual machine  

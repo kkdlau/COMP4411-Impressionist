@@ -31,8 +31,7 @@ public:
         printf("Go back in\n"); // TODO - Remove
         return;
     }
-    radius = 2 * pDoc->getSize();
-    const int width = pDoc->getWidth();
+    radius = pDoc->getSize();
     float r = pDoc->getRad();
 
     switch (pDoc->m_pUI->get_direction()) {
@@ -51,15 +50,20 @@ public:
 
     if (randomize && frand() >= 0.75)
         RandomizeAttributes();
+    float offset_x = cos(r) * radius;
+    float offset_y = sin(r) * radius;
+    Point center(target.x + offset_x, target.y + offset_y);
 
     gl_draw_shape(GL_POINTS, [&] {
       SetColor(source);
       
-      for (double i = M_PI / 4; i <= 3 * M_PI / 4; i += 0.01) {
+      for (double i = 0; i <= M_PI / 2; i += 0.01) {
         double angle = i + r;
-        double dx = cos(angle) * radius - radius;
-        double dy = sin(angle) * radius - radius;
-        gl_set_point(target.x + dx, target.y + dy);
+        double dx = cos(angle) * radius;
+        double dy = sin(angle) * radius;
+        Point cur(center.x + dx, center.y + dy);
+        cur = pDoc->clip(cur);
+        gl_set_point(cur.x, cur.y);
       }
     });
 

@@ -93,7 +93,11 @@ public:
     pDoc->m_pUI->m_MultiResPaint->deactivate();
   }
 
-  void RandomizeAttributes() { glLineWidth(irand(40)); }
+  void RandomizeAttributes() { 
+      ImpressionistDoc* pDoc = GetDocument();
+      int width = pDoc->getWidth();
+      glLineWidth(irand(width + 5)); 
+  }
 };
 
 #endif // __LINE_BRUSH_H__
