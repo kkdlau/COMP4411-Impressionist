@@ -7,7 +7,6 @@
 #include <random>
 #include <vector>
 
-
 #include "ImpBrush.h"
 #include "Paintview.h"
 #include "gl_helper.h"
@@ -63,7 +62,7 @@ void PaintView::draw() {
 
   if (!valid()) {
 
-    glClearColor(0.7f, 0.7f, 0.7f, 1.0);
+    glClearColor(1.0, 1.0, 1.0, 1.0);
 
     // We're only using 2-D, so turn off depth
     glDisable(GL_DEPTH_TEST);
@@ -109,7 +108,7 @@ void PaintView::draw() {
       multires_paint_flag = false;
       multires_paint();
     }
-    save_content(cur.raw_fmt());
+    save_to_cur();
     if (pDoc->app_mode == IMAGE)
       restore_content(overlay_image.raw_fmt()); // user loaded
   }
@@ -127,25 +126,25 @@ void PaintView::draw() {
     //
     // This is the event handler
 
-    //printf("\n\non draw e: %d\n\n", eventToDo);
+    // printf("\n\non draw e: %d\n\n", eventToDo);
     fflush(stdout);
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
       prev = cur; // for backup
       // restore_content(cur.raw_fmt());
       cur_brush.BrushBegin(source, target);
-      save_content(cur.raw_fmt());
+      save_to_cur();
 
       break;
     case LEFT_MOUSE_DRAG: {
       cur_brush.BrushMove(source, target);
       org_view.set_cursor(target);
-      save_content(cur.raw_fmt());
+      save_to_cur();
       break;
     }
     case LEFT_MOUSE_UP: {
       cur_brush.BrushEnd(source, target);
-      save_content(cur.raw_fmt());
+      save_to_cur();
       restore_content(cur.raw_fmt());
       break;
     }
@@ -195,7 +194,7 @@ void PaintView::draw() {
 }
 
 int PaintView::handle(int event) {
-  //printf("\n\n event: %d\n\n", event);
+  // printf("\n\n event: %d\n\n", event);
   if (pDoc != NULL && pDoc->app_mode == VIDEO) {
     // dont handle any mouse event during video mode
     return 1;
@@ -277,6 +276,11 @@ void PaintView::save_content(GLvoid *ptr) {
                GL_UNSIGNED_BYTE, ptr);
 }
 
+void PaintView::save_to_cur() {
+  save_content(cur.raw_fmt());
+  cur.for_each_alpha([](GLubyte &a) { a = 255; });
+}
+
 void PaintView::restore_content(GLvoid *ptr) {
   glDrawBuffer(GL_FRONT_AND_BACK);
 
@@ -309,6 +313,13 @@ void PaintView::set_current_img(Image &img) {
   cur = img;
   overlay_image = pDoc->m_pUI->m_origView->original_img;
   overlay_image.set_alpha(pDoc->m_pUI->getTransparency());
+  if (!black_image.contain_content() ||
+      black_image.width != overlay_image.width ||
+      black_image.height != overlay_image.height) {
+    Image tmp = Image::colored_image(0, 0, 0, 255, overlay_image.width,
+                                     overlay_image.height);
+    black_image = tmp;
+  }
   refresh();
 }
 
@@ -347,7 +358,7 @@ void PaintView::auto_paint(int s, short res) {
         start = false;
       } else
         cur_brush.BrushMove(source, target, nullptr, randomize);
-      // save_content(cur.raw_fmt());
+      // save_to_cur();
       counter++;
       if (counter % 20 == 0)
         std::shuffle(cols.begin(), cols.end(), g);
@@ -429,7 +440,8 @@ void PaintView::paint_layer(Image &reference, int radius) {
     // pass the color here GLubyte[4] array
     target = pDoc->clip(target);
     auto pixel = reference(target.y, target.x);
-    GLubyte color[4]{ get<0>(pixel), get<1>(pixel), get<2>(pixel), get<3>(pixel) };
+    GLubyte color[4]{get<0>(pixel), get<1>(pixel), get<2>(pixel),
+                     get<3>(pixel)};
     cur_brush.BrushBegin(source, target, radius, color);
     cur_brush.BrushEnd(source, target);
   });
