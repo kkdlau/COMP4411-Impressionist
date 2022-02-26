@@ -421,6 +421,10 @@ void ImpressionistUI::cb_alphaUpdate(Fl_Widget *o, void *v) {
       ->setAlpha(float(((Fl_Slider *)o)->value()));
 }
 
+void ImpressionistUI::cb_curvatureUpdate(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))
+      ->setCurvature(float(((Fl_Slider *)o)->value()));
+}
 void ImpressionistUI::cb_toggleOriginalView(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
   pDoc->toggleOriginalView();
@@ -530,6 +534,7 @@ int ImpressionistUI::getSize() { return m_nSize; }
 int ImpressionistUI::getWidth() { return m_nWidth; }
 int ImpressionistUI::getAngle() { return m_nAngle; }
 float ImpressionistUI::getAlpha() { return m_fAlpha; }
+float ImpressionistUI::getCurvature() { return m_nCurvature; }
 int ImpressionistUI::getColorBlending() { return m_fColorBlending; }
 int ImpressionistUI::getBlurValue() { return m_fBlur; }
 int ImpressionistUI::getSpacing() { return m_nSpacing; }
@@ -567,6 +572,12 @@ void ImpressionistUI::setAlpha(float a) {
 
   if (a <= 1.0)
     m_BrushAlphaSlider->value(m_fAlpha);
+}
+
+void ImpressionistUI::setCurvature(float a) {
+  m_nCurvature = a;
+  if (a <= 1.0)
+    m_BrushCurvatureSlider->value(m_nCurvature);
 }
 
 void ImpressionistUI::setColorBlending() {
@@ -720,8 +731,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_SCATTERED_CIRCLES},
     {"Fans", FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_FANS},
-    {"Curves", FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
-     (void *)BRUSH_CURVES},
+    {"Arcs", FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_ARC},
     {"Blurring Filter", FL_ALT + 'u',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_FILTER},
     {"Custom Filter", FL_ALT + 's',
@@ -729,8 +740,10 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_CUSTOM_FILTER},
     {"Alpha-mapped", FL_ALT + 'a',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHA},
-    {"Rubber", FL_ALT + 'R', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+    {"Rubber", FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_PULL_AS_RUBBER},
+    {"Curved", FL_ALT + 'v', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_CURVED},
     {0}};
 
 Fl_Menu_Item
@@ -852,9 +865,23 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushAlphaSlider->minimum(0.0);
   m_BrushAlphaSlider->maximum(1.0);
   m_BrushAlphaSlider->step(0.01);
-  m_BrushAlphaSlider->value(m_nWidth);
+  m_BrushAlphaSlider->value(m_fAlpha);
   m_BrushAlphaSlider->align(FL_ALIGN_RIGHT);
   m_BrushAlphaSlider->callback(cb_alphaUpdate);
+
+  m_BrushCurvatureSlider =
+      new Fl_Value_Slider(10, y += 30, 300, 20, "Curvature");
+  m_BrushCurvatureSlider->user_data(
+      (void *)(this)); // record self to be used by static callback functions
+  m_BrushCurvatureSlider->type(FL_HOR_NICE_SLIDER);
+  m_BrushCurvatureSlider->labelfont(FL_COURIER);
+  m_BrushCurvatureSlider->labelsize(12);
+  m_BrushCurvatureSlider->minimum(0.0);
+  m_BrushCurvatureSlider->maximum(1.0);
+  m_BrushCurvatureSlider->step(0.01);
+  m_BrushCurvatureSlider->value(m_nCurvature);
+  m_BrushCurvatureSlider->align(FL_ALIGN_RIGHT);
+  m_BrushCurvatureSlider->callback(cb_curvatureUpdate);
 
   m_BrushBlurSlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Blurring");
   m_BrushBlurSlider->user_data((void *)(this));

@@ -57,6 +57,7 @@ public:
         pDoc->m_pUI->m_BrushBlurSlider->activate();
         pDoc->m_pUI->m_ColorBlending->activate();
         pDoc->m_pUI->m_MultiResPaint->deactivate();
+        pDoc->m_pUI->m_BrushCurvatureSlider->deactivate();
     }
     
     void RandomizeAttributes() {

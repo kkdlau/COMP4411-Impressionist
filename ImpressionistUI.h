@@ -46,6 +46,7 @@ public:
   Fl_Slider *m_BrushAngleSlider;
   Fl_Slider *m_BrushAlphaSlider;
   Fl_Slider *m_BrushBlurSlider;
+  Fl_Slider* m_BrushCurvatureSlider;
   Fl_Button *m_ClearCanvasButton;
   Fl_Check_Button *m_ColorBlending;
   Fl_Check_Button *m_another_gradient_checkbox;
@@ -92,6 +93,9 @@ public:
 
   float getAlpha();
   void setAlpha(float a);
+
+  float getCurvature();
+  void setCurvature(float a);
 
   int getColorBlending();
   void setColorBlending();
@@ -141,6 +145,7 @@ private:
   int m_nWidth = 1;
   int m_nAngle = 0;
   float m_fAlpha = 1.0;
+  float m_nCurvature = 1.0;
   int m_fColorBlending = 0;
   StrokeDirection m_direction = SLIDER_RIGHT_MOUSE;
   int m_fBlur = 0;
@@ -187,6 +192,7 @@ private:
   static void cb_widthUpdate(Fl_Widget *o, void *v);
   static void cb_angleUpdate(Fl_Widget *o, void *v);
   static void cb_alphaUpdate(Fl_Widget *o, void *v);
+  static void cb_curvatureUpdate(Fl_Widget* o, void* v);
   static void cb_toggleOriginalView(Fl_Widget *o, void *v);
   static void cb_colorBlendingUpdate(Fl_Widget *o, void *v);
   static void cb_another_gradient(Fl_Widget *o, void *v);

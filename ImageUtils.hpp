@@ -102,7 +102,13 @@ static void applyBlurFilter(Image &original, Image &result,
     }
   }
 }
-
+static float colorDifference(RGBA c1, RGBA c2) {
+    float r = pow((get<0>(c1) - get<0>(c2)), 2);
+    float g = pow((get<1>(c1) - get<1>(c2)), 2);
+    float b = pow((get<2>(c1) - get<2>(c2)), 2);
+    float dist = sqrt(r + g + b);
+    return sqrt(r + g + b);
+}
 static tuple<float, float, float> sobel(Image &img, int y, int x) {
   float gx = 0;
   float gy = 0;
