@@ -39,13 +39,13 @@ BW edge clipping					yes
  - Choose File > Color Blending (ALT+K) to make the color chooser pop out  
 
 2. Alpha brush: 
- - Choose File > Load Alpha Image (ALT+X) to load any image. The alpha value is derived from its grayscale values.  
- - Choose Alpha-mapped Brush from the Brush Menu in Brush Dialog (no drawing made if no alpha image loaded)
+ - Choose File > Load Alpha Image (ALT+X) to load any image (the alpha value is derived from its grayscale values)
+ - Choose Alpha-mapped Brush from the Brush Menu in Brush Dialog (no drawing is made if no alpha image is loaded)
 
 3. User-specified kernel:   
  - Choose File > Custom Filter (ALT+F) to input a filter  
  - Click 'Apply' to save any changes to the input  
- - Choose Custom Filter Brush from the Brush Menu in Brush Dialog (no drawing made if no filter is given)
+ - Choose Custom Filter Brush from the Brush Menu in Brush Dialog (no drawing is made if no filter is given)
 
 4. Automatic edge clipping:
  - Check the Edge Clipping option in Brush Dialog  
