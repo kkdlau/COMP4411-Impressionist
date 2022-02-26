@@ -44,6 +44,8 @@ public:
 
   Image overlay_image;
 
+  Image black_image;
+
   PaintView(int x, int y, int w, int h, const char *l);
   void draw();
   int handle(int event);
@@ -53,6 +55,8 @@ public:
   void resizeWindow(int width, int height);
 
   void save_content(GLvoid *ptr);
+
+  void save_to_cur();
 
   void restore_content(GLvoid *ptr);
 
@@ -66,7 +70,7 @@ public:
 
   void multires_paint();
 
-  void paint_layer(Image& reference, int radius);
+  void paint_layer(Image &reference, int radius);
 
   ImpressionistDoc *m_pDoc;
 

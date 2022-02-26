@@ -48,6 +48,22 @@ public:
     return Image(data, width, height);
   }
 
+  static Image colored_image(GLubyte r, GLubyte g, GLubyte b, GLubyte a, int w,
+                             int h) {
+    Image tmp;
+    tmp.width = w;
+    tmp.height = h;
+    tmp.bytes.resize(w * h * 4);
+    for (auto p = tmp.bytes.begin(); p != tmp.bytes.end(); p += 4) {
+      p[0] = r;
+      p[1] = g;
+      p[2] = b;
+      p[3] = a;
+    }
+
+    return tmp;
+  }
+
   void operator=(Image &img) {
     this->bytes = img.bytes;
     this->width = img.width;
@@ -146,6 +162,15 @@ public:
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         handler(y, x);
+      }
+    }
+  }
+
+  void for_each_alpha(function<void(GLubyte &)> handler) {
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        int i = convert_to_index(y, x) + 3;
+        handler(bytes[i]);
       }
     }
   }
