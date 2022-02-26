@@ -46,11 +46,7 @@ BW edge clipping					yes/no
 8B Bayesian matting					yes/no
 
 ## ToDo before submission:
-- [ ] marks with alpha value < 1 disappear when window resized
-- [ ] empty spaces in autopaint and multirespaint - check if shuffle is taking away values? or for_each?? 
-    because if repeat a few times, the holes are covered -> dirty fix is to call autopaint a few times ><
 - [ ] warp brush
-- [ ] curved brush that follows image gradient  
 - [ ] compile with virtual machine  
 - [ ] README.md for TA with any special configuration - C++17 (?)  
 - [ ] Bell and whistle checklist

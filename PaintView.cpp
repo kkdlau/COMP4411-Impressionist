@@ -372,86 +372,86 @@ void PaintView::auto_paint(int s, short res) {
 }
 
 void PaintView::multires_paint() {
-  int brush_radii[3]{8, 4, 2};
-  for (int ind = 0; ind < 3; ind++) {
-    // create reference image
-      printf("\nlayer with brush size %d\n", brush_radii[ind]);
-    Image refImage = cur;
-    ImageUtils::applyBlurFilter(m_pDoc->m_pUI->m_origView->original_img,
-                                refImage, brush_radii[ind] + 1);
-    paint_layer(refImage, brush_radii[ind]);
-  }
+    int brush_radii[3]{ 8, 4, 2 };
+    for (int ind = 0; ind < 3; ind++) {
+        // create reference image
+        Image refImage = cur;
+        ImageUtils::applyBlurFilter(m_pDoc->m_pUI->m_origView->original_img, refImage, brush_radii[ind] + 1);
+        paint_layer(refImage, brush_radii[ind]);
+    }
 }
 
-void PaintView::paint_layer(Image &reference, int radius) {
-  std::vector<Point> strokes;
-  // from Impressionist Painterly implementation
-  const int grid = radius;
-  int threshold = 100;
-  printf("bp: image size is %d %d = %d\t", cur.width, cur.height, cur.width * cur.height);
-  // calculate pointwise difference image
-  std::vector<float> diff;
-  for (int i = 1; i < cur.width; i++) {
-    for (int j = 1; j < cur.height; j++) {
-      // calculate l2 distance btw reference and cur
-      Point source(i + m_nStartCol, m_nEndRow - j);
-      auto pixel1 = reference(source.y, source.x);
-      auto pixel2 = cur(source.y, source.x);
-      diff.push_back(ImageUtils::colorDifference(pixel1, pixel2));
-    }
-  }
-  printf("bp: diff.size is %d\t", diff.size());
-  // find points to set strokes
-  for (int i = 1; i < cur.width; i += grid / 2) {
-    for (int j = 1; j < cur.height; j += grid / 2) {
-      // sum the error in the region
-      float area_error = 0;
-      int max_k = 0, max_m = 0; // to get the arg max Point
-      float max_diff = 0;
-      for (int k = -grid / 2; k <= grid / 2; ++k) {
-        for (int m = -grid / 2; m <= grid / 2; ++m) {
-          if (i + k < 1 || i + k >= cur.width)
-            continue;
-          else if (j + m < 1 || j + m >= cur.height)
-            continue;
-          int x = i + k, y = j + m;
-          if ((x * cur.width + y) >= diff.size()) {
-              //printf("bp: trying to access index: %d\t", x * cur.width + y);
-              continue;
-          }
-          float cur_diff = diff[x * cur.width + y];
-          if (cur_diff > max_diff) {
-            max_diff = cur_diff;
-            max_k = k;
-            max_m = m;
-          }
-          area_error += cur_diff;
+void PaintView::paint_layer(Image& reference, int radius) {
+    std::vector<Point> strokes;
+    // from Impressionist Painterly implementation
+    const int grid = radius;
+    int threshold = 100;
+    printf("bp: image size is %d %d = %d\t", cur.width, cur.height, cur.width * cur.height);
+    // calculate pointwise difference image
+    std::vector<float> diff;
+    for (int i = 1; i < cur.width; i++) {
+        for (int j = 1; j < cur.height; j++) {
+            // calculate l2 distance btw reference and cur
+            //Point source(i + m_nStartCol, m_nEndRow - j);
+            Point source(i, j);
+            auto pixel1 = reference(source.y, source.x);
+            auto pixel2 = cur(source.y, source.x);
+            diff.push_back(ImageUtils::colorDifference(pixel1, pixel2));
         }
-      }
-      if (area_error > threshold) {
-        Point source(i + max_k + m_nStartCol, m_nEndRow - j - max_m);
-        strokes.push_back(source);
-      }
     }
-  }
-  printf("bp strokes.size is %d\t", strokes.size());
+    printf("bp: diff.size is %d\t", diff.size());
+    // find points to set strokes
+    for (int i = 1; i < cur.width; i += grid / 2) {
+        for (int j = 1; j < cur.height; j += grid / 2) {
+            // sum the error in the region
+            float area_error = 0;
+            int max_k = 0, max_m = 0; // to get the arg max Point
+            float max_diff = 0;
+            for (int k = -grid / 2; k <= grid / 2; ++k) {
+                for (int m = -grid / 2; m <= grid / 2; ++m) {
+                    if (i + k < 1 || i + k >= cur.width)
+                        continue;
+                    else if (j + m < 1 || j + m >= cur.height)
+                        continue;
+                    int x = i + k, y = j + m;
+                    int index = (x - 1) * (cur.width - 1) + y - 1;
+                    float cur_diff = 10;
+                    if (index >= 0 && index < diff.size())
+                        cur_diff = diff[index];
+                    if (cur_diff > max_diff) {
+                        max_diff = cur_diff;
+                        max_k = k;
+                        max_m = m;
+                    }
+                    area_error += cur_diff;
+                }
+            }
+            if (area_error > threshold) {
+                //Point source(i + max_k + m_nStartCol, m_nEndRow - j - max_m);
+                Point source(i + max_k, j + max_m);
+                strokes.push_back(source);
+            }
+        }
+    }
+    printf("bp strokes.size is %d\t", strokes.size());
 
-  // randomize strokes
-  std::random_device rd;
-  std::mt19937 g(rd());
-  std::shuffle(strokes.begin(), strokes.end(), g);
+    // randomize strokes
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(strokes.begin(), strokes.end(), g);
 
-  ImpBrush &cur_brush = *m_pDoc->m_pCurrentBrush;
-  std::for_each(strokes.begin(), strokes.end(), [&](Point &source) {
-    int i = source.x - m_nStartCol;
-    int j = m_nEndRow - source.y;
-    Point target(i, m_nWindowHeight - j);
-    // pass the color here GLubyte[4] array
-    target = pDoc->clip(target);
-    auto pixel = reference(target.y, target.x);
-    GLubyte color[4]{get<0>(pixel), get<1>(pixel), get<2>(pixel),
-                     get<3>(pixel)};
-    cur_brush.BrushBegin(source, target, radius, color);
-    cur_brush.BrushEnd(source, target);
-  });
+    ImpBrush& cur_brush = *m_pDoc->m_pCurrentBrush;
+    std::for_each(strokes.begin(), strokes.end(), [&](Point& source) {
+        //int i = source.x - m_nStartCol;
+        //int j = m_nEndRow - source.y;
+        //Point target(i, m_nWindowHeight - j);
+        Point target(source.x, source.y);
+        // pass the color here GLubyte[4] array
+        target = pDoc->clip(target);
+        auto pixel = reference(target.y, target.x);
+        GLubyte color[4]{ get<0>(pixel), get<1>(pixel), get<2>(pixel),
+                         get<3>(pixel) };
+        cur_brush.BrushBegin(source, target, radius, color);
+        cur_brush.BrushEnd(source, target);
+        });
 }
