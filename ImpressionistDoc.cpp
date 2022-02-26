@@ -31,7 +31,6 @@
 #include "VideoUtils.hpp"
 #include "gl_helper.h"
 
-
 #define DESTROY(p)                                                             \
   {                                                                            \
     if ((p) != NULL) {                                                         \
@@ -348,4 +347,5 @@ void ImpressionistDoc::multires_paint() {
 void ImpressionistDoc::generate_mosaic(const char *d) {
   Image &original_img = m_pUI->m_origView->original_img;
   ImageUtils::mosaics(original_img, d);
+  pDoc->force_update_canvas();
 }
