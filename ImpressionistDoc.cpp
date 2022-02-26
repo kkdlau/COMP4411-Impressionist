@@ -15,7 +15,7 @@
 // Include individual brush headers here.
 #include "AlphaMappedBrush.hpp"
 #include "CircleBrush.hpp"
-#include "CurveBrush.hpp"
+#include "ArcBrush.hpp"
 #include "CustomFilterBrush.hpp"
 #include "FanBrush.hpp"
 #include "FilterBrush.hpp"
@@ -26,6 +26,7 @@
 #include "ScatteredCircleBrush.hpp"
 #include "ScatteredLineBrush.hpp"
 #include "ScatteredPointBrush.hpp"
+#include "CurvedBrush.hpp"
 #include "VideoUtils.hpp"
 #include "gl_helper.h"
 
@@ -63,12 +64,13 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::set_brush(BRUSH_SCATTERED_CIRCLES,
                       new ScatteredCircleBrush(this, "Scattered Circles"));
   ImpBrush::set_brush(BRUSH_FANS, new FanBrush(this, "Fans"));
-  ImpBrush::set_brush(BRUSH_CURVES, new CurveBrush(this, "Curves"));
+  ImpBrush::set_brush(BRUSH_ARC, new ArcBrush(this, "Curves"));
   ImpBrush::set_brush(BRUSH_FILTER, new FilterBrush(this, "Blurring"));
   ImpBrush::set_brush(BRUSH_GRADIENT, new GradientBrush(this, "Gradient"));
   ImpBrush::set_brush(BRUSH_CUSTOM_FILTER,
                       new CustomFilterBrush(this, "Custom Filter"));
   ImpBrush::set_brush(BRUSH_ALPHA, new AlphaMappedBrush(this, "Alpha-mapped"));
+  ImpBrush::set_brush(BRUSH_CURVED, new CurvedBrush(this, "Curved"));
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];

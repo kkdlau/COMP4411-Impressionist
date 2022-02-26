@@ -1,5 +1,5 @@
-#if !defined(__CURVE_BRUSH__)
-#define __CURVE_BRUSH__
+#if !defined(__ARC_BRUSH__)
+#define __ARC_BRUSH__
 #include "ImageUtils.hpp"
 #include "ImpBrush.h"
 #include "gl_helper.h"
@@ -8,12 +8,12 @@
 
 using namespace GLHelper;
 
-class CurveBrush : public ImpBrush {
+class ArcBrush : public ImpBrush {
   Point last;
   double radius;
 
 public:
-  CurveBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
+  ArcBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
   void BrushBegin(const Point source, const Point target, int rad, GLubyte* color) {
@@ -86,7 +86,8 @@ public:
     pDoc->m_pUI->m_BrushBlurSlider->deactivate();
     pDoc->m_pUI->m_ColorBlending->activate();
     pDoc->m_pUI->m_MultiResPaint->deactivate();
+    pDoc->m_pUI->m_BrushCurvatureSlider->deactivate();
   }
 };
 
-#endif // __CIRCLE_BRUSH__
+#endif // __ARC_BRUSH__

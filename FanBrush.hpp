@@ -82,6 +82,7 @@ public:
     pDoc->m_pUI->m_BrushBlurSlider->deactivate();
     pDoc->m_pUI->m_ColorBlending->activate();
     pDoc->m_pUI->m_MultiResPaint->activate();
+    pDoc->m_pUI->m_BrushCurvatureSlider->deactivate();
   }
 };
 

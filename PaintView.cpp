@@ -105,6 +105,7 @@ void PaintView::draw() {
     if (auto_paint_flag) {
       auto_paint_flag = false;
       auto_paint();
+      auto_paint();
     } else if (multires_paint_flag) {
       multires_paint_flag = false;
       multires_paint();
@@ -363,6 +364,7 @@ void PaintView::multires_paint() {
   int brush_radii[3]{8, 4, 2};
   for (int ind = 0; ind < 3; ind++) {
     // create reference image
+      printf("\nlayer with brush size %d\n", brush_radii[ind]);
     Image refImage = cur;
     ImageUtils::applyBlurFilter(m_pDoc->m_pUI->m_origView->original_img,
                                 refImage, brush_radii[ind] + 1);
@@ -375,6 +377,7 @@ void PaintView::paint_layer(Image &reference, int radius) {
   // from Impressionist Painterly implementation
   const int grid = radius;
   int threshold = 100;
+  printf("bp: image size is %d %d = %d\t", cur.width, cur.height, cur.width * cur.height);
   // calculate pointwise difference image
   std::vector<float> diff;
   for (int i = 1; i < cur.width; i++) {
@@ -383,9 +386,10 @@ void PaintView::paint_layer(Image &reference, int radius) {
       Point source(i + m_nStartCol, m_nEndRow - j);
       auto pixel1 = reference(source.y, source.x);
       auto pixel2 = cur(source.y, source.x);
-      diff.push_back(dist(pixel1, pixel2));
+      diff.push_back(ImageUtils::colorDifference(pixel1, pixel2));
     }
   }
+  printf("bp: diff.size is %d\t", diff.size());
   // find points to set strokes
   for (int i = 1; i < cur.width; i += grid / 2) {
     for (int j = 1; j < cur.height; j += grid / 2) {
@@ -395,11 +399,15 @@ void PaintView::paint_layer(Image &reference, int radius) {
       float max_diff = 0;
       for (int k = -grid / 2; k <= grid / 2; ++k) {
         for (int m = -grid / 2; m <= grid / 2; ++m) {
-          if (i + k < 0 || i + k >= cur.width)
+          if (i + k < 1 || i + k >= cur.width)
             continue;
-          else if (j + m < 0 || j + m >= cur.height)
+          else if (j + m < 1 || j + m >= cur.height)
             continue;
           int x = i + k, y = j + m;
+          if ((x * cur.width + y) >= diff.size()) {
+              //printf("bp: trying to access index: %d\t", x * cur.width + y);
+              continue;
+          }
           float cur_diff = diff[x * cur.width + y];
           if (cur_diff > max_diff) {
             max_diff = cur_diff;
@@ -415,6 +423,7 @@ void PaintView::paint_layer(Image &reference, int radius) {
       }
     }
   }
+  printf("bp strokes.size is %d\t", strokes.size());
 
   // randomize strokes
   std::random_device rd;

@@ -25,11 +25,12 @@ enum {
   BRUSH_SCATTERED_LINES,
   BRUSH_SCATTERED_CIRCLES,
   BRUSH_FANS,
-  BRUSH_CURVES,
+  BRUSH_ARC,
   BRUSH_FILTER, // brush with blurring filter
   BRUSH_GRADIENT,
   BRUSH_CUSTOM_FILTER,
   BRUSH_ALPHA,
+  BRUSH_CURVED,
   NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
