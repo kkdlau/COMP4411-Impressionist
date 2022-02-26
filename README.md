@@ -22,43 +22,28 @@
   - By overriding `select()` and `disselect()`. 
 ## Bonus
 
-> W: Whistle, B: Bell
->
-> Bold: planned to do
->
-> Italic: wanted to do
->
-> Underline: wanted to do
-
-- [ ] (1W each) more brushes (M)
-  - [ ] pattern brush
-  - [ ] pixelize brush
-  - [x] random polygon [C]
-  - [x] curve brush [C]
-  - [ ] random scattered polygon
-  - [ ] grayscale brush
-- [x] **(1W)** clipped brushes (D)
-- [x] **(1W)** cursor on original image (D) [C]
-- [x] (1W) swap content and original (D) [C]
-- [x] (1B) change color of image (change channel) (M) [C]
-- [x] **(1B)** blur brush (M) [C]
-- [x] **(1B)** undo (D) [C]
-- [x] (1B) Dissolve one image into another (D) [C]
-  - [x] (1B1W) original image overlay (D) [C]
-    -[x] add a slider to control overlay alpha [C]
-- [x] _(1B1W)_ mural image (load another image without resetting) [C]
-- [x] (1B1W) alpha mapping brush (need more look up) (M) [C]
-- [x] **(1B1W)** auto paint (M)
-- [x] **(1B1W)** gradient according to another image (D) [C]
-- [x] _(1B1W)_ edge clipping (need more look up) (D) [C]
-- [x] _(2B)_ filter kernel (M) [C]
-- [x] _(2B)_ find edges (D) [C]
-- [x] _(2B)_ multiresolution automatic painting technique http://mrl.nyu.edu/projects/npr/painterly/ (M) [C]
-- [ ] _(2B)_ stretch and pull image http://mostfungames.com/warp-george-bush.htm
-- [ ] _(2B)_ curved brush that follows image gradient http://mrl.nyu.edu/projects/npr/painterly/
-- [ ] <u>(4B)</u> thumbnailhttp://www.cs.princeton.edu/~af/cool/webgothic.html (D)
-- [ ] <u>(4B)</u> video (M, D)
-- [ ] <u>(8B)</u> Bayesian matting (M, D)
+W per new brush						yes/no
+W border clipping					yes/no
+W (red) marker						yes/no
+W swap							yes/no
+B RGB scale						yes/no
+B blur/sharp brush					yes/no
+B 1 level undo						yes/no
+B dissolve						yes/no 
+BW fade in/out input on output canvas			yes/no
+BW mural (blending)					yes/no
+BW alpha brush						yes/no
+BW automatic paint whole image				yes/no
+BW gradient from user-specified image			yes/no
+BW edge clipping					yes/no
+2B user-specified kernel				yes/no
+2B edge detection + user-specified edge clipping	yes/no
+2B multiresolution					yes/no
+2B warp brush						yes/no
+2B curved brush following image gradient		yes/no
+4B mosaic						yes/no
+4B impressionist video with temporal coherency		yes/no
+8B Bayesian matting					yes/no
 
 ## ToDo before submission:
 - [ ] marks with alpha value < 1 disappear when window resized
@@ -68,4 +53,4 @@
 - [ ] curved brush that follows image gradient  
 - [ ] compile with virtual machine  
 - [ ] README.md for TA with any special configuration - C++17 (?)  
-- [ ] Bell and whistle checklist   
+- [ ] Bell and whistle checklist
