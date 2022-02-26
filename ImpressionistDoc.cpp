@@ -14,8 +14,9 @@
 
 // Include individual brush headers here.
 #include "AlphaMappedBrush.hpp"
-#include "CircleBrush.hpp"
 #include "ArcBrush.hpp"
+#include "CircleBrush.hpp"
+#include "CurvedBrush.hpp"
 #include "CustomFilterBrush.hpp"
 #include "FanBrush.hpp"
 #include "FilterBrush.hpp"
@@ -23,12 +24,13 @@
 #include "Image.hpp"
 #include "LineBrush.hpp"
 #include "PointBrush.h"
+#include "PullBrush.hpp"
 #include "ScatteredCircleBrush.hpp"
 #include "ScatteredLineBrush.hpp"
 #include "ScatteredPointBrush.hpp"
-#include "CurvedBrush.hpp"
 #include "VideoUtils.hpp"
 #include "gl_helper.h"
+
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -70,6 +72,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::set_brush(BRUSH_CUSTOM_FILTER,
                       new CustomFilterBrush(this, "Custom Filter"));
   ImpBrush::set_brush(BRUSH_ALPHA, new AlphaMappedBrush(this, "Alpha-mapped"));
+  ImpBrush::set_brush(BRUSH_PULL_AS_RUBBER, new PullBrush(this, "Rubber"));
   ImpBrush::set_brush(BRUSH_CURVED, new CurvedBrush(this, "Curved"));
 
   // make one of the brushes current
@@ -217,7 +220,8 @@ int ImpressionistDoc::loadAlphaImage(char *iname) {
   if (alpha_image.contain_content())
     alpha_image.clear();
   alpha_image.set(data, width, height);
-  printf("successfully loaded alpha image %d %d\n", alpha_image.width, alpha_image.height);
+  printf("successfully loaded alpha image %d %d\n", alpha_image.width,
+         alpha_image.height);
   return 1;
 }
 
@@ -339,4 +343,9 @@ void ImpressionistDoc::multires_paint() {
   canvas.multires_paint_flag = true;
   canvas.refresh();
   // canvas.multires_paint();
+}
+
+void ImpressionistDoc::generate_mosaic(const char *d) {
+  Image &original_img = m_pUI->m_origView->original_img;
+  ImageUtils::mosaics(original_img, d);
 }

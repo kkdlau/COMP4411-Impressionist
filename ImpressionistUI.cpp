@@ -204,6 +204,17 @@ void ImpressionistUI::cb_save_image(Fl_Menu_ *o, void *v) {
   }
 }
 
+void ImpressionistUI::mosaic(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+  char *dir = fl_dir_chooser("Open a bmp data set directory", "");
+  printf(dir);
+  fflush(stdout);
+  if (dir != NULL) {
+    pDoc->generate_mosaic(dir);
+  }
+}
+
 //-------------------------------------------------------------
 // Brings up the paint dialog
 // This is called by the UI when the brushes menu item
@@ -410,9 +421,9 @@ void ImpressionistUI::cb_alphaUpdate(Fl_Widget *o, void *v) {
       ->setAlpha(float(((Fl_Slider *)o)->value()));
 }
 
-void ImpressionistUI::cb_curvatureUpdate(Fl_Widget* o, void* v) {
-    ((ImpressionistUI*)(o->user_data()))
-        ->setCurvature(float(((Fl_Slider*)o)->value()));
+void ImpressionistUI::cb_curvatureUpdate(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))
+      ->setCurvature(float(((Fl_Slider *)o)->value()));
 }
 void ImpressionistUI::cb_toggleOriginalView(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
@@ -564,9 +575,9 @@ void ImpressionistUI::setAlpha(float a) {
 }
 
 void ImpressionistUI::setCurvature(float a) {
-    m_nCurvature = a;
-    if (a <= 1.0)
-        m_BrushCurvatureSlider->value(m_nCurvature);
+  m_nCurvature = a;
+  if (a <= 1.0)
+    m_BrushCurvatureSlider->value(m_nCurvature);
 }
 
 void ImpressionistUI::setColorBlending() {
@@ -674,6 +685,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
      (Fl_Callback *)ImpressionistUI::cb_load_alpha_image},
     {"&Load Video...", FL_ALT + 'l',
      (Fl_Callback *)ImpressionistUI::cb_load_video},
+    {"&Mosaic", FL_ALT + 'm', (Fl_Callback *)ImpressionistUI::mosaic},
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
@@ -728,8 +740,10 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_CUSTOM_FILTER},
     {"Alpha-mapped", FL_ALT + 'a',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHA},
-    {"Curved", FL_ALT + 'v',
-     (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_CURVED},
+    {"Rubber", FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_PULL_AS_RUBBER},
+    {"Curved", FL_ALT + 'v', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_CURVED},
     {0}};
 
 Fl_Menu_Item
@@ -855,9 +869,10 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushAlphaSlider->align(FL_ALIGN_RIGHT);
   m_BrushAlphaSlider->callback(cb_alphaUpdate);
 
-  m_BrushCurvatureSlider = new Fl_Value_Slider(10, y += 30, 300, 20, "Curvature");
+  m_BrushCurvatureSlider =
+      new Fl_Value_Slider(10, y += 30, 300, 20, "Curvature");
   m_BrushCurvatureSlider->user_data(
-      (void*)(this)); // record self to be used by static callback functions
+      (void *)(this)); // record self to be used by static callback functions
   m_BrushCurvatureSlider->type(FL_HOR_NICE_SLIDER);
   m_BrushCurvatureSlider->labelfont(FL_COURIER);
   m_BrushCurvatureSlider->labelsize(12);

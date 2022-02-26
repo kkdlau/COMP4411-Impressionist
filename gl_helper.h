@@ -14,10 +14,7 @@ using namespace std;
   printf("\n");                                                                \
   fflush(stdout);
 #else
-#define debugger(...)                                                          \
-  printf(__VA_ARGS__);                                                         \
-  printf("\n");                                                                \
-  fflush(stdout);
+#define debugger(...)
 #endif
 
 /**

@@ -52,6 +52,7 @@ public:
   int getRowNum();
   int getColNum();
   bool getNormalize();
+  void generate_mosaic(const char *);
 
   // Attributes
 public:

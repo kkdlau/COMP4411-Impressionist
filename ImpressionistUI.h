@@ -205,6 +205,7 @@ private:
   static void cb_arbFilterApply(Fl_Widget *o, void *v);
   static void cb_arbFilterNormalize(Fl_Widget *o, void *v);
   static void cb_transparencyUpdate(Fl_Widget *o, void *v);
+  static void mosaic(Fl_Menu_ *o, void *v);
 };
 
 #endif

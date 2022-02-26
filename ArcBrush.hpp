@@ -16,7 +16,8 @@ public:
   ArcBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL)
       : ImpBrush(pDoc, name) {}
 
-  void BrushBegin(const Point source, const Point target, int rad, GLubyte* color) {
+  void BrushBegin(const Point source, const Point target, int rad,
+                  GLubyte *color) {
     ImpressionistDoc *pDoc = GetDocument();
     last = target;
     const int width = pDoc->getWidth();
@@ -24,12 +25,14 @@ public:
     BrushMove(source, target);
   }
 
-  void BrushMove(const Point source, const Point target, GLubyte* color = nullptr, bool randomize = false) {
+  void BrushMove(const Point source, const Point target,
+                 GLubyte *color = nullptr, bool randomize = false) {
     ImpressionistDoc *pDoc = GetDocument();
-    if (source.x <= 0 || source.x >= pDoc->m_nPaintWidth || source.y <= 0 ||
-        source.y >= pDoc->m_nPaintHeight) {
-        printf("Go back in\n"); // TODO - Remove
-        return;
+    auto &img = pDoc->m_pUI->m_paintView->cur;
+    if (source.x <= 0 || source.x >= img.width || source.y <= 0 ||
+        source.y >= img.height) {
+      printf("Go back in\n"); // TODO - Remove
+      return;
     }
     radius = pDoc->getSize();
     float r = pDoc->getRad();
@@ -49,14 +52,14 @@ public:
       return;
 
     if (randomize && frand() >= 0.75)
-        RandomizeAttributes();
+      RandomizeAttributes();
     float offset_x = cos(r) * radius;
     float offset_y = sin(r) * radius;
     Point center(target.x + offset_x, target.y + offset_y);
 
     gl_draw_shape(GL_POINTS, [&] {
       SetColor(source);
-      
+
       for (double i = 0; i <= M_PI / 2; i += 0.01) {
         double angle = i + r;
         double dx = cos(angle) * radius;
@@ -72,8 +75,8 @@ public:
   void BrushEnd(const Point source, const Point target) {}
 
   void RandomizeAttributes() {
-      glPointSize(irand(20));
-      radius = irand(20);
+    glPointSize(irand(20));
+    radius = irand(20);
   }
 
   void select() {
