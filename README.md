@@ -64,6 +64,7 @@ BW edge clipping					yes
 
 7. Video:   
  - The video pauses when there are no mouse movements
+ - User may tune brush settings while video is running
  - A sample video located at `bonus/videos/cinepak.avi` is prepared for the graders
 
 8. Rubber / Sketch and pull:
